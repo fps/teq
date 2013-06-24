@@ -35,7 +35,7 @@ find_package(PkgConfig REQUIRED)
 
 
 pkg_check_modules(JACK jack)
-pkg_check_modules(PYTHON3 python3)
+pkg_check_modules(PYTHON python)
 
 # BOOST
 #set(Boost_USE_STATIC_LIBS)
@@ -53,10 +53,10 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 include_directories(${PROJECT_SOURCE_DIR})
 
 include_directories(${JACK_INCLUDE_DIRS})
-include_directories(${PYTHON3_INCLUDE_DIRS})
+include_directories(${PYTHON_INCLUDE_DIRS})
 
 add_library(teq SHARED teq/teq.cc)
-target_link_libraries(teq ${JACK_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(teq ${JACK_LIBRARIES} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 
 

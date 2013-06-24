@@ -1,3 +1,3 @@
-import teq
-t = teq.teq()
+import libteq
+t = libteq.teq("foo", 100)
 
