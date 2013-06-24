@@ -18,11 +18,13 @@ BOOST_PYTHON_MODULE(libteq)
 	;
 	
 	class_<teq::track>("track")
+		.def("clear", &teq::track::clear)
+		.def("clear_range", &teq::track::clear_range)
+		.def("copy_range", &teq::track::copy_range)
 		.def("add_note_on", &teq::track::add_note_on)
 		.def("add_note_off", &teq::track::add_note_off)
 		.def("add_all_notes_off", &teq::track::add_note_off)
 		.def("add_cc", &teq::track::add_cc)
-		.def_readwrite("events", &teq::track::m_events)
 	;
 	
 	class_<teq::track::range>("track_range")

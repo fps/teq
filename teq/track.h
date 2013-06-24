@@ -37,10 +37,29 @@ namespace teq
 		{
 			m_events.clear();
 		}
-		
-		void clear(tick position)
+
+		void copy_range(tick begin, tick end, const track &the_track)
 		{
+			auto low_it = the_track.m_events.lower_bound(begin);
 			
+			while (low_it != m_events.end() && low_it->first < end)
+			{
+				m_events.insert(std::make_pair(low_it->first, low_it->second));
+				
+				++low_it;
+			}
+		}
+		
+		void clear_range(tick begin, tick end)
+		{
+			auto low_it = m_events.lower_bound(begin);
+			
+			while (low_it != m_events.end() && low_it->first < end)
+			{
+				m_events.erase(low_it);
+				
+				low_it = m_events.lower_bound(begin);
+			}
 		}
 		
 		void add_note_on(tick position, unsigned channel, unsigned note, unsigned velocity)
