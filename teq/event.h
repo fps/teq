@@ -2,7 +2,7 @@
 #define LIBTEQ_EVENTS_HH
 
 #include <memory>
-#include <boost/concept_check.hpp>
+#include <boost/python.hpp>
 
 /* turn a numeric literal into a hex constant
 (avoids problems with leading zeroes)
@@ -37,17 +37,15 @@
 
 namespace teq
 {
-	struct event
-	{
-		virtual ~event() { }
-	};
-	
-	typedef std::shared_ptr<event> event_ptr;
-	
-	struct midi_event : event
+	struct midi_event
 	{
 		virtual unsigned size() const = 0;
 		virtual void render(unsigned char *buffer) const = 0;
+		
+		virtual ~midi_event() 
+		{
+			
+		}
 	};
 	
 	typedef std::shared_ptr<midi_event> midi_event_ptr;

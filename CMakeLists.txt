@@ -33,12 +33,17 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 find_package(PkgConfig REQUIRED)
 
+
 pkg_check_modules(JACK jack)
+pkg_check_modules(PYTHON3 python3)
 
 # BOOST
 #set(Boost_USE_STATIC_LIBS)
-#find_package(Boost COMPONENTS program_options timer filesystem system REQUIRED)
+find_package(Boost COMPONENTS python REQUIRED)
 
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
 
 #
 # BUILD TARGETS
@@ -47,8 +52,11 @@ pkg_check_modules(JACK jack)
 
 include_directories(${PROJECT_SOURCE_DIR})
 
-add_library(teq teq/teq.cc)
-target_link_libraries(teq ${JACK_LIBRARIES})
+include_directories(${JACK_INCLUDE_DIRS})
+include_directories(${PYTHON3_INCLUDE_DIRS})
+
+add_library(teq SHARED teq/teq.cc)
+target_link_libraries(teq ${JACK_LIBRARIES} ${Boost_LIBRARIES})
 
 
 

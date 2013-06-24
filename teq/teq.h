@@ -28,7 +28,7 @@ namespace teq
 	{
 		typedef std::function<void()> command;
 		
-		typedef std::shared_ptr<lart::junk<midi_track>> track_junk_ptr;
+		typedef std::shared_ptr<lart::junk<midi_track> > track_junk_ptr;
 		
 		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 1024) :
 			m_commands(command_buffer_size),
@@ -246,6 +246,13 @@ namespace teq
 		
 		friend int process_midi(jack_nframes_t, void*);
 	};
+}
+using namespace boost::python;
+
+BOOST_PYTHON_MODULE(libteq)
+{
+    class_<teq::teq>("teq", init<std::string, unsigned>())
+    ;
 }
 
 #endif
