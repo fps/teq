@@ -4,17 +4,13 @@
 #include <memory>
 #include <map>
 #include <utility>
+#include <boost/concept_check.hpp>
 
 #include <teq/event.h>
 
 namespace teq
 {
 	struct track
-	{
-		virtual ~track() { }
-	};
-	
-	struct midi_track : track
 	{
 		typedef uint64_t tick;
 		
@@ -35,7 +31,77 @@ namespace teq
 			}
 		};
 		
-		std::map<tick, midi_event_ptr> m_events;
+		std::multimap<tick, midi_event_ptr> m_events;
+		
+		void clear()
+		{
+			m_events.clear();
+		}
+		
+		void clear(tick position)
+		{
+			
+		}
+		
+		void add_note_on(tick position, unsigned channel, unsigned note, unsigned velocity)
+		{
+			m_events.insert
+			(
+				std::make_pair
+				(
+					position, 
+					std::shared_ptr<midi_note_on_event>
+					(
+						new midi_note_on_event(channel, note, velocity)
+					)
+				)
+			);
+		}
+		
+		void add_note_off(tick position, unsigned channel, unsigned note, unsigned velocity)
+		{
+			m_events.insert
+			(
+				std::make_pair
+				(
+					position, 
+					std::shared_ptr<midi_note_off_event>
+					(
+						new midi_note_off_event(channel, note, velocity)
+					)
+				)
+			);
+		}
+
+		void add_all_notes_off(tick position, unsigned channel)
+		{
+			m_events.insert
+			(
+				std::make_pair
+				(
+					position, 
+					std::shared_ptr<midi_all_notes_off_event>
+					(
+						new midi_all_notes_off_event(channel)
+					)
+				)
+			);
+		}
+
+		void add_cc(tick position, unsigned channel, unsigned cc, unsigned value)
+		{
+			m_events.insert
+			(
+				std::make_pair
+				(
+					position, 
+					std::shared_ptr<midi_cc_event>
+					(
+						new midi_cc_event(channel, cc, value)
+					)
+				)
+			);
+		}
 	};	
 }
 

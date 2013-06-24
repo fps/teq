@@ -11,7 +11,6 @@
 
 #include <jack/jack.h>
 #include <jack/midiport.h>
-#include <boost/concept_check.hpp>
 
 #include <teq/track.h>
 #include <lart/heap.h>
@@ -28,12 +27,12 @@ namespace teq
 	{
 		typedef std::function<void()> command;
 		
-		typedef std::shared_ptr<lart::junk<midi_track> > track_junk_ptr;
+		typedef std::shared_ptr<lart::junk<track> > track_junk_ptr;
 		
 		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 1024) :
 			m_commands(command_buffer_size),
 			m_client_name(client_name),
-			m_track(m_heap.add(midi_track())),
+			m_track(m_heap.add(track())),
 			m_send_all_notes_off_on_loop(true),
 			m_send_all_notes_off_on_stop(true),
 			m_last_effective_position(0)
@@ -83,7 +82,7 @@ namespace teq
 			m_commands.write(f);
 		}
 				
-		void set_track(const midi_track &track)
+		void set_track(const track &track)
 		{
 			auto new_track = m_heap.add(track);
 			
@@ -97,7 +96,7 @@ namespace teq
 			);
 		}
 		
-		void set_loop_range(const midi_track::range &range)
+		void set_loop_range(const track::range &range)
 		{
 			write_command
 			(
@@ -121,7 +120,7 @@ namespace teq
 		
 		track_junk_ptr m_track;
 		
-		midi_track::range m_loop_range;
+		track::range m_loop_range;
 		
 		jack_client_t *m_jack_client;
 		
@@ -247,12 +246,6 @@ namespace teq
 		friend int process_midi(jack_nframes_t, void*);
 	};
 }
-using namespace boost::python;
 
-BOOST_PYTHON_MODULE(libteq)
-{
-    class_<teq::teq>("teq", init<std::string, unsigned>())
-    ;
-}
 
 #endif
