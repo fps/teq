@@ -31,15 +31,15 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # BUILD DEPENDENCIES:
 #
 
+find_package(PythonLibs REQUIRED)
 find_package(PkgConfig REQUIRED)
 
 
 pkg_check_modules(JACK jack)
-pkg_check_modules(PYTHON python)
 
 # BOOST
 #set(Boost_USE_STATIC_LIBS)
-find_package(Boost COMPONENTS python REQUIRED)
+find_package(Boost COMPONENTS python3 REQUIRED)
 
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
