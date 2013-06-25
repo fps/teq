@@ -1,10 +1,10 @@
-import libteq
-r = libteq.track_range()
+import teq
+r = teq.track_range()
 r.enabled = True
 r.start = 0
 r.end = 48000
 
-t = libteq.teq("foo", 100)
+t = teq.teq("foo", 100)
 t.set_loop_range(r)
 
 tr = libteq.track()

@@ -1,7 +1,7 @@
 #include <teq/teq.h>
 
 
-BOOST_PYTHON_MODULE(libteq)
+BOOST_PYTHON_MODULE(teq)
 {
 	using namespace boost::python;
 	

@@ -55,8 +55,12 @@ include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${JACK_INCLUDE_DIRS})
 include_directories(${PYTHON_INCLUDE_DIRS})
 
-add_library(teq SHARED teq/teq.cc teq/python.cc)
+
+add_library(teq SHARED teq/teq.cc)
 target_link_libraries(teq ${JACK_LIBRARIES} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 
-
+add_library(pyteq SHARED teq/python.cc)
+set_target_properties(pyteq PROPERTIES PREFIX "")
+set_target_properties(pyteq PROPERTIES OUTPUT_NAME "teq")
+target_link_libraries(pyteq ${JACK_LIBRARIES} teq ${PYTHON_LIBRARIES})
