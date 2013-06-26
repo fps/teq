@@ -69,25 +69,6 @@ namespace teq
 			jack_client_close(m_jack_client);
 		}
 		
-		void write_command(command f)
-		{
-			if (false == m_commands.can_write())
-			{
-				throw std::runtime_error("Failed to write command");
-			}
-			
-			m_commands.write(f);
-		}
-		
-		void write_command_and_wait(command f)
-		{
-			std::unique_lock<std::mutex> lock(m_ack_mutex);
-			m_ack = false;
-			
-			write_command(f);
-			
-			m_ack_condition_variable.wait(lock, [this]() { return this->m_ack; });
-		}
 #if 0
 		void set_track(const track &track)
 		{
@@ -251,6 +232,26 @@ namespace teq
 			}			
 		}
 		
+		void write_command(command f)
+		{
+			if (false == m_commands.can_write())
+			{
+				throw std::runtime_error("Failed to write command");
+			}
+			
+			m_commands.write(f);
+		}
+		
+		void write_command_and_wait(command f)
+		{
+			std::unique_lock<std::mutex> lock(m_ack_mutex);
+			m_ack = false;
+			
+			write_command(f);
+			
+			m_ack_condition_variable.wait(lock, [this]() { return this->m_ack; });
+		}
+		
 		void update_tracks(tracks_junk_ptr new_tracks)
 		{
 			write_command_and_wait
@@ -314,69 +315,73 @@ namespace teq
 			
 			jack_position_t transport_position;
 			
-			void *port_buffer = jack_port_get_buffer(m_jack_port, nframes);
-
 			const jack_transport_state_t transport_state = jack_transport_query(m_jack_client, &transport_position);
-			
-			if 
-			(
-				m_send_all_notes_off_on_stop &&
-				m_last_transport_state == JackTransportRolling && 
-				transport_state != JackTransportRolling
-			)
-			{
-				midi_all_notes_off_event e(0);
-				render_event(e, port_buffer);
-			}
-			
-			m_last_transport_state = transport_state;
-			
-			if (JackTransportRolling != transport_state)
-			{
-				return 0;
-			}
 
-			
-			jack_midi_clear_buffer(port_buffer);
-			
-			auto events_it = m_track->t.m_events.lower_bound(effective_position(transport_position.frame, 0));
-			
-			// std::cout << ":";
-			for (jack_nframes_t frame = 0; frame < nframes; ++frame)
+			const tracks_map &tracks = m_tracks->t;;
+			for (auto track_it = tracks.begin(); track_it != tracks.end(); ++track_it)
 			{
-				const jack_nframes_t effective_frame = effective_position(transport_position.frame, frame);
-				
+				void *port_buffer = jack_port_get_buffer(track_it->second->second, nframes);
+
 				if 
 				(
-					m_send_all_notes_off_on_loop && 
-					effective_frame != m_last_effective_position + 1
+					m_send_all_notes_off_on_stop &&
+					m_last_transport_state == JackTransportRolling && 
+					transport_state != JackTransportRolling
 				)
 				{
 					midi_all_notes_off_event e(0);
 					render_event(e, port_buffer);
 				}
 				
-				m_last_effective_position = effective_frame;
+				m_last_transport_state = transport_state;
 				
-				if 
-				(
-					m_loop_range.m_enabled && 
-					effective_frame == m_loop_range.m_start && 
-					frame != 0
-				)
+				if (JackTransportRolling != transport_state)
 				{
-					events_it = m_track->t.m_events.lower_bound(effective_frame);
+					return 0;
 				}
+
 				
-				while 
-				(
-					events_it != m_track->t.m_events.end() && 
-					events_it->first == effective_frame
-				)
+				jack_midi_clear_buffer(port_buffer);
+				
+				auto events_it = m_track->t.m_events.lower_bound(effective_position(transport_position.frame, 0));
+				
+				// std::cout << ":";
+				for (jack_nframes_t frame = 0; frame < nframes; ++frame)
 				{
-					render_event(*(events_it->second), port_buffer);
+					const jack_nframes_t effective_frame = effective_position(transport_position.frame, frame);
 					
-					++events_it;
+					if 
+					(
+						m_send_all_notes_off_on_loop && 
+						effective_frame != m_last_effective_position + 1
+					)
+					{
+						midi_all_notes_off_event e(0);
+						render_event(e, port_buffer);
+					}
+					
+					m_last_effective_position = effective_frame;
+					
+					if 
+					(
+						m_loop_range.m_enabled && 
+						effective_frame == m_loop_range.m_start && 
+						frame != 0
+					)
+					{
+						events_it = m_track->t.m_events.lower_bound(effective_frame);
+					}
+					
+					while 
+					(
+						events_it != m_track->t.m_events.end() && 
+						events_it->first == effective_frame
+					)
+					{
+						render_event(*(events_it->second), port_buffer);
+						
+						++events_it;
+					}
 				}
 			}
 			
