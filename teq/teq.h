@@ -41,11 +41,9 @@ namespace teq
 			m_commands(command_buffer_size),
 			m_ack(false),
 			m_client_name(client_name),
-			m_track(m_heap.add(track())),
 			m_tracks(m_heap.add(tracks_map())),
 			m_send_all_notes_off_on_loop(true),
-			m_send_all_notes_off_on_stop(true),
-			m_last_effective_position(0)
+			m_send_all_notes_off_on_stop(true)
 		{
 			init();
 		}
@@ -54,9 +52,9 @@ namespace teq
 			m_commands(other.m_commands.size),
 			m_ack(false),
 			m_client_name(other.m_client_name),
+			m_tracks(other.m_tracks), // TODO: do the right thing here
 			m_send_all_notes_off_on_loop(other.m_send_all_notes_off_on_loop),
-			m_send_all_notes_off_on_stop(other.m_send_all_notes_off_on_stop),
-			m_last_effective_position(0)
+			m_send_all_notes_off_on_stop(other.m_send_all_notes_off_on_stop)
 		{
 			init();
 			
@@ -175,23 +173,17 @@ namespace teq
 
 		std::string m_client_name;
 		
-		track_junk_ptr m_track;
-		
 		tracks_junk_ptr m_tracks;
 		
 		track::loop_range m_loop_range;
 		
 		jack_client_t *m_jack_client;
 		
-		jack_port_t *m_jack_port;
-		
 		jack_transport_state_t m_last_transport_state;
 		
 		bool m_send_all_notes_off_on_loop;
 		
 		bool m_send_all_notes_off_on_stop;
-		
-		jack_nframes_t m_last_effective_position;
 		
 	protected:
 
@@ -204,15 +196,7 @@ namespace teq
 			{
 				throw std::runtime_error("Failed to open jack client");
 			}
-			
-			m_jack_port = jack_port_register(m_jack_client, "out", JACK_DEFAULT_MIDI_TYPE, JackPortIsOutput, 0);
-			
-			if (0 == m_jack_port)
-			{
-				jack_client_close(m_jack_client);
-				throw std::runtime_error("Failed to register jack output port");
-			}
-			
+						
 			int set_process_return_code = jack_set_process_callback(m_jack_client, process_midi, this);
 			
 			if (0 != set_process_return_code)
@@ -344,8 +328,6 @@ namespace teq
 			for (auto track_it = tracks.begin(); track_it != tracks.end(); ++track_it)
 			{
 				void *port_buffer = jack_port_get_buffer(track_it->second->second, nframes);
-
-
 				
 				jack_midi_clear_buffer(port_buffer);
 				
@@ -358,35 +340,26 @@ namespace teq
 				{
 					const jack_nframes_t effective_frame = effective_position(transport_position.frame, frame);
 					
+					const jack_nframes_t last_effective_frame = effective_position(transport_position.frame, frame - 1);
+					
 					if 
 					(
 						m_send_all_notes_off_on_loop && 
-						effective_frame != m_last_effective_position + 1
-					)
-					{
-						midi_all_notes_off_event e(0);
-						render_event(e, port_buffer, frame);
-					}
-					
-					m_last_effective_position = effective_frame;
-					
-					if 
-					(
-						m_loop_range.m_enabled && 
-						effective_frame == m_loop_range.m_start && 
-						frame != 0
+						effective_frame != last_effective_frame + 1
 					)
 					{
 						events_it = events.lower_bound(effective_frame);
+						midi_all_notes_off_event e(0);
+						render_event(e, port_buffer, frame);
 					}
-					
+										
 					while 
 					(
 						events_it != events.end() && 
 						events_it->first == effective_frame
 					)
 					{
-						render_event(*(events_it->second), port_buffer, effective_frame);
+						render_event(*(events_it->second), port_buffer, frame);
 						
 						++events_it;
 					}
