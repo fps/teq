@@ -286,9 +286,9 @@ namespace teq
 			throw std::logic_error("This should never happen");
 		}
 		
-		void render_event(const midi_event &e, void *port_buffer)
+		void render_event(const midi_event &e, void *port_buffer, jack_nframes_t time)
 		{
-			jack_midi_data_t *event_buffer = jack_midi_event_reserve(port_buffer, 0, e.size());
+			jack_midi_data_t *event_buffer = jack_midi_event_reserve(port_buffer, time, e.size());
 			e.render(event_buffer);
 		}
 		
@@ -313,37 +313,45 @@ namespace teq
 				// locking failed
 			}
 			
+			const tracks_map &tracks = m_tracks->t;;
+
 			jack_position_t transport_position;
 			
 			const jack_transport_state_t transport_state = jack_transport_query(m_jack_client, &transport_position);
 
-			const tracks_map &tracks = m_tracks->t;;
+			if 
+			(
+				m_send_all_notes_off_on_stop &&
+				m_last_transport_state == JackTransportRolling && 
+				transport_state != JackTransportRolling
+			)
+			{
+				for (auto track_it = tracks.begin(); track_it != tracks.end(); ++track_it)
+				{
+					void *port_buffer = jack_port_get_buffer(track_it->second->second, nframes);
+					midi_all_notes_off_event e(0);
+					render_event(e, port_buffer, 0);
+				}
+			}
+			
+			m_last_transport_state = transport_state;
+			
+			if (JackTransportRolling != transport_state)
+			{
+				return 0;
+			}
+			
 			for (auto track_it = tracks.begin(); track_it != tracks.end(); ++track_it)
 			{
 				void *port_buffer = jack_port_get_buffer(track_it->second->second, nframes);
 
-				if 
-				(
-					m_send_all_notes_off_on_stop &&
-					m_last_transport_state == JackTransportRolling && 
-					transport_state != JackTransportRolling
-				)
-				{
-					midi_all_notes_off_event e(0);
-					render_event(e, port_buffer);
-				}
-				
-				m_last_transport_state = transport_state;
-				
-				if (JackTransportRolling != transport_state)
-				{
-					return 0;
-				}
 
 				
 				jack_midi_clear_buffer(port_buffer);
 				
-				auto events_it = m_track->t.m_events.lower_bound(effective_position(transport_position.frame, 0));
+				const track::events_map &events = track_it->second->first.m_events;
+				
+				auto events_it = events.lower_bound(effective_position(transport_position.frame, 0));
 				
 				// std::cout << ":";
 				for (jack_nframes_t frame = 0; frame < nframes; ++frame)
@@ -357,7 +365,7 @@ namespace teq
 					)
 					{
 						midi_all_notes_off_event e(0);
-						render_event(e, port_buffer);
+						render_event(e, port_buffer, frame);
 					}
 					
 					m_last_effective_position = effective_frame;
@@ -369,16 +377,16 @@ namespace teq
 						frame != 0
 					)
 					{
-						events_it = m_track->t.m_events.lower_bound(effective_frame);
+						events_it = events.lower_bound(effective_frame);
 					}
 					
 					while 
 					(
-						events_it != m_track->t.m_events.end() && 
+						events_it != events.end() && 
 						events_it->first == effective_frame
 					)
 					{
-						render_event(*(events_it->second), port_buffer);
+						render_event(*(events_it->second), port_buffer, effective_frame);
 						
 						++events_it;
 					}

@@ -14,6 +14,8 @@ namespace teq
 	{
 		typedef uint64_t tick;
 		
+		typedef std::multimap<tick, midi_event_ptr> events_map;
+		
 		struct range
 		{
 			tick m_start;
@@ -40,7 +42,7 @@ namespace teq
 			}
 		};
 		
-		std::multimap<tick, midi_event_ptr> m_events;
+		events_map m_events;
 		
 		~track()
 		{
