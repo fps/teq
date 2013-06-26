@@ -27,14 +27,16 @@ BOOST_PYTHON_MODULE(teq)
 		.def("add_cc", &teq::track::add_cc)
 	;
 	
-	class_<teq::track::range>("track_range")
-		.def_readwrite("enabled", &teq::track::range::m_enabled)
-		.def_readwrite("start", &teq::track::range::m_start)
-		.def_readwrite("end", &teq::track::range::m_end)
+	class_<teq::track::loop_range>("loop_range")
+		.def_readwrite("enabled", &teq::track::loop_range::m_enabled)
+		.def_readwrite("start", &teq::track::loop_range::m_start)
+		.def_readwrite("end", &teq::track::loop_range::m_end)
 	;
 	
-	class_<teq::teq>("teq", init<std::string, unsigned>())
+	class_<teq::teq>("teq", init<optional<std::string, unsigned>>())
 		.def("set_loop_range", &teq::teq::set_loop_range)
 		.def("set_track", &teq::teq::set_track)
+		.def("remove_track", &teq::teq::remove_track)
+		.def("gc", &teq::teq::gc)
     ;
 }

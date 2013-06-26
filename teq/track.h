@@ -4,7 +4,7 @@
 #include <memory>
 #include <map>
 #include <utility>
-#include <boost/concept_check.hpp>
+#include <iostream>
 
 #include <teq/event.h>
 
@@ -20,11 +20,20 @@ namespace teq
 			
 			tick m_end;
 			
+			range(tick start, tick end) :
+				m_start(start),
+				m_end(end)
+			{
+			
+			}
+		};
+		
+		struct loop_range : range
+		{
 			bool m_enabled;
 			
-			range(tick start = 0, tick end = 0, bool enabled = false):
-				m_start(start),
-				m_end(end),
+			loop_range(tick start = 0, tick end = 0, bool enabled = false) :
+				range(start, end),
 				m_enabled(enabled)
 			{
 				
@@ -32,6 +41,11 @@ namespace teq
 		};
 		
 		std::multimap<tick, midi_event_ptr> m_events;
+		
+		~track()
+		{
+			// std::cout << "~track" << std::endl;
+		}
 		
 		void clear()
 		{
