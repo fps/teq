@@ -37,6 +37,8 @@ BOOST_PYTHON_MODULE(teq)
 		.def("set_loop_range", &teq::teq::set_loop_range)
 		.def("set_track", &teq::teq::set_track)
 		.def("remove_track", &teq::teq::remove_track)
+		.def("set_send_all_notes_off_on_loop", &teq::teq::set_send_all_notes_off_on_loop)
+		.def("set_send_all_notes_off_on_stop", &teq::teq::set_send_all_notes_off_on_stop)
 		.def("gc", &teq::teq::gc)
     ;
 }

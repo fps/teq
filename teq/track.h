@@ -130,9 +130,9 @@ namespace teq
 				std::make_pair
 				(
 					position, 
-					std::shared_ptr<midi_cc_event>
+					std::make_shared<midi_cc_event>
 					(
-						new midi_cc_event(channel, cc, value)
+						channel, cc, value
 					)
 				)
 			);

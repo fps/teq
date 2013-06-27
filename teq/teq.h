@@ -52,13 +52,11 @@ namespace teq
 			m_commands(other.m_commands.size),
 			m_ack(false),
 			m_client_name(other.m_client_name),
-			m_tracks(other.m_tracks), // TODO: do the right thing here
+			m_tracks(other.m_tracks), 
 			m_send_all_notes_off_on_loop(other.m_send_all_notes_off_on_loop),
 			m_send_all_notes_off_on_stop(other.m_send_all_notes_off_on_stop)
 		{
 			init();
-			
-			// TODO: set_track();
 		}
 	
 		~teq()
@@ -67,22 +65,28 @@ namespace teq
 			jack_client_close(m_jack_client);
 		}
 		
-#if 0
-		void set_track(const track &track)
+		void set_send_all_notes_off_on_loop(bool on)
 		{
-			auto new_track = m_heap.add(track);
-			
 			write_command_and_wait
 			(
-				[this, new_track]() mutable
+				[this, on]()
 				{
-					this->m_track = new_track; 
-					new_track.reset();
+					m_send_all_notes_off_on_loop = on;
 				}
 			);
 		}
-#endif
-
+		
+		void set_send_all_notes_off_on_stop(bool on)
+		{
+			write_command_and_wait
+			(
+				[this, on]()
+				{
+					m_send_all_notes_off_on_stop = on;
+				}
+			);
+		}
+		
 		void set_track(const std::string &name, const track &track)
 		{
 			auto new_tracks = m_heap.add(tracks_map(m_tracks->t));
@@ -352,7 +356,7 @@ namespace teq
 						midi_all_notes_off_event e(0);
 						render_event(e, port_buffer, frame);
 					}
-										
+
 					while 
 					(
 						events_it != events.end() && 
