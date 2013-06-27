@@ -4,6 +4,12 @@
 #include <memory>
 #include <boost/python.hpp>
 
+/* Binary constant generator macro
+By Tom Torfs - donated to the public domain
+*/
+
+/* All macro's evaluate to compile-time constants */
+
 /* turn a numeric literal into a hex constant
 (avoids problems with leading zeroes)
 8-bit constants max value 0x11111111, always fits in unsigned long
