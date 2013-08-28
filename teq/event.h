@@ -2,7 +2,6 @@
 #define LIBTEQ_EVENTS_HH
 
 #include <memory>
-#include <boost/python.hpp>
 
 /* Binary constant generator macro
 By Tom Torfs - donated to the public domain
@@ -91,7 +90,7 @@ namespace teq
 			
 			virtual void render(unsigned char *buffer) const
 			{
-				buffer[0] = B8(10010000) + m_channel;
+				buffer[0] = B8(10010000) | m_channel;
 				buffer[1] = m_note;
 				buffer[2] = m_velocity;
 			}
@@ -119,7 +118,7 @@ namespace teq
 			
 			virtual void render(unsigned char *buffer) const
 			{
-				buffer[0] = B8(10000000) + m_channel;
+				buffer[0] = B8(10000000) | m_channel;
 				buffer[1] = m_note;
 				buffer[2] = m_velocity;
 			}
@@ -147,7 +146,7 @@ namespace teq
 			
 			virtual void render(unsigned char *buffer) const 
 			{
-				buffer[0] = B8(10110000) + m_channel;
+				buffer[0] = B8(10110000) | m_channel;
 				buffer[1] = m_cc;
 				buffer[2] = m_value;
 			}

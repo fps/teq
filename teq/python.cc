@@ -1,5 +1,6 @@
 #include <teq/teq.h>
 
+#include <boost/python.hpp>
 
 BOOST_PYTHON_MODULE(teq)
 {
