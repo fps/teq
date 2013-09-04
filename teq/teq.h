@@ -14,9 +14,12 @@
 #include <jack/jack.h>
 #include <jack/midiport.h>
 
-#include <teq/track.h>
 #include <lart/heap.h>
 #include <lart/ringbuffer.h>
+
+#include <teq/event.h>
+#include <teq/midi_event.h>
+#include <teq/song.h>
 
 namespace teq
 {
@@ -29,19 +32,45 @@ namespace teq
 	{
 		typedef std::function<void()> command;
 		
-		typedef std::pair<track, jack_port_t *> track_with_port;
+		typedef uint64_t tick;
+
+		struct range
+		{
+			tick m_start;
+			
+			tick m_end;
+			
+			range(tick start, tick end) :
+				m_start(start),
+				m_end(end)
+			{
+			
+			}
+		};
 		
-		typedef std::map<std::string, std::shared_ptr<track_with_port>> tracks_map;
+		struct loop_range : range
+		{
+			bool m_enabled;
+			
+			loop_range(tick start = 0, tick end = 0, bool enabled = false) :
+				range(start, end),
+				m_enabled(enabled)
+			{
+				
+			}
+		};
 		
-		typedef std::shared_ptr<lart::junk<tracks_map>> tracks_junk_ptr;
+		enum transport_state { STOPPED, PLAYING };
 		
-		typedef std::shared_ptr<lart::junk<track> > track_junk_ptr;
+		enum transport_source { INTERNAL, JACK_TRANSPORT };
 		
 		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 128) :
 			m_commands(command_buffer_size),
 			m_ack(false),
 			m_client_name(client_name),
-			m_tracks(m_heap.add(tracks_map())),
+			m_transport_state(STOPPED),
+			m_transport_source(INTERNAL),
+			m_transport_position(0),
 			m_send_all_notes_off_on_loop(true),
 			m_send_all_notes_off_on_stop(true)
 		{
@@ -52,7 +81,9 @@ namespace teq
 			m_commands(other.m_commands.size),
 			m_ack(false),
 			m_client_name(other.m_client_name),
-			m_tracks(other.m_tracks), 
+			m_transport_state(STOPPED),
+			m_transport_source(INTERNAL),
+			m_transport_position(0),
 			m_send_all_notes_off_on_loop(other.m_send_all_notes_off_on_loop),
 			m_send_all_notes_off_on_stop(other.m_send_all_notes_off_on_stop)
 		{
@@ -86,6 +117,19 @@ namespace teq
 				}
 			);
 		}
+		
+#if 0
+		void add_track(const std::string &track_name);
+		void remove_track(const std::string &track_name);
+		
+		void insert_midi_column(const std::string track_name, unsigned index);
+		void remove_midi_column(const std::string track_name, unsigned index);
+		unsigned number_of_midi_columns(const std::string track_name);
+		
+		void insert_cv_column(const std::string track_name, unsigned index);
+		void remove_cv_column(const std::string track_name, unsigned index);
+		unsigned number_of_cv_columns(const std::string track_name);
+		
 		
 		void set_track(const std::string &name, const track &track)
 		{
@@ -146,14 +190,59 @@ namespace teq
 			
 			jack_port_unregister(m_jack_client, port);
 		}
-		
-		void set_loop_range(const track::loop_range &range)
+#endif
+
+		void set_loop_range(const loop_range &range)
 		{
 			write_command_and_wait
 			(
 				[this, range]()
 				{
 					this->m_loop_range = range;
+				}
+			);
+		}
+		
+		void set_global_tempo(float tempo)
+		{
+			write_command_and_wait
+			(
+				[this, tempo]()
+				{
+					this->m_tempo = tempo;
+				}
+			);
+		}	
+		
+		void set_transport_state(transport_state state)
+		{
+			write_command_and_wait
+			(
+				[this, state]()
+				{
+					this->m_transport_state = state;
+				}
+			);
+		}
+		
+		void set_transport_position(tick position)
+		{
+			write_command_and_wait
+			(
+				[this, position]()
+				{
+					this->m_transport_position = position;
+				}
+			);
+		}
+		
+		void set_transport_source(transport_source source)
+		{
+			write_command_and_wait
+			(
+				[this, source]()
+				{
+					this->m_transport_source = source;
 				}
 			);
 		}
@@ -175,15 +264,28 @@ namespace teq
 		
 		bool m_ack;
 
+		
 		std::string m_client_name;
-		
-		tracks_junk_ptr m_tracks;
-		
-		track::loop_range m_loop_range;
 		
 		jack_client_t *m_jack_client;
 		
 		jack_transport_state_t m_last_transport_state;
+		
+		song_ptr m_song;
+		
+#if 0		
+		tracks_junk_ptr m_tracks;
+#endif
+		
+		loop_range m_loop_range;
+		
+		float m_tempo;
+		
+		transport_state m_transport_state;
+		
+		transport_source m_transport_source;
+		
+		tick m_transport_position;
 		
 		bool m_send_all_notes_off_on_loop;
 		
@@ -239,7 +341,8 @@ namespace teq
 			
 			m_ack_condition_variable.wait(lock, [this]() { return this->m_ack; });
 		}
-		
+
+#if 0
 		void update_tracks(tracks_junk_ptr new_tracks)
 		{
 			write_command_and_wait
@@ -251,7 +354,8 @@ namespace teq
 				}
 			);
 		}
-		
+#endif
+
 		inline jack_nframes_t effective_position(jack_nframes_t transport_frame, jack_nframes_t process_frame)
 		{
 			const jack_nframes_t frame = transport_frame + process_frame;
@@ -301,6 +405,7 @@ namespace teq
 				// locking failed
 			}
 			
+#if 0
 			const tracks_map &tracks = m_tracks->t;;
 
 			jack_position_t transport_position;
@@ -328,7 +433,7 @@ namespace teq
 			{
 				return 0;
 			}
-			
+
 			for (auto track_it = tracks.begin(); track_it != tracks.end(); ++track_it)
 			{
 				void *port_buffer = jack_port_get_buffer(track_it->second->second, nframes);
@@ -369,7 +474,7 @@ namespace teq
 					}
 				}
 			}
-			
+#endif	
 			return 0;
 		}
 		
