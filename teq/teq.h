@@ -259,16 +259,16 @@ namespace teq
 			return new_song;
 		}
 		
-		void insert_midi_track(const std::string &track_name, unsigned index)
+		bool insert_midi_track(const std::string &track_name, unsigned index)
 		{
 			if (true == track_name_exists(track_name))
 			{
-				return;
+				return false;
 			}
 			
 			if (index > number_of_tracks())
 			{
-				return;
+				return false;
 			}
 			
 			song_ptr new_song = copy_and_prepare_song_for_track_insert();
@@ -284,24 +284,26 @@ namespace teq
 			
 			if (0 == port)
 			{
-				return;
+				return false;
 			}
 			
 			insert_track<midi_track, global_midi_track_properties>(new_song, index, (void *)port);
 
 			update_song(new_song);
+			
+			return true;
 		}
 		
-		void insert_cv_track(const std::string &track_name, unsigned index)
+		bool insert_cv_track(const std::string &track_name, unsigned index)
 		{
 			if (true == track_name_exists(track_name))
 			{
-				return;
+				return false;
 			}
 			
 			if (index > number_of_tracks())
 			{
-				return;
+				return false;
 			}
 			
 			song_ptr new_song = copy_and_prepare_song_for_track_insert();
@@ -317,24 +319,26 @@ namespace teq
 			
 			if (0 == port)
 			{
-				return;
+				return false;
 			}
 			
 			insert_track<cv_track, global_cv_track_properties>(new_song, index, (void*)port);
 
 			update_song(new_song);
+			
+			return true;
 		}
 		
-		void insert_control_track(const std::string &track_name, unsigned index)
+		bool insert_control_track(const std::string &track_name, unsigned index)
 		{
 			if (true == track_name_exists(track_name))
 			{
-				return;
+				return false;
 			}
 			
 			if (index > number_of_tracks())
 			{
-				return;
+				return false;
 			}
 			
 			song_ptr new_song = copy_and_prepare_song_for_track_insert();
@@ -342,6 +346,8 @@ namespace teq
 			insert_track<control_track, global_control_track_properties>(new_song, index, (void *)nullptr);
 
 			update_song(new_song);
+			
+			return true;
 		}
 		
 		//! For internal use only!
@@ -372,15 +378,15 @@ namespace teq
 			return m_song->m_tracks->size();
 		}
 		
-		void remove_track(unsigned index);
+		bool remove_track(unsigned index);
 		
-		void move_track(unsigned from, unsigned to);
+		bool move_track(unsigned from, unsigned to);
 		
-		void insert_pattern(unsigned index, unsigned pattern_length)
+		bool insert_pattern(unsigned index, unsigned pattern_length)
 		{
 			if (index > m_song->m_patterns->size())
 			{
-				return;
+				return false;
 			}
 			
 			pattern new_pattern;
@@ -410,13 +416,15 @@ namespace teq
 					new_pattern_list.reset();
 				}
 			);
+			
+			return true;
 		}
 	
-		void remove_pattern(unsigned index);
+		bool remove_pattern(unsigned index);
 		
-		void move_pattern(unsigned from, unsigned to);
+		bool move_pattern(unsigned from, unsigned to);
 		
-		void clear_midi_event(unsigned pattern_index, unsigned track_index, unsigned column_index, unsigned tick)
+		bool clear_midi_event(unsigned pattern_index, unsigned track_index, unsigned column_index, unsigned tick)
 		{
 			midi_event_ptr new_midi_event;
 			
@@ -427,10 +435,12 @@ namespace teq
 					auto track_ptr = std::dynamic_pointer_cast<midi_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
 					track_ptr->m_columns[column_index].m_events[tick] = new_midi_event;
 				}
-			);			
+			);
+			
+			return true;
 		}
 		
-		void set_midi_event
+		bool set_midi_event
 		(
 			unsigned pattern_index, 
 			unsigned track_index, 
@@ -443,7 +453,7 @@ namespace teq
 		{
 			if (pattern_index >= m_song->m_patterns->size())
 			{
-				return;
+				return false;
 			}
 			
 			midi_event_ptr new_midi_event(new midi_event);
@@ -465,9 +475,11 @@ namespace teq
 					new_midi_event.reset();
 				}
 			);
+			
+			return true;
 		}
 		
-		void clear_cv_event(unsigned pattern_index, unsigned track_index, unsigned tick)
+		bool clear_cv_event(unsigned pattern_index, unsigned track_index, unsigned tick)
 		{
 			cv_event_ptr new_cv_event;
 			
@@ -478,10 +490,12 @@ namespace teq
 					auto track_ptr = std::dynamic_pointer_cast<cv_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
 					track_ptr->m_cv_column.m_events[tick] = new_cv_event;
 				}
-			);			
+			);
+			
+			return true;
 		}
 		
-		void set_cv_event
+		bool set_cv_event
 		(
 			unsigned pattern_index, 
 			unsigned track_index, 
@@ -493,7 +507,7 @@ namespace teq
 		{
 			if (pattern_index >= m_song->m_patterns->size())
 			{
-				return;
+				return false;
 			}
 			
 			cv_event_ptr new_cv_event(new cv_event);
@@ -515,9 +529,11 @@ namespace teq
 					new_cv_event.reset();
 				}
 			);
+			
+			return true;
 		}
 		
-		void clear_control_event(unsigned pattern_index, unsigned track_index, unsigned tick)
+		bool clear_control_event(unsigned pattern_index, unsigned track_index, unsigned tick)
 		{
 			control_event_ptr new_control_event;
 			
@@ -528,10 +544,11 @@ namespace teq
 					auto track_ptr = std::dynamic_pointer_cast<control_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
 					track_ptr->m_control_column.m_events[tick] = new_control_event;
 				}
-			);			
+			);	
+			return true;
 		}
 		
-		void set_control_event
+		bool set_control_event
 		(
 			unsigned pattern_index, 
 			unsigned track_index, 
@@ -543,7 +560,7 @@ namespace teq
 		{
 			if (pattern_index >= m_song->m_patterns->size())
 			{
-				return;
+				return false;
 			}
 			
 			control_event_ptr new_control_event(new control_event);
@@ -565,6 +582,8 @@ namespace teq
 					new_control_event.reset();
 				}
 			);
+			
+			return true;
 		}
 #if 0
 		void add_track(const std::string &track_name);
