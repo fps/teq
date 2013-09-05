@@ -287,13 +287,7 @@ namespace teq
 				return;
 			}
 			
-			new_song->m_tracks->insert
-			(
-				new_song->m_tracks->begin() + index, 
-				std::make_pair(global_track_properties_ptr(new global_midi_track_properties()), (void *)port)
-			);
-			
-			insert_track<midi_track>(new_song, index);
+			insert_track<midi_track, global_midi_track_properties>(new_song, index, (void *)port);
 
 			update_song(new_song);
 		}
@@ -326,13 +320,7 @@ namespace teq
 				return;
 			}
 			
-			new_song->m_tracks->insert
-			(
-				new_song->m_tracks->begin() + index, 
-				std::make_pair(global_track_properties_ptr(new global_cv_track_properties()), (void *)port)
-			);
-			
-			insert_track<cv_track>(new_song, index);
+			insert_track<cv_track, global_cv_track_properties>(new_song, index, (void*)port);
 
 			update_song(new_song);
 		}
@@ -351,27 +339,27 @@ namespace teq
 			
 			song_ptr new_song = copy_and_prepare_song_for_track_insert();
 
-			new_song->m_tracks->insert
-			(
-				new_song->m_tracks->begin() + index, 
-				std::make_pair(global_track_properties_ptr(new global_control_track_properties()), (void *)nullptr)
-			);
-			
-			insert_track<control_track>(new_song, index);
+			insert_track<control_track, global_control_track_properties>(new_song, index, (void *)nullptr);
 
 			update_song(new_song);
 		}
 		
 		//! For internal use only!
-		template <class T>
-		void insert_track(song_ptr new_song, unsigned index)
+		template <class TrackType, class TrackPropertiesType>
+		void insert_track(song_ptr new_song, unsigned index, void *port)
 		{
+			new_song->m_tracks->insert
+			(
+				new_song->m_tracks->begin() + index, 
+				std::make_pair(global_track_properties_ptr(new TrackPropertiesType()), port)
+			);
+			
 			for (auto &it : *new_song->m_patterns)
 			{
 				it.m_tracks.insert
 				(
 					it.m_tracks.begin() + index,
-					track_ptr(new T)
+					track_ptr(new TrackType)
 				);
 				
 				(*(it.m_tracks.begin() + index))->set_length(it.m_length);
