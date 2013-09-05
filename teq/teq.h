@@ -298,9 +298,69 @@ namespace teq
 			update_song(new_song);
 		}
 		
-		void insert_cv_track(const std::string &track_name);
+		void insert_cv_track(const std::string &track_name, unsigned index)
+		{
+			if (true == track_name_exists(track_name))
+			{
+				return;
+			}
+			
+			if (index > number_of_tracks())
+			{
+				return;
+			}
+			
+			song_ptr new_song = copy_and_prepare_song_for_track_insert();
+			
+			jack_port_t *port = jack_port_register
+			(
+				m_jack_client, 
+				track_name.c_str(), 
+				JACK_DEFAULT_AUDIO_TYPE, 
+				JackPortIsOutput | JackPortIsTerminal,
+				0
+			);
+			
+			if (0 == port)
+			{
+				return;
+			}
+			
+			new_song->m_tracks->insert
+			(
+				new_song->m_tracks->begin() + index, 
+				std::make_pair(global_track_properties_ptr(new global_cv_track_properties()), (void *)port)
+			);
+			
+			insert_track<cv_track>(new_song, index);
+
+			update_song(new_song);
+		}
 		
-		void insert_control_track(const std::string &name);
+		void insert_control_track(const std::string &track_name, unsigned index)
+		{
+			if (true == track_name_exists(track_name))
+			{
+				return;
+			}
+			
+			if (index > number_of_tracks())
+			{
+				return;
+			}
+			
+			song_ptr new_song = copy_and_prepare_song_for_track_insert();
+
+			new_song->m_tracks->insert
+			(
+				new_song->m_tracks->begin() + index, 
+				std::make_pair(global_track_properties_ptr(new global_control_track_properties()), (void *)nullptr)
+			);
+			
+			insert_track<control_track>(new_song, index);
+
+			update_song(new_song);			
+		}
 		
 		template <class T>
 		void insert_track(song_ptr new_song, unsigned index)
@@ -367,9 +427,18 @@ namespace teq
 		
 		void move_pattern(unsigned from, unsigned to);
 		
-		void clear_event(unsigned pattern_index, unsigned track_index, unsigned tick, unsigned column_index)
+		void clear_midi_event(unsigned pattern_index, unsigned track_index, unsigned column_index, unsigned tick)
 		{
+			midi_event_ptr new_midi_event;
 			
+			write_command_and_wait
+			(
+				[this, new_midi_event, pattern_index, track_index, column_index, tick] () mutable
+				{
+					auto track_ptr = std::dynamic_pointer_cast<midi_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
+					track_ptr->m_columns[column_index].m_events[tick] = new_midi_event;
+				}
+			);			
 		}
 		
 		void set_midi_event
@@ -407,7 +476,106 @@ namespace teq
 					new_midi_event.reset();
 				}
 			);
-
+		}
+		
+		void clear_cv_event(unsigned pattern_index, unsigned track_index, unsigned tick)
+		{
+			cv_event_ptr new_cv_event;
+			
+			write_command_and_wait
+			(
+				[this, new_cv_event, pattern_index, track_index, tick] () mutable
+				{
+					auto track_ptr = std::dynamic_pointer_cast<cv_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
+					track_ptr->m_cv_column.m_events[tick] = new_cv_event;
+				}
+			);			
+		}
+		
+		void set_cv_event
+		(
+			unsigned pattern_index, 
+			unsigned track_index, 
+			unsigned tick, 
+			cv_event::type type, 
+			unsigned value1, 
+			unsigned value2
+		)
+		{
+			if (pattern_index >= m_song->m_patterns->size())
+			{
+				return;
+			}
+			
+			cv_event_ptr new_cv_event(new cv_event);
+			
+			new_cv_event->m_type = type;
+			
+			new_cv_event->m_value1 = value1;
+			
+			new_cv_event->m_value2 = value2;
+			
+			m_event_heap.add(new_cv_event);
+			
+			write_command_and_wait
+			(
+				[this, new_cv_event, pattern_index, track_index, tick] () mutable
+				{
+					auto track_ptr = std::dynamic_pointer_cast<cv_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
+					track_ptr->m_cv_column.m_events[tick] = new_cv_event;
+					new_cv_event.reset();
+				}
+			);
+		}
+		
+		void clear_control_event(unsigned pattern_index, unsigned track_index, unsigned tick)
+		{
+			control_event_ptr new_control_event;
+			
+			write_command_and_wait
+			(
+				[this, new_control_event, pattern_index, track_index, tick] () mutable
+				{
+					auto track_ptr = std::dynamic_pointer_cast<control_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
+					track_ptr->m_control_column.m_events[tick] = new_control_event;
+				}
+			);			
+		}
+		
+		void set_control_event
+		(
+			unsigned pattern_index, 
+			unsigned track_index, 
+			unsigned tick, 
+			control_event::type type, 
+			unsigned value1, 
+			unsigned value2
+		)
+		{
+			if (pattern_index >= m_song->m_patterns->size())
+			{
+				return;
+			}
+			
+			control_event_ptr new_control_event(new control_event);
+			
+			new_control_event->m_type = type;
+			
+			new_control_event->m_value1 = value1;
+			
+			new_control_event->m_value2 = value2;
+			
+			m_event_heap.add(new_control_event);
+			
+			write_command_and_wait
+			(
+				[this, new_control_event, pattern_index, track_index, tick] () mutable
+				{
+					auto track_ptr = std::dynamic_pointer_cast<control_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
+					track_ptr->m_control_column.m_events[tick] = new_control_event;
+					new_control_event.reset();
+				}
+			);
 		}
 #if 0
 		void add_track(const std::string &track_name);

@@ -14,7 +14,7 @@ namespace teq
 	
 	struct control_event : event
 	{
-		enum type { TEMPO, RELATIVE_TEMPO };
+		enum type { GLOBAL_TEMPO_ONE_SHOT, RELATIVE_TEMPO_ONE_SHOT, GLOBAL_TEMPO_INTERVAL, RELATIVE_TEMPO_INTERVAL };
 		
 		type m_type;
 		
@@ -29,6 +29,10 @@ namespace teq
 
 	struct cv_event : event
 	{
+		enum type { ONE_SHOT, INTERVAL };
+		
+		type m_type;
+		
 		//! Start value
 		float m_value1;
 		

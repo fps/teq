@@ -23,9 +23,15 @@ BOOST_PYTHON_MODULE(teq)
 		.def("set_send_all_notes_off_on_stop", &teq::teq::set_send_all_notes_off_on_stop)
 		.def("number_of_tracks", &teq::teq::number_of_tracks)
 		.def("insert_midi_track", &teq::teq::insert_midi_track)
+		.def("insert_cv_track", &teq::teq::insert_cv_track)
+		.def("insert_control_track", &teq::teq::insert_control_track)
 		.def("insert_pattern", &teq::teq::insert_pattern)
-		.def("clear_event", &teq::teq::clear_event)
+		.def("clear_midi_event", &teq::teq::clear_midi_event)
 		.def("set_midi_event", &teq::teq::set_midi_event)
+		.def("clear_cv_event", &teq::teq::clear_cv_event)
+		.def("set_cv_event", &teq::teq::set_cv_event)
+		.def("clear_control_event", &teq::teq::clear_control_event)
+		.def("set_control_event", &teq::teq::set_control_event)
 	;
 	
 	enum_<teq::teq::transport_state>("transport_state")
@@ -50,4 +56,15 @@ BOOST_PYTHON_MODULE(teq)
 		.value("CC", teq::midi_event::type::CC)
 		.value("PITCHBEND", teq::midi_event::PITCHBEND)
 	;
+
+	enum_<teq::cv_event::type>("cv_event_type")
+		.value("ONE_SHOT", teq::cv_event::type::ONE_SHOT)
+		.value("INTERVAL", teq::cv_event::type::INTERVAL)
+
+	enum_<teq::control_event::type>("control_event_type")
+		.value("GLOBAL_TEMPO_ONE_SHOT", teq::control_event::type::GLOBAL_TEMPO_ONE_SHOT)
+		.value("RELATIVE_TEMPO_ONE_SHOT", teq::control_event::type::RELATIVE_TEMPO_ONE_SHOT)
+		.value("GLOBAL_TEMPO_INTERVAL", teq::control_event::type::GLOBAL_TEMPO_INTERVAL)
+		.value("RELATIVE_TEMPO_INTERVAL", teq::control_event::type::RELATIVE_TEMPO_INTERVAL)
+
 }

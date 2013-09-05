@@ -87,22 +87,38 @@ namespace teq
 	
 	struct cv_track : track
 	{
-		event_column<cv_event> m_cv_column;
+		event_column<cv_event_ptr> m_cv_column;
+		
+		virtual void set_length(unsigned length)
+		{
+			m_cv_column.m_events.resize(length);
+		}
 	};
 	
-	struct global_cv_track_properties
+	struct global_cv_track_properties : global_track_properties
 	{
-		
+		virtual track_ptr create_track()
+		{
+			return track_ptr(new cv_track);
+		}
 	};
 	
 	struct control_track : track
 	{
-		event_column<control_event> m_control_column;
+		event_column<control_event_ptr> m_control_column;
+		
+		virtual void set_length(unsigned length)
+		{
+			m_control_column.m_events.resize(length);
+		}
 	};
 
-	struct global_control_track_properties
+	struct global_control_track_properties : global_track_properties
 	{
-		
+		virtual track_ptr create_track()
+		{
+			return track_ptr(new control_track);
+		}
 	};	
 } // namespace
 
