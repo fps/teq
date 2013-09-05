@@ -36,13 +36,19 @@ namespace teq
 
 		struct range
 		{
-			tick m_start;
+			tick m_start_pattern;
 			
-			tick m_end;
+			tick m_end_pattern;
 			
-			range(tick start, tick end) :
-				m_start(start),
-				m_end(end)
+			tick m_start_tick;
+			
+			tick m_end_tick;
+			
+			range(tick start_pattern, tick end_pattern, tick start_tick, tick end_tick) :
+				m_start_pattern(start_pattern),
+				m_end_pattern(end_pattern),
+				m_start_tick(start_tick),
+				m_end_tick(end_tick)
 			{
 			
 			}
@@ -52,8 +58,15 @@ namespace teq
 		{
 			bool m_enabled;
 			
-			loop_range(tick start = 0, tick end = 0, bool enabled = false) :
-				range(start, end),
+			loop_range
+			(
+				tick start_pattern = 0, 
+				tick end_pattern = 0, 
+				tick start_tick = 0, 
+				tick end_tick = 0, 
+				bool enabled = false
+			) :
+				range(start_pattern, end_pattern, start_tick, end_tick),
 				m_enabled(enabled)
 			{
 				
@@ -140,6 +153,9 @@ namespace teq
 		
 		tick m_transport_position;
 		
+		tick m_current_pattern;
+		
+		tick m_current_tick;
 		
 		bool m_send_all_notes_off_on_loop;
 		
@@ -585,79 +601,6 @@ namespace teq
 			
 			return true;
 		}
-#if 0
-		void add_track(const std::string &track_name);
-		void remove_track(const std::string &track_name);
-		
-		void insert_midi_column(const std::string track_name, unsigned index);
-		void remove_midi_column(const std::string track_name, unsigned index);
-		unsigned number_of_midi_columns(const std::string track_name);
-		
-		void insert_cv_column(const std::string track_name, unsigned index);
-		void remove_cv_column(const std::string track_name, unsigned index);
-		unsigned number_of_cv_columns(const std::string track_name);
-		
-		
-		void set_track(const std::string &name, const track &track)
-		{
-			auto new_tracks = m_heap.add(tracks_map(m_tracks->t));
-			
-			auto it = m_tracks->t.find(name);
-			
-			if (it == m_tracks->t.end())
-			{
-				jack_port_t *port = jack_port_register
-				(
-					m_jack_client, 
-					name.c_str(), 
-					JACK_DEFAULT_MIDI_TYPE, 
-					JackPortIsOutput | JackPortIsTerminal,
-					0
-				);
-				
-				if (0 == port)
-				{
-					return;
-				}
-				
-				track_with_port new_entry(track, port);
-				new_tracks->t[name] = std::make_shared<track_with_port>(new_entry);
-			}
-			else
-			{
-				new_tracks->t[name]->first = track;
-			}
-			
-			update_tracks(new_tracks);
-		}
-		
-		void remove_track(const std::string &name)
-		{
-			auto it = m_tracks->t.find(name);
-			
-			if (it == m_tracks->t.end())
-			{	
-				return;
-			}
-
-			auto new_tracks = m_heap.add(tracks_map(m_tracks->t));
-			
-			auto it2 = new_tracks->t.find(name);
-			
-			if (it2 == new_tracks->t.end())
-			{
-				return;
-			}
-			
-			jack_port_t *port = it->second->second;
-			
-			new_tracks->t.erase(it2);
-
-			update_tracks(new_tracks);
-			
-			jack_port_unregister(m_jack_client, port);
-		}
-#endif
 
 		void set_loop_range(const loop_range &range)
 		{
@@ -755,6 +698,7 @@ namespace teq
 			);
 		}
 
+#if 0
 		inline jack_nframes_t effective_position(jack_nframes_t transport_frame, jack_nframes_t process_frame)
 		{
 			const jack_nframes_t frame = transport_frame + process_frame;
@@ -776,7 +720,8 @@ namespace teq
 			// to see that. So we make him happy..
 			throw std::logic_error("This should never happen");
 		}
-		
+#endif
+
 		void render_event(const midi::midi_event &e, void *port_buffer, jack_nframes_t time)
 		{
 			jack_midi_data_t *event_buffer = jack_midi_event_reserve(port_buffer, time, e.size());

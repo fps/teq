@@ -14,8 +14,10 @@ t.set_transport_state(teq.transport_state.PLAYING)
 r = teq.loop_range()
 
 r.enabled = True
-r.start = 0
-r.end = 64
+r.start_pattern = 0
+r.end_pattern = 1
+t.start_tick = 0
+t.end_tick = 128
 
 # Set the loop range.
 t.set_loop_range(r)
@@ -47,7 +49,7 @@ print ("Inserting a control event...")
 t.set_control_event(0, 3, 0, teq.control_event_type.GLOBAL_TEMPO_ONE_SHOT, 260, 0)
 
 for n in range(0, 128):
-	print ("Adding a midi note...", n)
+	print ("Adding a midi note at tick ", n, " with note ", n, "...")
 	t.set_midi_event(0, 0, 0, n, teq.midi_event_type.ON, n, 64)
 
 # Clean up some memory

@@ -8,8 +8,10 @@ BOOST_PYTHON_MODULE(teq)
 	
 	class_<teq::teq::loop_range>("loop_range")
 		.def_readwrite("enabled", &teq::teq::loop_range::m_enabled)
-		.def_readwrite("start", &teq::teq::loop_range::m_start)
-		.def_readwrite("end", &teq::teq::loop_range::m_end)
+		.def_readwrite("start_pattern", &teq::teq::loop_range::m_start_pattern)
+		.def_readwrite("end_pattern", &teq::teq::loop_range::m_end_pattern)
+		.def_readwrite("start_tick", &teq::teq::loop_range::m_start_tick)
+		.def_readwrite("end_tick", &teq::teq::loop_range::m_end_tick)
 	;
 	
 	class_<teq::teq>("teq", init<optional<std::string, unsigned>>())
