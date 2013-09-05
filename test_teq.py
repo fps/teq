@@ -7,7 +7,8 @@ t.set_global_tempo(250.0)
 
 t.set_transport_position(0)
 
-#t.set_transport_state(teq.transport_state.PLAYING)
+t.set_transport_source(teq.transport_source.INTERNAL)
+t.set_transport_state(teq.transport_state.PLAYING)
 
 # We want to set a loop range, so let's do it. Times are samplerate based.
 r = teq.loop_range()
@@ -20,7 +21,7 @@ r.end = 64
 t.set_loop_range(r)
 
 # Create a track
-tr = teq.track()
+t.insert_midi_track("foo", 0)
 
 # Add a note and clear the range immediately again.
 #tr.add_note_on(0, 0, 64, 64)
@@ -35,8 +36,8 @@ for n in range(0, 512):
 # Set the track 50 times just to test that it works
 for n in range(0, 50):
 	print ("track", n)
-	t.set_track("foo", tr)
-	t.set_track("bar", tr)
+	#t.set_track("foo", tr)
+	#t.set_track("bar", tr)
 	t.gc()
 
 # Wait for the user to press a key...

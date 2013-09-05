@@ -9,9 +9,17 @@ namespace teq
 {
 	struct pattern
 	{
-		typedef std::shared_ptr<std::vector<track_ptr>> track_list_ptr;
+		typedef std::vector<track_ptr> track_list;
 		
-		track_list_ptr m_track_list;
+		track_list m_tracks;
+		
+		unsigned m_length;
+		
+		pattern(unsigned length = 128) :
+			m_length(length)
+		{
+			
+		}
 	};
 	
 	typedef std::shared_ptr<pattern> pattern_ptr;

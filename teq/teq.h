@@ -10,11 +10,11 @@
 #include <stdexcept>
 #include <mutex>
 #include <condition_variable>
+#include <algorithm>
 
 #include <jack/jack.h>
 #include <jack/midiport.h>
 
-#include <lart/heap.h>
 #include <lart/ringbuffer.h>
 
 #include <teq/event.h>
@@ -60,9 +60,83 @@ namespace teq
 			}
 		};
 		
+		template <class T>
+		struct heap
+		{
+			typedef std::shared_ptr<T> T_ptr;
+			
+			std::list<T_ptr> m_heap;
+			
+			T_ptr add(T_ptr ptr)
+			{
+				m_heap.push_back(ptr);
+				return ptr;
+			}
+			
+			T_ptr add_new(T &&t)
+			{
+				T_ptr ptr = std::make_shared<T>(t);
+				return add(ptr);
+			}
+			
+			void gc()
+			{
+				for (auto it = m_heap.begin(); it != m_heap.end();) {
+					if (it->unique()) {
+						it = m_heap.erase(it);
+					} else {
+						++it;
+					}
+				}	
+			}
+		};
+		
+		
 		enum transport_state { STOPPED, PLAYING };
 		
 		enum transport_source { INTERNAL, JACK_TRANSPORT };
+		
+		enum track_type { MIDI, CV, CONTROL };
+		
+		heap<song> m_song_heap;
+		
+		heap<song::global_track_properties_list> m_global_track_properties_list_heap;
+		
+		heap<pattern> m_pattern_heap;
+		
+		heap<song::pattern_list> m_pattern_list_heap;
+		
+		heap<event> m_event_heap;
+		
+		lart::ringbuffer<command> m_commands;
+		
+		std::mutex m_ack_mutex;
+		
+		std::condition_variable m_ack_condition_variable;
+		
+		bool m_ack;
+
+		std::string m_client_name;
+		
+		jack_client_t *m_jack_client;
+		
+		jack_transport_state_t m_last_transport_state;
+		
+		song_ptr m_song;
+		
+		loop_range m_loop_range;
+		
+		float m_tempo;
+		
+		transport_state m_transport_state;
+		
+		transport_source m_transport_source;
+		
+		tick m_transport_position;
+		
+		bool m_send_all_notes_off_on_loop;
+		
+		bool m_send_all_notes_off_on_stop;
 		
 		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 128) :
 			m_commands(command_buffer_size),
@@ -90,6 +164,37 @@ namespace teq
 			init();
 		}
 	
+		void init()
+		{
+			m_song = m_song_heap.add_new(song());
+			
+			jack_status_t status;
+			m_jack_client = jack_client_open(m_client_name.c_str(), JackNullOption, &status);
+			
+			if (0 == m_jack_client)
+			{
+				throw std::runtime_error("Failed to open jack client");
+			}
+			
+			int set_process_return_code = jack_set_process_callback(m_jack_client, process_midi, this);
+			
+			if (0 != set_process_return_code)
+			{
+				jack_client_close(m_jack_client);
+				throw std::runtime_error("Failed to set jack process callback");
+			}
+			
+			m_last_transport_state = jack_transport_query(m_jack_client, 0);
+			
+			int activate_return_code = jack_activate(m_jack_client);
+			
+			if (0 != activate_return_code)
+			{
+				jack_client_close(m_jack_client);
+				throw std::runtime_error("Failed to activate jack client");
+			}
+		}
+		
 		~teq()
 		{
 			jack_deactivate(m_jack_client);
@@ -117,6 +222,108 @@ namespace teq
 				}
 			);
 		}
+		
+		bool track_name_exists(const std::string track_name)
+		{
+			for (auto it : *(m_song->m_tracks))
+			{
+				if (track_name == it.first->m_name)
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		song_ptr copy_and_prepare_song_for_track_insert()
+		{
+			song_ptr new_song = m_song_heap.add_new(song(*m_song));
+			
+			new_song->m_tracks =
+				m_global_track_properties_list_heap
+					.add_new(song::global_track_properties_list(*m_song->m_tracks));
+			
+			new_song->m_patterns = 
+				m_pattern_list_heap
+					.add_new(song::pattern_list(*m_song->m_patterns));
+					
+			return new_song;
+		}
+		
+		void insert_midi_track(const std::string &track_name, unsigned index)
+		{
+			if (true == track_name_exists(track_name))
+			{
+				return;
+			}
+			
+			if (index > number_of_tracks())
+			{
+				return;
+			}
+			
+			song_ptr new_song = copy_and_prepare_song_for_track_insert();
+			
+			jack_port_t *port = jack_port_register
+			(
+				m_jack_client, 
+				track_name.c_str(), 
+				JACK_DEFAULT_MIDI_TYPE, 
+				JackPortIsOutput | JackPortIsTerminal,
+				0
+			);
+			
+			if (0 == port)
+			{
+				return;
+			}
+			
+			new_song->m_tracks->insert
+			(
+				new_song->m_tracks->begin() + index, 
+				std::make_pair(global_track_properties_ptr(new global_midi_track_properties()), (void *)port)
+			);
+			
+			insert_track<midi_track>(new_song, index);
+
+			update_song(new_song);
+		}
+		
+		void insert_cv_track(const std::string &track_name);
+		
+		void insert_control_track(const std::string &name);
+		
+		template <class T>
+		void insert_track(song_ptr new_song, unsigned index)
+		{
+			for (auto it : *new_song->m_patterns)
+			{
+				it.m_tracks.insert
+				(
+					it.m_tracks.begin() + index,
+					track_ptr(new T)
+				);
+				
+				(*(it.m_tracks.begin() + index))->set_length(it.m_length);
+			}
+			
+		}
+		
+		size_t number_of_tracks()
+		{
+			return m_song->m_tracks->size();
+		}
+		
+		void remove_track(unsigned index);
+		
+		void move_track(unsigned from, unsigned to);
+		
+		void insert_pattern(unsigned index);
+	
+		void remove_pattern(unsigned index);
+		
+		void move_pattern(unsigned from, unsigned to);
 		
 #if 0
 		void add_track(const std::string &track_name);
@@ -249,77 +456,10 @@ namespace teq
 		
 		void gc()
 		{
-			m_heap.cleanup();
-		}
-		
-	protected:
-		
-		lart::heap m_heap;
-		
-		lart::ringbuffer<command> m_commands;
-		
-		std::mutex m_ack_mutex;
-		
-		std::condition_variable m_ack_condition_variable;
-		
-		bool m_ack;
-
-		
-		std::string m_client_name;
-		
-		jack_client_t *m_jack_client;
-		
-		jack_transport_state_t m_last_transport_state;
-		
-		song_ptr m_song;
-		
-#if 0		
-		tracks_junk_ptr m_tracks;
-#endif
-		
-		loop_range m_loop_range;
-		
-		float m_tempo;
-		
-		transport_state m_transport_state;
-		
-		transport_source m_transport_source;
-		
-		tick m_transport_position;
-		
-		bool m_send_all_notes_off_on_loop;
-		
-		bool m_send_all_notes_off_on_stop;
-		
-	protected:
-
-		void init()
-		{
-			jack_status_t status;
-			m_jack_client = jack_client_open(m_client_name.c_str(), JackNullOption, &status);
-			
-			if (0 == m_jack_client)
-			{
-				throw std::runtime_error("Failed to open jack client");
-			}
-						
-			int set_process_return_code = jack_set_process_callback(m_jack_client, process_midi, this);
-			
-			if (0 != set_process_return_code)
-			{
-				jack_client_close(m_jack_client);
-				throw std::runtime_error("Failed to set jack process callback");
-			}
-			
-			m_last_transport_state = jack_transport_query(m_jack_client, 0);
-			
-			int activate_return_code = jack_activate(m_jack_client);
-			
-			if (0 != activate_return_code)
-			{
-				jack_client_close(m_jack_client);
-				throw std::runtime_error("Failed to activate jack client");
-			}			
+			m_song_heap.gc();
+			m_global_track_properties_list_heap.gc();
+			m_pattern_heap.gc();
+			m_pattern_list_heap.gc();
 		}
 		
 		void write_command(command f)
@@ -342,19 +482,17 @@ namespace teq
 			m_ack_condition_variable.wait(lock, [this]() { return this->m_ack; });
 		}
 
-#if 0
-		void update_tracks(tracks_junk_ptr new_tracks)
+		void update_song(song_ptr new_song)
 		{
 			write_command_and_wait
 			(
-				[this, new_tracks] () mutable
+				[this, new_song] () mutable
 				{
-					m_tracks = new_tracks;
-					new_tracks.reset();
+					m_song = new_song;
+					new_song.reset();
 				}
 			);
 		}
-#endif
 
 		inline jack_nframes_t effective_position(jack_nframes_t transport_frame, jack_nframes_t process_frame)
 		{
@@ -378,7 +516,7 @@ namespace teq
 			throw std::logic_error("This should never happen");
 		}
 		
-		void render_event(const midi_event &e, void *port_buffer, jack_nframes_t time)
+		void render_event(const midi::midi_event &e, void *port_buffer, jack_nframes_t time)
 		{
 			jack_midi_data_t *event_buffer = jack_midi_event_reserve(port_buffer, time, e.size());
 			e.render(event_buffer);

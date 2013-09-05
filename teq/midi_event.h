@@ -42,128 +42,131 @@ By Tom Torfs - donated to the public domain
 
 namespace teq
 {
-	struct midi_event
+	namespace midi
 	{
-		virtual unsigned size() const = 0;
-		
-		virtual void render(unsigned char *buffer) const = 0;
-		
-		virtual ~midi_event() 
+		struct midi_event
 		{
+			virtual unsigned size() const = 0;
 			
-		}
-	};
-	
-	typedef std::shared_ptr<midi_event> midi_event_ptr;
-	
-	struct midi_channel_event : midi_event
-	{
-		protected:
-			unsigned m_channel;
+			virtual void render(unsigned char *buffer) const = 0;
 			
-		public:
-			midi_channel_event(unsigned channel) :
-				m_channel(channel)
+			virtual ~midi_event() 
 			{
 				
 			}
-	};
-	
-	struct midi_note_on_event : midi_channel_event
-	{
-		protected:
-			unsigned m_note;
-			
-			unsigned m_velocity;
-			
-		public:
-			midi_note_on_event(unsigned channel, unsigned note, unsigned velocity) :
-				midi_channel_event(channel),
-				m_note(note),
-				m_velocity(velocity)
-			{
-				
-			}
-			
-			virtual unsigned size() const
-			{
-				return 3;
-			}
-			
-			virtual void render(unsigned char *buffer) const
-			{
-				buffer[0] = B8(10010000) | m_channel;
-				buffer[1] = m_note;
-				buffer[2] = m_velocity;
-			}
-	};
-	
-	struct midi_note_off_event : midi_channel_event
-	{
-		protected:
-			unsigned m_note;
-			
-			unsigned m_velocity;
-			
-		public:
-			midi_note_off_event(unsigned channel, unsigned note, unsigned velocity) :
-				midi_channel_event(channel),
-				m_note(note),
-				m_velocity(velocity)
-			{
-				
-			}
-			
-			virtual unsigned size() const
-			{
-				return 3;
-			}
-			
-			virtual void render(unsigned char *buffer) const
-			{
-				buffer[0] = B8(10000000) | m_channel;
-				buffer[1] = m_note;
-				buffer[2] = m_velocity;
-			}
-	};
-	
-	struct midi_cc_event : midi_channel_event
-	{
-		protected:
-			unsigned m_cc;
-			
-			unsigned m_value;
-			
-		public:
-			midi_cc_event(unsigned channel, unsigned cc, unsigned value) :
-				midi_channel_event(channel),
-				m_cc(cc),
-				m_value(value)
-			{
-				
-			}
-			
-			virtual unsigned size() const
-			{
-				return 3;
-			}
-			
-			virtual void render(unsigned char *buffer) const 
-			{
-				buffer[0] = B8(10110000) | m_channel;
-				buffer[1] = m_cc;
-				buffer[2] = m_value;
-			}
-	};
-	
-	struct midi_all_notes_off_event : midi_cc_event
-	{
-		midi_all_notes_off_event(unsigned channel) :
-			midi_cc_event(channel, 123, 0)
+		};
+		
+		typedef std::shared_ptr<midi_event> midi_event_ptr;
+		
+		struct midi_channel_event : midi_event
 		{
-			
-		}
-	};
-}
+			protected:
+				unsigned m_channel;
+				
+			public:
+				midi_channel_event(unsigned channel) :
+					m_channel(channel)
+				{
+					
+				}
+		};
+		
+		struct midi_note_on_event : midi_channel_event
+		{
+			protected:
+				unsigned m_note;
+				
+				unsigned m_velocity;
+				
+			public:
+				midi_note_on_event(unsigned channel, unsigned note, unsigned velocity) :
+					midi_channel_event(channel),
+					m_note(note),
+					m_velocity(velocity)
+				{
+					
+				}
+				
+				virtual unsigned size() const
+				{
+					return 3;
+				}
+				
+				virtual void render(unsigned char *buffer) const
+				{
+					buffer[0] = B8(10010000) | m_channel;
+					buffer[1] = m_note;
+					buffer[2] = m_velocity;
+				}
+		};
+		
+		struct midi_note_off_event : midi_channel_event
+		{
+			protected:
+				unsigned m_note;
+				
+				unsigned m_velocity;
+				
+			public:
+				midi_note_off_event(unsigned channel, unsigned note, unsigned velocity) :
+					midi_channel_event(channel),
+					m_note(note),
+					m_velocity(velocity)
+				{
+					
+				}
+				
+				virtual unsigned size() const
+				{
+					return 3;
+				}
+				
+				virtual void render(unsigned char *buffer) const
+				{
+					buffer[0] = B8(10000000) | m_channel;
+					buffer[1] = m_note;
+					buffer[2] = m_velocity;
+				}
+		};
+		
+		struct midi_cc_event : midi_channel_event
+		{
+			protected:
+				unsigned m_cc;
+				
+				unsigned m_value;
+				
+			public:
+				midi_cc_event(unsigned channel, unsigned cc, unsigned value) :
+					midi_channel_event(channel),
+					m_cc(cc),
+					m_value(value)
+				{
+					
+				}
+				
+				virtual unsigned size() const
+				{
+					return 3;
+				}
+				
+				virtual void render(unsigned char *buffer) const 
+				{
+					buffer[0] = B8(10110000) | m_channel;
+					buffer[1] = m_cc;
+					buffer[2] = m_value;
+				}
+		};
+		
+		struct midi_all_notes_off_event : midi_cc_event
+		{
+			midi_all_notes_off_event(unsigned channel) :
+				midi_cc_event(channel, 123, 0)
+			{
+				
+			}
+		};
+	} // namespace
+} // namespace
 
 #endif

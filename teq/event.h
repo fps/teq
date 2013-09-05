@@ -5,7 +5,14 @@
 
 namespace teq
 {
-	struct control_event
+	struct event
+	{
+		virtual ~event() { }
+	};
+	
+	typedef std::shared_ptr<event> event_ptr;
+	
+	struct control_event : event
 	{
 		enum type { TEMPO, RELATIVE_TEMPO };
 		
@@ -18,7 +25,9 @@ namespace teq
 		float m_value2;
 	};
 	
-	struct cv_event
+	typedef std::shared_ptr<control_event> control_event_ptr;
+
+	struct cv_event : event
 	{
 		//! Start value
 		float m_value1;
@@ -33,19 +42,22 @@ namespace teq
 		}
 	};
 	
-	struct note_event
+	typedef std::shared_ptr<cv_event> cv_event_ptr;
+
+	struct midi_event : event
 	{
 		enum type { ON, OFF, CC, PITCHBEND };
 		
 		type m_type;
 
-		//! ON: note, OFF: ignored, CC: controller, PITCHBEND: bend
+		//! ON: midi, OFF: ignored, CC: controller, PITCHBEND: bend
 		unsigned m_value1;
 		
 		//! ON: velocity, OFF, CC, PITCHBEND: ignored
 		unsigned m_value2;
 	};
 	
+	typedef std::shared_ptr<midi_event> midi_event_ptr;
 }
 
 #endif

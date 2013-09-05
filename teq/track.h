@@ -15,7 +15,9 @@ namespace teq
 	struct track
 	{
 		virtual ~track() { }
-				
+		
+		virtual void set_length(unsigned) = 0;
+		
 		track()
 		{
 			
@@ -27,6 +29,8 @@ namespace teq
 	
 	struct global_track_properties
 	{
+		const std::string m_name;
+		
 		virtual ~global_track_properties() { }
 	};
 
@@ -35,10 +39,19 @@ namespace teq
 	
 	struct midi_track : track
 	{
-		typedef std::shared_ptr<event_column<note_event>> note_column_ptr;
-		typedef std::shared_ptr<std::vector<note_column_ptr>> column_list_ptr;
+		typedef event_column<midi_event_ptr> midi_column;
 		
-		column_list_ptr m_column_list;
+		typedef std::vector<midi_column> column_list;
+		
+		column_list m_columns;
+		
+		virtual void set_length(unsigned length)
+		{
+			for (auto &it: m_columns)
+			{
+				it.m_events.resize(length);
+			}
+		}
 	};
 	
 	
@@ -52,10 +65,25 @@ namespace teq
 		}
 	};
 	
-	typedef event_column<cv_event> cv_track;
-
-	typedef event_column<control_event> control_track;
+	struct cv_track : track
+	{
+		event_column<cv_event> m_cv_column;
+	};
 	
-}
+	struct global_cv_track_properties
+	{
+		
+	};
+	
+	struct control_track : track
+	{
+		event_column<control_event> m_control_column;
+	};
+
+	struct global_control_track_properties
+	{
+		
+	};	
+} // namespace
 
 #endif
