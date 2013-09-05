@@ -32,6 +32,9 @@ namespace teq
 		const std::string m_name;
 		
 		virtual ~global_track_properties() { }
+		
+		
+		virtual track_ptr create_track() = 0;
 	};
 
 	typedef std::shared_ptr<global_track_properties> global_track_properties_ptr;
@@ -54,14 +57,31 @@ namespace teq
 		}
 	};
 	
+	typedef std::shared_ptr<midi_track> midi_track_ptr;
+	
 	
 	struct global_midi_track_properties : global_track_properties
 	{
+		unsigned m_number_of_columns;
+		
 		std::array<bool, 16> m_channels;
 
-		global_midi_track_properties()
+		global_midi_track_properties() : 
+			m_number_of_columns(1)
 		{
 			m_channels[0] = true;
+		}
+		
+		virtual track_ptr create_track()
+		{
+			midi_track_ptr new_midi_track(new midi_track);
+			
+			for (unsigned index = 0; index < m_number_of_columns; ++index)
+			{
+				new_midi_track->m_columns.push_back(midi_track::midi_column());
+			}
+			
+			return new_midi_track;
 		}
 	};
 	

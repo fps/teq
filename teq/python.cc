@@ -13,6 +13,7 @@ BOOST_PYTHON_MODULE(teq)
 	;
 	
 	class_<teq::teq>("teq", init<optional<std::string, unsigned>>())
+		.def("gc", &teq::teq::gc)
 		.def("set_global_tempo", &teq::teq::set_global_tempo)
 		.def("set_loop_range", &teq::teq::set_loop_range)
 		.def("set_transport_state", &teq::teq::set_transport_state)
@@ -20,9 +21,11 @@ BOOST_PYTHON_MODULE(teq)
 		.def("set_transport_position", &teq::teq::set_transport_position)
 		.def("set_send_all_notes_off_on_loop", &teq::teq::set_send_all_notes_off_on_loop)
 		.def("set_send_all_notes_off_on_stop", &teq::teq::set_send_all_notes_off_on_stop)
-		.def("gc", &teq::teq::gc)
 		.def("number_of_tracks", &teq::teq::number_of_tracks)
 		.def("insert_midi_track", &teq::teq::insert_midi_track)
+		.def("insert_pattern", &teq::teq::insert_pattern)
+		.def("clear_event", &teq::teq::clear_event)
+		.def("set_midi_event", &teq::teq::set_midi_event)
 	;
 	
 	enum_<teq::teq::transport_state>("transport_state")
@@ -39,5 +42,12 @@ BOOST_PYTHON_MODULE(teq)
 		.value("MIDI", teq::teq::track_type::MIDI)
 		.value("CV", teq::teq::track_type::CV)
 		.value("CONTROL", teq::teq::track_type::CONTROL)
+	;
+
+	enum_<teq::midi_event::type>("midi_event_type")
+		.value("ON", teq::midi_event::type::ON)
+		.value("OFF", teq::midi_event::type::OFF)
+		.value("CC", teq::midi_event::type::CC)
+		.value("PITCHBEND", teq::midi_event::PITCHBEND)
 	;
 }

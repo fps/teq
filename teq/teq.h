@@ -83,6 +83,7 @@ namespace teq
 			{
 				for (auto it = m_heap.begin(); it != m_heap.end();) {
 					if (it->unique()) {
+						std::cout << "Erasing..." << std::endl;
 						it = m_heap.erase(it);
 					} else {
 						++it;
@@ -98,6 +99,7 @@ namespace teq
 		
 		enum track_type { MIDI, CV, CONTROL };
 		
+		
 		heap<song> m_song_heap;
 		
 		heap<song::global_track_properties_list> m_global_track_properties_list_heap;
@@ -108,6 +110,7 @@ namespace teq
 		
 		heap<event> m_event_heap;
 		
+		
 		lart::ringbuffer<command> m_commands;
 		
 		std::mutex m_ack_mutex;
@@ -116,11 +119,13 @@ namespace teq
 		
 		bool m_ack;
 
+		
 		std::string m_client_name;
 		
 		jack_client_t *m_jack_client;
 		
 		jack_transport_state_t m_last_transport_state;
+		
 		
 		song_ptr m_song;
 		
@@ -128,15 +133,18 @@ namespace teq
 		
 		float m_tempo;
 		
+		
 		transport_state m_transport_state;
 		
 		transport_source m_transport_source;
 		
 		tick m_transport_position;
 		
+		
 		bool m_send_all_notes_off_on_loop;
 		
 		bool m_send_all_notes_off_on_stop;
+		
 		
 		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 128) :
 			m_commands(command_buffer_size),
@@ -319,12 +327,88 @@ namespace teq
 		
 		void move_track(unsigned from, unsigned to);
 		
-		void insert_pattern(unsigned index);
+		void insert_pattern(unsigned index, unsigned pattern_length)
+		{
+			if (index > m_song->m_patterns->size())
+			{
+				return;
+			}
+			
+			pattern new_pattern;
+			
+			new_pattern.m_length = pattern_length;
+			
+			for (auto &it : *m_song->m_tracks)
+			{
+				std::cout << "Creating track" << std::endl;
+				track_ptr new_track = it.first->create_track();
+				
+				new_track->set_length(pattern_length);
+				
+				new_pattern.m_tracks.push_back(new_track);
+			}
+			
+			song::pattern_list_ptr new_pattern_list = m_pattern_list_heap.add_new(song::pattern_list(*m_song->m_patterns));
+			
+			new_pattern_list->insert(new_pattern_list->begin() + index, new_pattern);
+
+			std::cout << "Pattern list has # of entries: " << new_pattern_list->size() << std::endl;
+			write_command_and_wait
+			(
+				[this, new_pattern_list] () mutable
+				{
+					m_song->m_patterns = new_pattern_list;
+					new_pattern_list.reset();
+				}
+			);
+		}
 	
 		void remove_pattern(unsigned index);
 		
 		void move_pattern(unsigned from, unsigned to);
 		
+		void clear_event(unsigned pattern_index, unsigned track_index, unsigned tick, unsigned column_index)
+		{
+			
+		}
+		
+		void set_midi_event
+		(
+			unsigned pattern_index, 
+			unsigned track_index, 
+			unsigned column_index, 
+			unsigned tick, 
+			midi_event::type type, 
+			unsigned value1, 
+			unsigned value2
+		)
+		{
+			if (pattern_index >= m_song->m_patterns->size())
+			{
+				return;
+			}
+			
+			midi_event_ptr new_midi_event(new midi_event);
+			
+			new_midi_event->m_type = type;
+			
+			new_midi_event->m_value1 = value1;
+			
+			new_midi_event->m_value2 = value2;
+			
+			m_event_heap.add(new_midi_event);
+			
+			write_command_and_wait
+			(
+				[this, new_midi_event, pattern_index, track_index, column_index, tick] () mutable
+				{
+					auto track_ptr = std::dynamic_pointer_cast<midi_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
+					track_ptr->m_columns[column_index].m_events[tick] = new_midi_event;
+					new_midi_event.reset();
+				}
+			);
+
+		}
 #if 0
 		void add_track(const std::string &track_name);
 		void remove_track(const std::string &track_name);
@@ -460,6 +544,7 @@ namespace teq
 			m_global_track_properties_list_heap.gc();
 			m_pattern_heap.gc();
 			m_pattern_list_heap.gc();
+			m_event_heap.gc();
 		}
 		
 		void write_command(command f)
