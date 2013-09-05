@@ -5,7 +5,11 @@ t = teq.teq()
 
 t.set_global_tempo(250.0)
 
-t.set_transport_position(0)
+p = teq.transport_position()
+p.pattern = 0
+p.tick = 0
+
+t.set_transport_position(p)
 
 t.set_transport_source(teq.transport_source.INTERNAL)
 t.set_transport_state(teq.transport_state.PLAYING)
@@ -14,10 +18,12 @@ t.set_transport_state(teq.transport_state.PLAYING)
 r = teq.loop_range()
 
 r.enabled = True
-r.start_pattern = 0
-r.end_pattern = 1
-t.start_tick = 0
-t.end_tick = 128
+
+r.start.pattern = 0
+r.start.tick = 0
+
+r.end.pattern = 1
+r.end.tick = 128
 
 # Set the loop range.
 t.set_loop_range(r)

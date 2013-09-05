@@ -34,24 +34,25 @@ namespace teq
 		
 		typedef uint64_t tick;
 
+		struct transport_position
+		{
+			tick m_pattern;
+			
+			tick m_tick;
+			
+			transport_position(tick pattern = 0, tick the_tick = 0) :
+				m_pattern(pattern),
+				m_tick(the_tick)
+			{
+				
+			}
+		};
+		
 		struct range
 		{
-			tick m_start_pattern;
+			transport_position m_start;
 			
-			tick m_end_pattern;
-			
-			tick m_start_tick;
-			
-			tick m_end_tick;
-			
-			range(tick start_pattern, tick end_pattern, tick start_tick, tick end_tick) :
-				m_start_pattern(start_pattern),
-				m_end_pattern(end_pattern),
-				m_start_tick(start_tick),
-				m_end_tick(end_tick)
-			{
-			
-			}
+			transport_position m_end;
 		};
 		
 		struct loop_range : range
@@ -60,13 +61,8 @@ namespace teq
 			
 			loop_range
 			(
-				tick start_pattern = 0, 
-				tick end_pattern = 0, 
-				tick start_tick = 0, 
-				tick end_tick = 0, 
 				bool enabled = false
 			) :
-				range(start_pattern, end_pattern, start_tick, end_tick),
 				m_enabled(enabled)
 			{
 				
@@ -96,7 +92,7 @@ namespace teq
 			{
 				for (auto it = m_heap.begin(); it != m_heap.end();) {
 					if (it->unique()) {
-						// std::cout << "Erasing..." << std::endl;
+						std::cout << "Erasing..." << std::endl;
 						it = m_heap.erase(it);
 					} else {
 						++it;
@@ -137,7 +133,7 @@ namespace teq
 		
 		jack_client_t *m_jack_client;
 		
-		jack_transport_state_t m_last_transport_state;
+		transport_state m_last_transport_state;
 		
 		
 		song_ptr m_song;
@@ -151,11 +147,10 @@ namespace teq
 		
 		transport_source m_transport_source;
 		
-		tick m_transport_position;
+		tick m_frames_since_last_tick;
 		
-		tick m_current_pattern;
+		transport_position m_transport_position;
 		
-		tick m_current_tick;
 		
 		bool m_send_all_notes_off_on_loop;
 		
@@ -168,7 +163,6 @@ namespace teq
 			m_client_name(client_name),
 			m_transport_state(STOPPED),
 			m_transport_source(INTERNAL),
-			m_transport_position(0),
 			m_send_all_notes_off_on_loop(true),
 			m_send_all_notes_off_on_stop(true)
 		{
@@ -181,7 +175,6 @@ namespace teq
 			m_client_name(other.m_client_name),
 			m_transport_state(STOPPED),
 			m_transport_source(INTERNAL),
-			m_transport_position(0),
 			m_send_all_notes_off_on_loop(other.m_send_all_notes_off_on_loop),
 			m_send_all_notes_off_on_stop(other.m_send_all_notes_off_on_stop)
 		{
@@ -208,7 +201,15 @@ namespace teq
 				throw std::runtime_error("Failed to set jack process callback");
 			}
 			
-			m_last_transport_state = jack_transport_query(m_jack_client, 0);
+			if (m_transport_source == transport_source::JACK_TRANSPORT)
+			{
+				m_last_transport_state = 
+					jack_transport_query(m_jack_client, 0) == JackTransportRolling ? transport_state::PLAYING : transport_state::STOPPED;
+			}
+			else
+			{
+				m_last_transport_state = transport_state::STOPPED;
+			}
 			
 			int activate_return_code = jack_activate(m_jack_client);
 			
@@ -474,13 +475,13 @@ namespace teq
 			
 			midi_event_ptr new_midi_event(new midi_event);
 			
+			m_event_heap.add(new_midi_event);
+
 			new_midi_event->m_type = type;
 			
 			new_midi_event->m_value1 = value1;
 			
-			new_midi_event->m_value2 = value2;
-			
-			m_event_heap.add(new_midi_event);
+			new_midi_event->m_value2 = value2;			
 			
 			write_command_and_wait
 			(
@@ -528,13 +529,13 @@ namespace teq
 			
 			cv_event_ptr new_cv_event(new cv_event);
 			
+			m_event_heap.add(new_cv_event);
+			
 			new_cv_event->m_type = type;
 			
 			new_cv_event->m_value1 = value1;
 			
 			new_cv_event->m_value2 = value2;
-			
-			m_event_heap.add(new_cv_event);
 			
 			write_command_and_wait
 			(
@@ -581,13 +582,13 @@ namespace teq
 			
 			control_event_ptr new_control_event(new control_event);
 			
+			m_event_heap.add(new_control_event);
+			
 			new_control_event->m_type = type;
 			
 			new_control_event->m_value1 = value1;
 			
 			new_control_event->m_value2 = value2;
-			
-			m_event_heap.add(new_control_event);
 			
 			write_command_and_wait
 			(
@@ -635,7 +636,8 @@ namespace teq
 			);
 		}
 		
-		void set_transport_position(tick position)
+		
+		void set_transport_position(transport_position position)
 		{
 			write_command_and_wait
 			(
