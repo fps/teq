@@ -21,12 +21,24 @@ r.end = 64
 t.set_loop_range(r)
 
 # Create a track
+print ("Adding a midi track...")
 t.insert_midi_track("foo", 0)
+
+print ("Inserting some patterns...")
 t.insert_pattern(0, 128)
 t.insert_pattern(1, 128)
 
+print ("Adding a midi track...")
 t.insert_midi_track("bar", 1)
+
+print ("Inserting a pattern...")
 t.insert_pattern(0, 128)
+
+print ("Adding a CV track...")
+t.insert_cv_track("cv", 2)
+
+print ("Adding a control track...")
+t.insert_control_track("control", 3)
 
 for n in range(0, 128):
 	print ("note", n)

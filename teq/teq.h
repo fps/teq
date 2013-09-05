@@ -25,7 +25,7 @@ namespace teq
 {
 	extern "C" 
 	{
-		int process_midi(jack_nframes_t nframes, void *arg);
+		int jack_process(jack_nframes_t nframes, void *arg);
 	}
 	
 	struct teq
@@ -83,7 +83,7 @@ namespace teq
 			{
 				for (auto it = m_heap.begin(); it != m_heap.end();) {
 					if (it->unique()) {
-						std::cout << "Erasing..." << std::endl;
+						// std::cout << "Erasing..." << std::endl;
 						it = m_heap.erase(it);
 					} else {
 						++it;
@@ -184,7 +184,7 @@ namespace teq
 				throw std::runtime_error("Failed to open jack client");
 			}
 			
-			int set_process_return_code = jack_set_process_callback(m_jack_client, process_midi, this);
+			int set_process_return_code = jack_set_process_callback(m_jack_client, jack_process, this);
 			
 			if (0 != set_process_return_code)
 			{
@@ -359,13 +359,14 @@ namespace teq
 			
 			insert_track<control_track>(new_song, index);
 
-			update_song(new_song);			
+			update_song(new_song);
 		}
 		
+		//! For internal use only!
 		template <class T>
 		void insert_track(song_ptr new_song, unsigned index)
 		{
-			for (auto it : *new_song->m_patterns)
+			for (auto &it : *new_song->m_patterns)
 			{
 				it.m_tracks.insert
 				(
@@ -869,7 +870,7 @@ namespace teq
 			return 0;
 		}
 		
-		friend int process_midi(jack_nframes_t, void*);
+		friend int jack_process(jack_nframes_t, void*);
 	};
 }
 
