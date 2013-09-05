@@ -487,8 +487,8 @@ namespace teq
 			unsigned track_index, 
 			unsigned tick, 
 			cv_event::type type, 
-			unsigned value1, 
-			unsigned value2
+			float value1, 
+			float value2
 		)
 		{
 			if (pattern_index >= m_song->m_patterns->size())
@@ -537,8 +537,8 @@ namespace teq
 			unsigned track_index, 
 			unsigned tick, 
 			control_event::type type, 
-			unsigned value1, 
-			unsigned value2
+			float value1, 
+			float value2
 		)
 		{
 			if (pattern_index >= m_song->m_patterns->size())
