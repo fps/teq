@@ -11,6 +11,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <algorithm>
+#include <sstream>
 
 #include <jack/jack.h>
 #include <jack/midiport.h>
@@ -20,6 +21,13 @@
 #include <teq/event.h>
 #include <teq/midi_event.h>
 #include <teq/song.h>
+
+#define LIBTEQ_THROW_RUNTIME_ERROR(x) \
+{ \
+	std::stringstream stream; \
+	stream << x; \
+	throw std::runtime_error(stream.str().c_str()); \
+}
 
 namespace teq
 {
@@ -100,7 +108,6 @@ namespace teq
 				}	
 			}
 		};
-		
 		
 		enum transport_state { STOPPED, PLAYING };
 		
@@ -276,17 +283,48 @@ namespace teq
 			return new_song;
 		}
 		
-		bool insert_midi_track(const std::string &track_name, unsigned index)
+		void check_track_name_and_index_for_insert(const std::string &track_name, unsigned index)
 		{
 			if (true == track_name_exists(track_name))
 			{
-				return false;
+				LIBTEQ_THROW_RUNTIME_ERROR("Track name already exists: " << track_name)
 			}
 			
 			if (index > number_of_tracks())
 			{
-				return false;
+				LIBTEQ_THROW_RUNTIME_ERROR("Track index out of bounds: " << index << ". Number of tracks: " << number_of_tracks())
 			}
+		}
+		
+		void check_track_index(unsigned index)
+		{
+			if (index >= number_of_tracks())
+			{
+				LIBTEQ_THROW_RUNTIME_ERROR("Track index out of bounds: " << index << ". Number of tracks: " << number_of_tracks())
+			}
+		}
+		
+		void check_pattern_index(unsigned index)
+		{
+			if (index >= m_song->m_patterns->size())
+			{
+				LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << number_of_patterns())
+			}
+		}
+		
+		void check_column_index(unsigned track_index, unsigned column_index)
+		{
+			
+		}
+		
+		void check_tick_index(unsigned pattern_index, unsigned tick_index)
+		{
+			
+		}
+		
+		void insert_midi_track(const std::string &track_name, unsigned index)
+		{
+			check_track_name_and_index_for_insert(track_name, index);
 			
 			song_ptr new_song = copy_and_prepare_song_for_track_insert();
 			
@@ -301,27 +339,17 @@ namespace teq
 			
 			if (0 == port)
 			{
-				return false;
+				LIBTEQ_THROW_RUNTIME_ERROR("Failed to register jack port")
 			}
 			
 			insert_track<midi_track, global_midi_track_properties>(new_song, index, (void *)port);
 
 			update_song(new_song);
-			
-			return true;
 		}
 		
-		bool insert_cv_track(const std::string &track_name, unsigned index)
+		void insert_cv_track(const std::string &track_name, unsigned index)
 		{
-			if (true == track_name_exists(track_name))
-			{
-				return false;
-			}
-			
-			if (index > number_of_tracks())
-			{
-				return false;
-			}
+			check_track_name_and_index_for_insert(track_name, index);
 			
 			song_ptr new_song = copy_and_prepare_song_for_track_insert();
 			
@@ -336,35 +364,23 @@ namespace teq
 			
 			if (0 == port)
 			{
-				return false;
+				LIBTEQ_THROW_RUNTIME_ERROR("Failed to register jack port")
 			}
 			
 			insert_track<cv_track, global_cv_track_properties>(new_song, index, (void*)port);
 
 			update_song(new_song);
-			
-			return true;
 		}
 		
-		bool insert_control_track(const std::string &track_name, unsigned index)
+		void insert_control_track(const std::string &track_name, unsigned index)
 		{
-			if (true == track_name_exists(track_name))
-			{
-				return false;
-			}
-			
-			if (index > number_of_tracks())
-			{
-				return false;
-			}
+			check_track_name_and_index_for_insert(track_name, index);
 			
 			song_ptr new_song = copy_and_prepare_song_for_track_insert();
 
 			insert_track<control_track, global_control_track_properties>(new_song, index, (void *)nullptr);
 
 			update_song(new_song);
-			
-			return true;
 		}
 		
 		//! For internal use only!
@@ -395,15 +411,26 @@ namespace teq
 			return m_song->m_tracks->size();
 		}
 		
-		bool remove_track(unsigned index);
+		size_t number_of_patterns()
+		{
+			return m_song->m_patterns->size();
+		}
 		
-		bool move_track(unsigned from, unsigned to);
+		void remove_track(unsigned index)
+		{
+			if (index >= number_of_tracks())
+			{
+				LIBTEQ_THROW_RUNTIME_ERROR("Track index out of bounds: " << index << ". Number of tracks: " << number_of_tracks())
+			}
+		}
 		
-		bool insert_pattern(unsigned index, unsigned pattern_length)
+		void move_track(unsigned from, unsigned to);
+		
+		void insert_pattern(unsigned index, unsigned pattern_length)
 		{
 			if (index > m_song->m_patterns->size())
 			{
-				return false;
+				LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << number_of_patterns())
 			}
 			
 			pattern new_pattern;
@@ -433,16 +460,18 @@ namespace teq
 					new_pattern_list.reset();
 				}
 			);
-			
-			return true;
 		}
 	
-		bool remove_pattern(unsigned index);
+		void remove_pattern(unsigned index);
 		
-		bool move_pattern(unsigned from, unsigned to);
+		void move_pattern(unsigned from, unsigned to);
 		
-		bool clear_midi_event(unsigned pattern_index, unsigned track_index, unsigned column_index, unsigned tick)
+		void clear_midi_event(unsigned pattern_index, unsigned track_index, unsigned column_index, unsigned tick)
 		{
+			check_pattern_index(pattern_index);
+			
+			check_track_index(track_index);
+			
 			midi_event_ptr new_midi_event;
 			
 			write_command_and_wait
@@ -453,25 +482,26 @@ namespace teq
 					track_ptr->m_columns[column_index].m_events[tick] = new_midi_event;
 				}
 			);
-			
-			return true;
 		}
 		
-		bool set_midi_event
+		void set_midi_event
 		(
 			unsigned pattern_index, 
 			unsigned track_index, 
 			unsigned column_index, 
-			unsigned tick, 
+			unsigned tick_index, 
 			midi_event::type type, 
 			unsigned value1, 
 			unsigned value2
 		)
 		{
-			if (pattern_index >= m_song->m_patterns->size())
-			{
-				return false;
-			}
+			check_pattern_index(pattern_index);
+			
+			check_track_index(track_index);
+			
+			check_column_index(track_index, column_index);
+			
+			check_tick_index(pattern_index, tick_index);
 			
 			midi_event_ptr new_midi_event(new midi_event);
 			
@@ -485,48 +515,51 @@ namespace teq
 			
 			write_command_and_wait
 			(
-				[this, new_midi_event, pattern_index, track_index, column_index, tick] () mutable
+				[this, new_midi_event, pattern_index, track_index, column_index, tick_index] () mutable
 				{
 					auto track_ptr = std::dynamic_pointer_cast<midi_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
-					track_ptr->m_columns[column_index].m_events[tick] = new_midi_event;
+					track_ptr->m_columns[column_index].m_events[tick_index] = new_midi_event;
 					new_midi_event.reset();
 				}
 			);
-			
-			return true;
 		}
 		
-		bool clear_cv_event(unsigned pattern_index, unsigned track_index, unsigned tick)
+		void clear_cv_event(unsigned pattern_index, unsigned track_index, unsigned tick_index)
 		{
+			check_pattern_index(pattern_index);
+			
+			check_track_index(track_index);
+						
+			check_tick_index(pattern_index, tick_index);
+			
 			cv_event_ptr new_cv_event;
 			
 			write_command_and_wait
 			(
-				[this, new_cv_event, pattern_index, track_index, tick] () mutable
+				[this, new_cv_event, pattern_index, track_index, tick_index] () mutable
 				{
 					auto track_ptr = std::dynamic_pointer_cast<cv_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
-					track_ptr->m_cv_column.m_events[tick] = new_cv_event;
+					track_ptr->m_cv_column.m_events[tick_index] = new_cv_event;
 				}
 			);
-			
-			return true;
 		}
 		
-		bool set_cv_event
+		void set_cv_event
 		(
 			unsigned pattern_index, 
 			unsigned track_index, 
-			unsigned tick, 
+			unsigned tick_index, 
 			cv_event::type type, 
 			float value1, 
 			float value2
 		)
 		{
-			if (pattern_index >= m_song->m_patterns->size())
-			{
-				return false;
-			}
+			check_pattern_index(pattern_index);
 			
+			check_track_index(track_index);
+			
+			check_tick_index(pattern_index, tick_index);
+
 			cv_event_ptr new_cv_event(new cv_event);
 			
 			m_event_heap.add(new_cv_event);
@@ -539,46 +572,50 @@ namespace teq
 			
 			write_command_and_wait
 			(
-				[this, new_cv_event, pattern_index, track_index, tick] () mutable
+				[this, new_cv_event, pattern_index, track_index, tick_index] () mutable
 				{
 					auto track_ptr = std::dynamic_pointer_cast<cv_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
-					track_ptr->m_cv_column.m_events[tick] = new_cv_event;
+					track_ptr->m_cv_column.m_events[tick_index] = new_cv_event;
 					new_cv_event.reset();
 				}
 			);
-			
-			return true;
 		}
 		
-		bool clear_control_event(unsigned pattern_index, unsigned track_index, unsigned tick)
+		void clear_control_event(unsigned pattern_index, unsigned track_index, unsigned tick_index)
 		{
+			check_pattern_index(pattern_index);
+			
+			check_track_index(track_index);
+			
+			check_tick_index(pattern_index, tick_index);
+
 			control_event_ptr new_control_event;
 			
 			write_command_and_wait
 			(
-				[this, new_control_event, pattern_index, track_index, tick] () mutable
+				[this, new_control_event, pattern_index, track_index, tick_index] () mutable
 				{
 					auto track_ptr = std::dynamic_pointer_cast<control_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
-					track_ptr->m_control_column.m_events[tick] = new_control_event;
+					track_ptr->m_control_column.m_events[tick_index] = new_control_event;
 				}
 			);	
-			return true;
 		}
 		
-		bool set_control_event
+		void set_control_event
 		(
 			unsigned pattern_index, 
 			unsigned track_index, 
-			unsigned tick, 
+			unsigned tick_index, 
 			control_event::type type, 
 			float value1, 
 			float value2
 		)
 		{
-			if (pattern_index >= m_song->m_patterns->size())
-			{
-				return false;
-			}
+			check_pattern_index(pattern_index);
+			
+			check_track_index(track_index);
+				
+			check_tick_index(pattern_index, tick_index);
 			
 			control_event_ptr new_control_event(new control_event);
 			
@@ -592,15 +629,13 @@ namespace teq
 			
 			write_command_and_wait
 			(
-				[this, new_control_event, pattern_index, track_index, tick] () mutable
+				[this, new_control_event, pattern_index, track_index, tick_index] () mutable
 				{
 					auto track_ptr = std::dynamic_pointer_cast<control_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
-					track_ptr->m_control_column.m_events[tick] = new_control_event;
+					track_ptr->m_control_column.m_events[tick_index] = new_control_event;
 					new_control_event.reset();
 				}
 			);
-			
-			return true;
 		}
 
 		void set_loop_range(const loop_range &range)
