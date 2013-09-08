@@ -24,9 +24,9 @@
 
 #define LIBTEQ_THROW_RUNTIME_ERROR(x) \
 { \
-	std::stringstream stream; \
-	stream << x; \
-	throw std::runtime_error(stream.str().c_str()); \
+	std::stringstream exception_string_stream; \
+	exception_string_stream << x; \
+	throw std::runtime_error(exception_string_stream.str().c_str()); \
 }
 
 namespace teq
