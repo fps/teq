@@ -183,8 +183,8 @@ namespace teq
 			init
 			(
 				other.m_client_name,
-				transport_state::STOPPED,
-				transport_source::INTERNAL,
+				other.m_transport_state,
+				other.m_transport_source,
 				other.m_send_all_notes_off_on_loop,
 				other.m_send_all_notes_off_on_stop
 			);
@@ -346,6 +346,13 @@ namespace teq
 			{
 				LIBTEQ_THROW_RUNTIME_ERROR("Tick index out of bounds: " << tick_index << ". Pattern length: " << (*(m_song->m_patterns))[pattern_index].m_length)
 			}
+		}
+		
+		global_track_properties::type track_type(unsigned index)
+		{
+			check_track_index(index);
+			
+			return (*m_song->m_tracks)[index].first->m_type;
 		}
 		
 		void insert_midi_track(const std::string &track_name, unsigned index)
