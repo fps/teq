@@ -29,10 +29,19 @@ namespace teq
 	
 	struct global_track_properties
 	{
+		enum type { NONE, MIDI, CV, CONTROL };
+		
+		type m_type;
+
 		const std::string m_name;
 		
 		virtual ~global_track_properties() { }
 		
+		global_track_properties(type the_type = type::NONE)  :
+			m_type(the_type)
+		{
+			
+		}
 		
 		virtual track_ptr create_track() = 0;
 	};
@@ -67,6 +76,7 @@ namespace teq
 		std::array<bool, 16> m_channels;
 
 		global_midi_track_properties() : 
+			global_track_properties(global_track_properties::type::MIDI),
 			m_number_of_columns(1)
 		{
 			m_channels[0] = true;
@@ -101,6 +111,12 @@ namespace teq
 		{
 			return track_ptr(new cv_track);
 		}
+		
+		global_cv_track_properties() :
+			global_track_properties(global_track_properties::type::CV)
+		{
+			
+		}
 	};
 	
 	struct control_track : track
@@ -118,6 +134,12 @@ namespace teq
 		virtual track_ptr create_track()
 		{
 			return track_ptr(new control_track);
+		}
+		
+		global_control_track_properties() :
+			global_track_properties(global_track_properties::type::CONTROL)
+		{
+			
 		}
 	};	
 } // namespace

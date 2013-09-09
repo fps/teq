@@ -113,8 +113,6 @@ namespace teq
 		
 		enum transport_source { INTERNAL, JACK_TRANSPORT };
 		
-		enum track_type { MIDI, CV, CONTROL };
-		
 		
 		heap<song> m_song_heap;
 		
@@ -166,30 +164,53 @@ namespace teq
 		
 		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 128) :
 			m_commands(command_buffer_size),
-			m_ack(false),
-			m_client_name(client_name),
-			m_transport_state(STOPPED),
-			m_transport_source(INTERNAL),
-			m_send_all_notes_off_on_loop(true),
-			m_send_all_notes_off_on_stop(true)
+			m_ack(false)
 		{
-			init();
+			init
+			(
+				client_name,
+				transport_state::STOPPED,
+				transport_source::INTERNAL,
+				true,
+				true
+			);
 		}
 		
 		teq(const teq &other) :
 			m_commands(other.m_commands.size),
-			m_ack(false),
-			m_client_name(other.m_client_name),
-			m_transport_state(STOPPED),
-			m_transport_source(INTERNAL),
-			m_send_all_notes_off_on_loop(other.m_send_all_notes_off_on_loop),
-			m_send_all_notes_off_on_stop(other.m_send_all_notes_off_on_stop)
+			m_ack(false)
 		{
-			init();
+			init
+			(
+				other.m_client_name,
+				transport_state::STOPPED,
+				transport_source::INTERNAL,
+				other.m_send_all_notes_off_on_loop,
+				other.m_send_all_notes_off_on_stop
+			);
 		}
 	
-		void init()
+		void init
+		(
+			const std::string &client_name,
+			transport_state the_transport_state,
+			transport_source the_transport_source,
+			bool send_all_notes_off_on_loop,
+			bool send_all_notes_off_on_stop
+		)
 		{
+			m_client_name = client_name;
+			
+			m_ack = false;
+			
+			m_transport_state = the_transport_state;
+			
+			m_transport_source = the_transport_source;
+			
+			m_send_all_notes_off_on_loop = send_all_notes_off_on_loop;
+			
+			m_send_all_notes_off_on_stop = send_all_notes_off_on_stop;
+			
 			m_song = m_song_heap.add_new(song());
 			
 			jack_status_t status;

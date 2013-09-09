@@ -70,10 +70,10 @@ BOOST_PYTHON_MODULE(teq)
 		.value("JACK_TRANSPORT", teq::teq::transport_source::JACK_TRANSPORT)
 	;
 
-	enum_<teq::teq::track_type>("track_type")
-		.value("MIDI", teq::teq::track_type::MIDI)
-		.value("CV", teq::teq::track_type::CV)
-		.value("CONTROL", teq::teq::track_type::CONTROL)
+	enum_<teq::global_track_properties::type>("track_type")
+		.value("MIDI", teq::global_track_properties::type::MIDI)
+		.value("CV", teq::global_track_properties::type::CV)
+		.value("CONTROL", teq::global_track_properties::type::CONTROL)
 	;
 
 	enum_<teq::midi_event::type>("midi_event_type")

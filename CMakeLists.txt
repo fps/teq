@@ -39,7 +39,8 @@ pkg_check_modules(JACK jack)
 
 # BOOST
 #set(Boost_USE_STATIC_LIBS)
-find_package(Boost COMPONENTS python3 REQUIRED)
+#find_package(Boost COMPONENTS python3 REQUIRED)
+find_package(Boost COMPONENTS python REQUIRED)
 
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
