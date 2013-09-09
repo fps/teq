@@ -319,7 +319,12 @@ namespace teq
 		
 		void check_tick_index(unsigned pattern_index, unsigned tick_index)
 		{
+			check_pattern_index(pattern_index);
 			
+			if (tick_index >=  (*(m_song->m_patterns))[pattern_index].m_length)
+			{
+				LIBTEQ_THROW_RUNTIME_ERROR("Tick index out of bounds: " << tick_index << ". Pattern length: " << (*(m_song->m_patterns))[pattern_index].m_length)
+			}
 		}
 		
 		void insert_midi_track(const std::string &track_name, unsigned index)
@@ -416,6 +421,13 @@ namespace teq
 			return m_song->m_patterns->size();
 		}
 		
+		size_t number_of_ticks(unsigned pattern_index)
+		{
+			check_pattern_index(pattern_index);
+			
+			return (*m_song->m_patterns)[pattern_index].m_length;
+		}
+		
 		void remove_track(unsigned index)
 		{
 			if (index >= number_of_tracks())
@@ -484,6 +496,41 @@ namespace teq
 			);
 		}
 		
+
+		void set_midi_event
+		(
+			unsigned pattern_index, 
+			unsigned track_index, 
+			unsigned column_index, 
+			unsigned tick_index, 
+			midi_event event
+		)
+		{
+			check_pattern_index(pattern_index);
+			
+			check_track_index(track_index);
+			
+			check_column_index(track_index, column_index);
+			
+			check_tick_index(pattern_index, tick_index);
+			
+
+			midi_event_ptr new_midi_event(new midi_event(event));
+			
+			m_event_heap.add(new_midi_event);
+
+			write_command_and_wait
+			(
+				[this, new_midi_event, pattern_index, track_index, column_index, tick_index] () mutable
+				{
+					auto track_ptr = std::dynamic_pointer_cast<midi_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
+					track_ptr->m_columns[column_index].m_events[tick_index] = new_midi_event;
+					new_midi_event.reset();
+				}
+			);			
+		}
+
+#if 0
 		void set_midi_event
 		(
 			unsigned pattern_index, 
@@ -502,6 +549,7 @@ namespace teq
 			check_column_index(track_index, column_index);
 			
 			check_tick_index(pattern_index, tick_index);
+			
 			
 			midi_event_ptr new_midi_event(new midi_event);
 			
@@ -523,6 +571,66 @@ namespace teq
 				}
 			);
 		}
+#endif
+
+		midi_event get_midi_event
+		(
+			unsigned pattern_index, 
+			unsigned track_index, 
+			unsigned column_index, 
+			unsigned tick_index
+		)
+		{
+			check_pattern_index(pattern_index);
+			
+			check_track_index(track_index);
+			
+			check_tick_index(pattern_index, tick_index);
+			
+			check_column_index(track_index, column_index);
+			
+			return 
+				*(std::dynamic_pointer_cast<midi_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index])
+					->m_columns[column_index].m_events[tick_index]);
+		}
+		
+		cv_event get_cv_event	
+		(
+			unsigned pattern_index, 
+			unsigned track_index, 
+			unsigned tick_index
+		)
+		{
+			check_pattern_index(pattern_index);
+			
+			check_track_index(track_index);
+			
+			check_tick_index(pattern_index, tick_index);
+
+			return 
+				*(std::dynamic_pointer_cast<cv_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index])
+					->m_cv_column.m_events[tick_index]);
+		}
+
+		
+		control_event get_control_event
+		(
+			unsigned pattern_index, 
+			unsigned track_index, 
+			unsigned tick_index
+		)
+		{
+			check_pattern_index(pattern_index);
+			
+			check_track_index(track_index);
+			
+			check_tick_index(pattern_index, tick_index);
+			
+			return 
+				*(std::dynamic_pointer_cast<control_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index])
+					->m_control_column.m_events[tick_index]);
+		}
+
 		
 		void clear_cv_event(unsigned pattern_index, unsigned track_index, unsigned tick_index)
 		{

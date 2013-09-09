@@ -17,6 +17,24 @@ BOOST_PYTHON_MODULE(teq)
 		.def_readwrite("end", &teq::teq::loop_range::m_end)
 	;
 	
+	class_<teq::midi_event>("midi_event", init<optional<teq::midi_event::type, unsigned, unsigned>>())
+		.def_readwrite("type", &teq::midi_event::m_type)
+		.def_readwrite("value1", &teq::midi_event::m_value1)
+		.def_readwrite("value2", &teq::midi_event::m_value2)
+	;
+
+	class_<teq::cv_event>("cv_event", init<optional<teq::cv_event::type, float, float>>())
+		.def_readwrite("type", &teq::cv_event::m_type)
+		.def_readwrite("value1", &teq::cv_event::m_value1)
+		.def_readwrite("value2", &teq::cv_event::m_value2)
+	;
+
+	class_<teq::control_event>("control_event", init<optional<teq::control_event::type, float, float>>())
+		.def_readwrite("type", &teq::control_event::m_type)
+		.def_readwrite("value1", &teq::control_event::m_value1)
+		.def_readwrite("value2", &teq::control_event::m_value2)
+	;
+
 	class_<teq::teq>("teq", init<optional<std::string, unsigned>>())
 		.def("gc", &teq::teq::gc)
 		.def("set_global_tempo", &teq::teq::set_global_tempo)
@@ -33,10 +51,13 @@ BOOST_PYTHON_MODULE(teq)
 		.def("insert_pattern", &teq::teq::insert_pattern)
 		.def("clear_midi_event", &teq::teq::clear_midi_event)
 		.def("set_midi_event", &teq::teq::set_midi_event)
+		.def("get_midi_event", &teq::teq::set_midi_event)
 		.def("clear_cv_event", &teq::teq::clear_cv_event)
 		.def("set_cv_event", &teq::teq::set_cv_event)
+		.def("get_cv_event", &teq::teq::set_midi_event)
 		.def("clear_control_event", &teq::teq::clear_control_event)
 		.def("set_control_event", &teq::teq::set_control_event)
+		.def("get_control_event", &teq::teq::set_midi_event)
 	;
 	
 	enum_<teq::teq::transport_state>("transport_state")
