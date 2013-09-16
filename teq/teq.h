@@ -145,16 +145,18 @@ namespace teq
 		
 		loop_range m_loop_range;
 		
-		float m_tempo;
+		float m_global_tempo;
+		
+		float m_relative_tempo;
 		
 		
 		transport_state m_transport_state;
 		
 		transport_source m_transport_source;
 		
-		tick m_frames_since_last_tick;
-		
 		transport_position m_transport_position;
+		
+		float m_time_since_last_tick;
 		
 		
 		bool m_send_all_notes_off_on_loop;
@@ -204,6 +206,10 @@ namespace teq
 			m_ack = false;
 			
 			m_transport_state = the_transport_state;
+			
+			m_global_tempo = 125.0;
+			
+			m_relative_tempo = 1.0;
 			
 			m_transport_source = the_transport_source;
 			
@@ -791,7 +797,7 @@ namespace teq
 			(
 				[this, tempo]()
 				{
-					this->m_tempo = tempo;
+					this->m_global_tempo = tempo;
 				}
 			);
 		}	
@@ -810,6 +816,11 @@ namespace teq
 		
 		void set_transport_position(transport_position position)
 		{
+			if (m_transport_source != transport_source::INTERNAL)
+			{
+				LIBTEQ_THROW_RUNTIME_ERROR("Transport controlled by jack transport")
+			}
+			
 			write_command_and_wait
 			(
 				[this, position]()
@@ -922,6 +933,23 @@ namespace teq
 				// locking failed
 			}
 			
+			jack_position_t transport_position;
+			
+			const jack_transport_state_t transport_state = jack_transport_query(m_jack_client, &transport_position);
+
+			if (m_transport_source == transport_source::INTERNAL)
+			{
+				
+			}
+			else
+			{
+				
+			}
+			
+			for (jack_nframes_t frame_index = 0; frame_index < nframes; ++frame_index)
+			{
+				
+			}
 #if 0
 			const tracks_map &tracks = m_tracks->t;;
 
