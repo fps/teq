@@ -34,6 +34,7 @@ namespace teq
 	extern "C" 
 	{
 		int jack_process(jack_nframes_t nframes, void *arg);
+		int jack_transport(jack_transport_state_t, jack_position_t*, void *);
 	}
 	
 	struct teq
@@ -912,6 +913,12 @@ namespace teq
 			e.render(event_buffer);
 		}
 		
+		int transport(jack_transport_state_t state, jack_position_t *position)
+		{
+			return 1;
+		}
+
+		
 		int process(jack_nframes_t nframes)
 		{
 			try
@@ -1024,6 +1031,9 @@ namespace teq
 		}
 		
 		friend int jack_process(jack_nframes_t, void*);
+		friend int jack_transport(jack_transport_state_t, jack_position_t*, void *);
+
+
 	};
 }
 
