@@ -5,7 +5,7 @@ t = teq.teq()
 
 t.set_global_tempo(250.0)
 
-# We want to set a loop range, so let's do it. Times are samplerate based.
+# We want to set a loop range, so let's do it. 
 r = teq.loop_range()
 
 r.enabled = True
