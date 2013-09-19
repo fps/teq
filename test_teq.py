@@ -11,7 +11,6 @@ p.tick = 0
 
 t.set_transport_position(p)
 
-t.set_transport_source(teq.transport_source.INTERNAL)
 t.set_transport_state(teq.transport_state.PLAYING)
 
 # We want to set a loop range, so let's do it. Times are samplerate based.
@@ -23,7 +22,7 @@ r.start.pattern = 0
 r.start.tick = 0
 
 r.end.pattern = 1
-r.end.tick = 128
+r.end.tick = 0
 
 # Set the loop range.
 t.set_loop_range(r)
