@@ -5,14 +5,6 @@ t = teq.teq()
 
 t.set_global_tempo(250.0)
 
-p = teq.transport_position()
-p.pattern = 0
-p.tick = 0
-
-t.set_transport_position(p)
-
-t.set_transport_state(teq.transport_state.PLAYING)
-
 # We want to set a loop range, so let's do it. Times are samplerate based.
 r = teq.loop_range()
 
@@ -59,6 +51,16 @@ for n in range(0, 128):
 
 # Clean up some memory
 t.gc()
+
+# Set the transport position and play
+p = teq.transport_position()
+p.pattern = 0
+p.tick = 0
+
+t.set_transport_position(p)
+
+t.set_transport_state(teq.transport_state.PLAYING)
+
 
 # Wait for the user to press a key...
 try:

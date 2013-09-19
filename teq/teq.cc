@@ -279,7 +279,7 @@ namespace teq
 	
 	void teq::move_track(unsigned from, unsigned to)
 	{
-		
+	
 	}
 	
 	void teq::insert_pattern(unsigned index, unsigned pattern_length)
@@ -682,30 +682,6 @@ namespace teq
 		);
 	}
 
-#if 0
-	inline jack_nframes_t effective_position(jack_nframes_t transport_frame, jack_nframes_t process_frame)
-	{
-		const jack_nframes_t frame = transport_frame + process_frame;
-		
-		if 
-		(
-			false == m_loop_range.m_enabled || 
-			frame < m_loop_range.m_end
-		)
-		{
-			return frame;
-		}
-		else
-		{
-			return m_loop_range.m_start + ((frame - m_loop_range.m_start) % (m_loop_range.m_end - m_loop_range.m_start));
-		}
-		
-		// Above list of conditions is exhaustive. The compiler doesn't seem 
-		// to see that. So we make him happy..
-		throw std::logic_error("This should never happen");
-	}
-#endif
-
 	void teq::render_event(const midi::midi_event &e, void *port_buffer, jack_nframes_t time)
 	{
 		jack_midi_data_t *event_buffer = jack_midi_event_reserve(port_buffer, time, e.size());
@@ -732,6 +708,11 @@ namespace teq
 		catch(std::system_error &e)
 		{
 			// locking failed
+		}
+		
+		if (m_transport_state == transport_state::STOPPED)
+		{
+			return 0;
 		}
 		
 		const float sample_duration = 1.0 / jack_get_sample_rate(m_jack_client);
@@ -799,6 +780,14 @@ namespace teq
 							if (nullptr == the_track.m_cv_column.m_events[current_tick])
 							{
 								break;
+							}
+							
+							const auto &the_event = *the_track.m_cv_column.m_events[current_tick];
+
+							switch (the_event.m_type)
+							{
+								default:
+									break;
 							}
 						}
 						break;

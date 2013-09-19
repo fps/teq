@@ -107,6 +107,8 @@ namespace teq
 	
 	struct global_cv_track_properties : global_track_properties
 	{
+		cv_event m_state;
+		
 		virtual track_ptr create_track()
 		{
 			return track_ptr(new cv_track);
@@ -131,6 +133,8 @@ namespace teq
 
 	struct global_control_track_properties : global_track_properties
 	{
+		control_event m_state;
+		
 		virtual track_ptr create_track()
 		{
 			return track_ptr(new control_track);
