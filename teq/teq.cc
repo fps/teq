@@ -687,14 +687,8 @@ namespace teq
 							const auto &the_track = *std::static_pointer_cast<cv_track>(the_pattern.m_tracks[track_index]);
 							auto &cv_properties = *((global_cv_track_properties*)&track_properties);
 							
-							if (cv_event::type::NONE != the_track.m_events[current_tick].m_type)
-							{
-								const auto &the_event = the_track.m_events[current_tick];
-								cv_properties.m_state = the_event;
-								cv_properties.m_time_since_event = 0;
-							}
-							
-							cv_properties.m_time_since_event += sample_duration;
+							const auto &the_event = the_track.m_events[current_tick];
+							cv_properties.m_current_event = the_event;
 						}
 						break;
 
@@ -703,14 +697,8 @@ namespace teq
 							const auto &the_track = *std::static_pointer_cast<control_track>(the_pattern.m_tracks[track_index]);
 							auto &control_properties = *((global_control_track_properties*)&track_properties);
 							
-							if (control_event::type::NONE != the_track.m_events[current_tick].m_type)
-							{
-								const auto &the_event = the_track.m_events[current_tick];
-								control_properties.m_state = the_event;
-								control_properties.m_time_since_event = 0;
-							}
-							
-							control_properties.m_time_since_event += sample_duration;
+							const auto &the_event = the_track.m_events[current_tick];
+							control_properties.m_current_event = the_event;
 						}
 						break;
 

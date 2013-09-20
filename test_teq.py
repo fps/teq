@@ -49,10 +49,10 @@ for n in range(0, 128):
 	print ("Adding a midi note at tick ", n, " with note ", n, "...")
 	t.set_midi_event(0, 0, 0, n, teq.midi_event(teq.midi_event_type.ON, n, 64))
 
-# Clean up some memory
+print ("Cleaning up some memory...")
 t.gc()
 
-# Set the transport position and play
+print ("Setting the transport position and starting playback...")
 p = teq.transport_position()
 p.pattern = 0
 p.tick = 0
