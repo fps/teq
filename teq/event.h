@@ -24,7 +24,7 @@ namespace teq
 		//! End value
 		float m_value2;
 		
-		control_event(type the_type = type::GLOBAL_TEMPO_ONE_SHOT, float value1 = 128, float value2 = 0) :
+		control_event(type the_type = type::GLOBAL_TEMPO_ONE_SHOT, float value1 = 0, float value2 = 0) :
 			m_type(the_type),
 			m_value1(value1),
 			m_value2(value2)

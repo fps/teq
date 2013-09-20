@@ -763,7 +763,7 @@ namespace teq
 				
 				for (size_t track_index = 0; track_index < m_song->m_tracks->size(); ++track_index)
 				{
-					const auto &track_properties = *(*m_song->m_tracks)[track_index].first;
+					auto &track_properties = *(*m_song->m_tracks)[track_index].first;
 					
 					switch(track_properties.m_type)
 					{
@@ -776,36 +776,40 @@ namespace teq
 						case global_track_properties::type::CV:
 						{
 							const auto &the_track = *std::static_pointer_cast<cv_track>(the_pattern.m_tracks[track_index]);
+							auto &cv_properties = *((global_cv_track_properties*)&track_properties);
 							
-							if (nullptr == the_track.m_cv_column.m_events[current_tick])
+							if (nullptr != the_track.m_cv_column.m_events[current_tick])
 							{
-								break;
+								const auto &the_event = *the_track.m_cv_column.m_events[current_tick];
+								cv_properties.m_state = the_event;
+								cv_properties.m_time_since_event = 0;
 							}
 							
-							const auto &the_event = *the_track.m_cv_column.m_events[current_tick];
-
-							switch (the_event.m_type)
-							{
-								default:
-									break;
-							}
+							cv_properties.m_time_since_event += sample_duration;
 						}
 						break;
 
 						case global_track_properties::type::CONTROL:
 						{
 							const auto &the_track = *std::static_pointer_cast<control_track>(the_pattern.m_tracks[track_index]);
+							auto &control_properties = *((global_control_track_properties*)&track_properties);
 							
-							if (nullptr == the_track.m_control_column.m_events[current_tick])
+							if (nullptr != the_track.m_control_column.m_events[current_tick])
 							{
-								break;
+								const auto &the_event = *the_track.m_control_column.m_events[current_tick];
+								control_properties.m_state = the_event;
+								control_properties.m_time_since_event = 0;
 							}
+							
+							control_properties.m_time_since_event += sample_duration;
 						}
 						break;
 
 						default:
 							break;
 					}
+					
+					
 				}
 			}
 			

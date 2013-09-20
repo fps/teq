@@ -13,7 +13,7 @@ r.enabled = True
 r.start.pattern = 0
 r.start.tick = 0
 
-r.end.pattern = 1
+r.end.pattern = 3
 r.end.tick = 0
 
 # Set the loop range.

@@ -108,6 +108,7 @@ namespace teq
 	struct global_cv_track_properties : global_track_properties
 	{
 		cv_event m_state;
+		float m_time_since_event;
 		
 		virtual track_ptr create_track()
 		{
@@ -115,7 +116,8 @@ namespace teq
 		}
 		
 		global_cv_track_properties() :
-			global_track_properties(global_track_properties::type::CV)
+			global_track_properties(global_track_properties::type::CV),
+			m_time_since_event(0)
 		{
 			
 		}
@@ -134,6 +136,7 @@ namespace teq
 	struct global_control_track_properties : global_track_properties
 	{
 		control_event m_state;
+		float m_time_since_event;
 		
 		virtual track_ptr create_track()
 		{
@@ -141,7 +144,8 @@ namespace teq
 		}
 		
 		global_control_track_properties() :
-			global_track_properties(global_track_properties::type::CONTROL)
+			global_track_properties(global_track_properties::type::CONTROL),
+			m_time_since_event(0)
 		{
 			
 		}
