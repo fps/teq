@@ -239,8 +239,6 @@ namespace teq
 		
 		void move_pattern(unsigned from, unsigned to);
 		
-		void clear_midi_event(unsigned pattern_index, unsigned track_index, unsigned column_index, unsigned tick);
-
 		void set_midi_event
 		(
 			unsigned pattern_index, 
