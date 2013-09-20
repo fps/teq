@@ -328,24 +328,6 @@ namespace teq
 		
 	}
 	
-	void teq::clear_midi_event(unsigned pattern_index, unsigned track_index, unsigned column_index, unsigned tick)
-	{
-		check_pattern_index(pattern_index);
-		
-		check_track_index(track_index);
-		
-		midi_event_ptr new_midi_event;
-		
-		write_command_and_wait
-		(
-			[this, new_midi_event, pattern_index, track_index, column_index, tick] () mutable
-			{
-				auto track_ptr = std::dynamic_pointer_cast<midi_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
-				track_ptr->m_columns[column_index].m_events[tick] = new_midi_event;
-			}
-		);
-	}
-	
 
 	void teq::set_midi_event
 	(
@@ -353,7 +335,7 @@ namespace teq
 		unsigned track_index, 
 		unsigned column_index, 
 		unsigned tick_index, 
-		midi_event event
+		const midi_event &event
 	)
 	{
 		check_pattern_index(pattern_index);
@@ -364,18 +346,12 @@ namespace teq
 		
 		check_tick_index(pattern_index, tick_index);
 		
-
-		midi_event_ptr new_midi_event(new midi_event(event));
-		
-		m_event_heap.add(new_midi_event);
-
 		write_command_and_wait
 		(
-			[this, new_midi_event, pattern_index, track_index, column_index, tick_index] () mutable
+			[this, event, pattern_index, track_index, column_index, tick_index] () mutable
 			{
 				auto track_ptr = std::dynamic_pointer_cast<midi_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
-				track_ptr->m_columns[column_index].m_events[tick_index] = new_midi_event;
-				new_midi_event.reset();
+				track_ptr->m_columns[column_index].m_events[tick_index] = event;
 			}
 		);			
 	}
@@ -440,7 +416,7 @@ namespace teq
 		check_column_index(track_index, column_index);
 		
 		return 
-			*(std::dynamic_pointer_cast<midi_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index])
+			(std::dynamic_pointer_cast<midi_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index])
 				->m_columns[column_index].m_events[tick_index]);
 	}
 	
@@ -458,8 +434,8 @@ namespace teq
 		check_tick_index(pattern_index, tick_index);
 
 		return 
-			*(std::dynamic_pointer_cast<cv_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index])
-				->m_cv_column.m_events[tick_index]);
+			(std::dynamic_pointer_cast<cv_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index])
+				->m_events[tick_index]);
 	}
 
 	
@@ -477,39 +453,17 @@ namespace teq
 		check_tick_index(pattern_index, tick_index);
 		
 		return 
-			*(std::dynamic_pointer_cast<control_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index])
-				->m_control_column.m_events[tick_index]);
+			(std::dynamic_pointer_cast<control_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index])
+				->m_events[tick_index]);
 	}
 
-	
-	void teq::clear_cv_event(unsigned pattern_index, unsigned track_index, unsigned tick_index)
-	{
-		check_pattern_index(pattern_index);
 		
-		check_track_index(track_index);
-					
-		check_tick_index(pattern_index, tick_index);
-		
-		cv_event_ptr new_cv_event;
-		
-		write_command_and_wait
-		(
-			[this, new_cv_event, pattern_index, track_index, tick_index] () mutable
-			{
-				auto track_ptr = std::dynamic_pointer_cast<cv_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
-				track_ptr->m_cv_column.m_events[tick_index] = new_cv_event;
-			}
-		);
-	}
-	
 	void teq::set_cv_event
 	(
 		unsigned pattern_index, 
 		unsigned track_index, 
 		unsigned tick_index, 
-		cv_event::type type, 
-		float value1, 
-		float value2
+		const cv_event &event
 	)
 	{
 		check_pattern_index(pattern_index);
@@ -517,46 +471,15 @@ namespace teq
 		check_track_index(track_index);
 		
 		check_tick_index(pattern_index, tick_index);
-
-		cv_event_ptr new_cv_event(new cv_event);
-		
-		m_event_heap.add(new_cv_event);
-		
-		new_cv_event->m_type = type;
-		
-		new_cv_event->m_value1 = value1;
-		
-		new_cv_event->m_value2 = value2;
 		
 		write_command_and_wait
 		(
-			[this, new_cv_event, pattern_index, track_index, tick_index] () mutable
+			[this, event, pattern_index, track_index, tick_index] () mutable
 			{
 				auto track_ptr = std::dynamic_pointer_cast<cv_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
-				track_ptr->m_cv_column.m_events[tick_index] = new_cv_event;
-				new_cv_event.reset();
+				track_ptr->m_events[tick_index] = event;
 			}
 		);
-	}
-	
-	void teq::clear_control_event(unsigned pattern_index, unsigned track_index, unsigned tick_index)
-	{
-		check_pattern_index(pattern_index);
-		
-		check_track_index(track_index);
-		
-		check_tick_index(pattern_index, tick_index);
-
-		control_event_ptr new_control_event;
-		
-		write_command_and_wait
-		(
-			[this, new_control_event, pattern_index, track_index, tick_index] () mutable
-			{
-				auto track_ptr = std::dynamic_pointer_cast<control_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
-				track_ptr->m_control_column.m_events[tick_index] = new_control_event;
-			}
-		);	
 	}
 	
 	void teq::set_control_event
@@ -564,9 +487,7 @@ namespace teq
 		unsigned pattern_index, 
 		unsigned track_index, 
 		unsigned tick_index, 
-		control_event::type type, 
-		float value1, 
-		float value2
+		const control_event &event
 	)
 	{
 		check_pattern_index(pattern_index);
@@ -575,23 +496,12 @@ namespace teq
 			
 		check_tick_index(pattern_index, tick_index);
 		
-		control_event_ptr new_control_event(new control_event);
-		
-		m_event_heap.add(new_control_event);
-		
-		new_control_event->m_type = type;
-		
-		new_control_event->m_value1 = value1;
-		
-		new_control_event->m_value2 = value2;
-		
 		write_command_and_wait
 		(
-			[this, new_control_event, pattern_index, track_index, tick_index] () mutable
+			[this, event, pattern_index, track_index, tick_index] () mutable
 			{
 				auto track_ptr = std::dynamic_pointer_cast<control_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
-				track_ptr->m_control_column.m_events[tick_index] = new_control_event;
-				new_control_event.reset();
+				track_ptr->m_events[tick_index] = event;
 			}
 		);
 	}
@@ -647,7 +557,6 @@ namespace teq
 		m_global_track_properties_list_heap.gc();
 		m_pattern_heap.gc();
 		m_pattern_list_heap.gc();
-		m_event_heap.gc();
 	}
 	
 	void teq::write_command(command f)
@@ -778,9 +687,9 @@ namespace teq
 							const auto &the_track = *std::static_pointer_cast<cv_track>(the_pattern.m_tracks[track_index]);
 							auto &cv_properties = *((global_cv_track_properties*)&track_properties);
 							
-							if (nullptr != the_track.m_cv_column.m_events[current_tick])
+							if (cv_event::type::NONE != the_track.m_events[current_tick].m_type)
 							{
-								const auto &the_event = *the_track.m_cv_column.m_events[current_tick];
+								const auto &the_event = the_track.m_events[current_tick];
 								cv_properties.m_state = the_event;
 								cv_properties.m_time_since_event = 0;
 							}
@@ -794,9 +703,9 @@ namespace teq
 							const auto &the_track = *std::static_pointer_cast<control_track>(the_pattern.m_tracks[track_index]);
 							auto &control_properties = *((global_control_track_properties*)&track_properties);
 							
-							if (nullptr != the_track.m_control_column.m_events[current_tick])
+							if (control_event::type::NONE != the_track.m_events[current_tick].m_type)
 							{
-								const auto &the_event = *the_track.m_control_column.m_events[current_tick];
+								const auto &the_event = the_track.m_events[current_tick];
 								control_properties.m_state = the_event;
 								control_properties.m_time_since_event = 0;
 							}

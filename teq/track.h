@@ -51,7 +51,7 @@ namespace teq
 	
 	struct midi_track : track
 	{
-		typedef event_column<midi_event_ptr> midi_column;
+		typedef event_column<midi_event> midi_column;
 		
 		typedef std::vector<midi_column> column_list;
 		
@@ -97,11 +97,11 @@ namespace teq
 	
 	struct cv_track : track
 	{
-		event_column<cv_event_ptr> m_cv_column;
+		std::vector<cv_event> m_events;
 		
 		virtual void set_length(unsigned length)
 		{
-			m_cv_column.m_events.resize(length);
+			m_events.resize(length);
 		}
 	};
 	
@@ -125,11 +125,11 @@ namespace teq
 	
 	struct control_track : track
 	{
-		event_column<control_event_ptr> m_control_column;
+		std::vector<control_event> m_events;
 		
 		virtual void set_length(unsigned length)
 		{
-			m_control_column.m_events.resize(length);
+			m_events.resize(length);
 		}
 	};
 

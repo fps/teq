@@ -5,16 +5,9 @@
 
 namespace teq
 {
-	struct event
+	struct control_event
 	{
-		virtual ~event() { }
-	};
-	
-	typedef std::shared_ptr<event> event_ptr;
-	
-	struct control_event : event
-	{
-		enum type { GLOBAL_TEMPO_ONE_SHOT, RELATIVE_TEMPO_ONE_SHOT, GLOBAL_TEMPO_INTERVAL, RELATIVE_TEMPO_INTERVAL };
+		enum type { NONE, GLOBAL_TEMPO_ONE_SHOT, RELATIVE_TEMPO_ONE_SHOT, GLOBAL_TEMPO_INTERVAL, RELATIVE_TEMPO_INTERVAL };
 		
 		type m_type;
 		
@@ -24,7 +17,7 @@ namespace teq
 		//! End value
 		float m_value2;
 		
-		control_event(type the_type = type::GLOBAL_TEMPO_ONE_SHOT, float value1 = 0, float value2 = 0) :
+		control_event(type the_type = type::NONE, float value1 = 0, float value2 = 0) :
 			m_type(the_type),
 			m_value1(value1),
 			m_value2(value2)
@@ -33,11 +26,9 @@ namespace teq
 		}
 	};
 	
-	typedef std::shared_ptr<control_event> control_event_ptr;
-
-	struct cv_event : event
+	struct cv_event
 	{
-		enum type { ONE_SHOT, INTERVAL };
+		enum type { NONE, ONE_SHOT, INTERVAL };
 		
 		type m_type;
 		
@@ -53,7 +44,7 @@ namespace teq
 			m_value2 = value;
 		}
 
-		cv_event(type the_type = type::ONE_SHOT, float value1 = 0, float value2 = 0) :
+		cv_event(type the_type = type::NONE, float value1 = 0, float value2 = 0) :
 			m_type(the_type),
 			m_value1(value1),
 			m_value2(value2)
@@ -63,11 +54,9 @@ namespace teq
 
 	};
 	
-	typedef std::shared_ptr<cv_event> cv_event_ptr;
-
-	struct midi_event : event
+	struct midi_event
 	{
-		enum type { ON, OFF, CC, PITCHBEND };
+		enum type { NONE, ON, OFF, CC, PITCHBEND };
 		
 		type m_type;
 
@@ -77,7 +66,7 @@ namespace teq
 		//! ON: velocity, OFF, CC, PITCHBEND: ignored
 		unsigned m_value2;
 
- 		midi_event(type the_type = type::ON, unsigned value1 = 0, unsigned value2 = 0) :
+ 		midi_event(type the_type = type::NONE, unsigned value1 = 0, unsigned value2 = 0) :
 			m_type(the_type),
 			m_value1(value1),
 			m_value2(value2)

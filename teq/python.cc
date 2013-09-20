@@ -71,6 +71,7 @@ BOOST_PYTHON_MODULE(teq)
 	;
 
 	enum_<teq::midi_event::type>("midi_event_type")
+		.value("NONE", teq::midi_event::type::NONE)
 		.value("ON", teq::midi_event::type::ON)
 		.value("OFF", teq::midi_event::type::OFF)
 		.value("CC", teq::midi_event::type::CC)
@@ -78,11 +79,13 @@ BOOST_PYTHON_MODULE(teq)
 	;
 
 	enum_<teq::cv_event::type>("cv_event_type")
+		.value("NONE", teq::cv_event::type::NONE)
 		.value("ONE_SHOT", teq::cv_event::type::ONE_SHOT)
 		.value("INTERVAL", teq::cv_event::type::INTERVAL)
 	;
 	
 	enum_<teq::control_event::type>("control_event_type")
+		.value("NONE", teq::control_event::type::NONE)
 		.value("GLOBAL_TEMPO_ONE_SHOT", teq::control_event::type::GLOBAL_TEMPO_ONE_SHOT)
 		.value("RELATIVE_TEMPO_ONE_SHOT", teq::control_event::type::RELATIVE_TEMPO_ONE_SHOT)
 		.value("GLOBAL_TEMPO_INTERVAL", teq::control_event::type::GLOBAL_TEMPO_INTERVAL)

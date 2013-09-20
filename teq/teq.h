@@ -119,8 +119,6 @@ namespace teq
 		
 		heap<song::pattern_list> m_pattern_list_heap;
 		
-		heap<event> m_event_heap;
-		
 		
 		lart::ringbuffer<command> m_commands;
 		
@@ -249,7 +247,7 @@ namespace teq
 			unsigned track_index, 
 			unsigned column_index, 
 			unsigned tick_index, 
-			midi_event event
+			const midi_event &event
 		);
 
 
@@ -275,29 +273,20 @@ namespace teq
 			unsigned tick_index
 		);
 
-		
-		void clear_cv_event(unsigned pattern_index, unsigned track_index, unsigned tick_index);
-		
 		void set_cv_event
 		(
 			unsigned pattern_index, 
 			unsigned track_index, 
 			unsigned tick_index, 
-			cv_event::type type, 
-			float value1, 
-			float value2
+			const cv_event &event
 		);
-		
-		void clear_control_event(unsigned pattern_index, unsigned track_index, unsigned tick_index);
 		
 		void set_control_event
 		(
 			unsigned pattern_index, 
 			unsigned track_index, 
 			unsigned tick_index, 
-			control_event::type type, 
-			float value1, 
-			float value2
+			const control_event &event
 		);
 		
 		void set_loop_range(const loop_range &range);
