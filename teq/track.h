@@ -70,14 +70,14 @@ namespace teq
 	
 	
 	struct global_midi_track_properties : global_track_properties
-	{
-		unsigned m_number_of_columns;
-		
+	{		
 		std::array<bool, 16> m_channels;
+		
+		std::vector<midi_event> m_current_events;
 
 		global_midi_track_properties() : 
 			global_track_properties(global_track_properties::type::MIDI),
-			m_number_of_columns(1)
+			m_current_events(1)
 		{
 			m_channels[0] = true;
 		}
@@ -86,7 +86,7 @@ namespace teq
 		{
 			midi_track_ptr new_midi_track(new midi_track);
 			
-			for (unsigned index = 0; index < m_number_of_columns; ++index)
+			for (unsigned index = 0; index < m_current_events.size(); ++index)
 			{
 				new_midi_track->m_columns.push_back(midi_track::midi_column());
 			}
@@ -136,8 +136,6 @@ namespace teq
 
 	struct global_control_track_properties : global_track_properties
 	{
-		control_event m_current_event;
-		
 		virtual track_ptr create_track()
 		{
 			return track_ptr(new control_track);

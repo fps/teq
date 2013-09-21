@@ -7,20 +7,16 @@ namespace teq
 {
 	struct control_event
 	{
-		enum type { NONE, GLOBAL_TEMPO_ONE_SHOT, RELATIVE_TEMPO_ONE_SHOT, GLOBAL_TEMPO_INTERVAL, RELATIVE_TEMPO_INTERVAL };
+		enum type { NONE, GLOBAL_TEMPO, RELATIVE_TEMPO };
 		
 		type m_type;
 		
 		//! Start value: TEMPO: global tempo, RELATIVE_TEMPO: factor relative to global tempo
-		float m_value1;
-		
-		//! End value
-		float m_value2;
-		
-		control_event(type the_type = type::NONE, float value1 = 0, float value2 = 0) :
+		float m_value;
+	
+		control_event(type the_type = type::NONE, float value = 0) :
 			m_type(the_type),
-			m_value1(value1),
-			m_value2(value2)
+			m_value(value)
 		{
 			
 		}
@@ -28,7 +24,7 @@ namespace teq
 	
 	struct cv_event
 	{
-		enum type { NONE, ONE_SHOT, INTERVAL };
+		enum type { NONE, INTERVAL };
 		
 		type m_type;
 		

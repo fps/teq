@@ -686,6 +686,7 @@ namespace teq
 						{
 							const auto &the_track = *std::static_pointer_cast<cv_track>(the_pattern.m_tracks[track_index]);
 							auto &cv_properties = *((global_cv_track_properties*)&track_properties);
+							const auto &the_previous_event = cv_properties.m_current_event;
 							
 							const auto &the_event = the_track.m_events[current_tick];
 							cv_properties.m_current_event = the_event;
@@ -695,10 +696,21 @@ namespace teq
 						case global_track_properties::type::CONTROL:
 						{
 							const auto &the_track = *std::static_pointer_cast<control_track>(the_pattern.m_tracks[track_index]);
-							auto &control_properties = *((global_control_track_properties*)&track_properties);
-							
 							const auto &the_event = the_track.m_events[current_tick];
-							control_properties.m_current_event = the_event;
+							
+							switch (the_event.m_type)
+							{
+								case control_event::type::GLOBAL_TEMPO:
+									m_global_tempo = the_event.m_value;
+									break;
+									
+								case control_event::type::RELATIVE_TEMPO:
+									m_relative_tempo = the_event.m_value;
+									break;
+									
+								default: 
+									break;
+							}
 						}
 						break;
 
