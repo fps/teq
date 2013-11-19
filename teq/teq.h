@@ -16,8 +16,7 @@
 #include <jack/jack.h>
 #include <jack/midiport.h>
 
-#include <lart/ringbuffer.h>
-
+#include <teq/ringbuffer.h>
 #include <teq/event.h>
 #include <teq/midi_event.h>
 #include <teq/song.h>
