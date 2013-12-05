@@ -16,11 +16,11 @@ namespace teq
 
 		typedef std::shared_ptr<pattern_list> pattern_list_ptr;
 		
-		typedef std::pair<global_track_properties_ptr, jack_port_t *> track_properties_and_payload;
+		typedef std::pair<track_ptr, jack_port_t *> track_properties_and_payload;
 		
-		typedef std::vector<track_properties_and_payload> global_track_properties_list;
+		typedef std::vector<track_properties_and_payload> track_list;
 		
-		typedef std::shared_ptr<global_track_properties_list> global_track_properties_list_ptr;
+		typedef std::shared_ptr<track_list> track_list_ptr;
 		
 		std::string m_name;
 	
@@ -28,7 +28,7 @@ namespace teq
 		
 		pattern_list_ptr m_patterns;
 		
-		global_track_properties_list_ptr m_tracks;
+		track_list_ptr m_tracks;
 		
 		song() :
 			m_patterns(new std::vector<pattern>),

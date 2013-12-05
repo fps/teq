@@ -9,9 +9,9 @@ namespace teq
 {
 	struct pattern
 	{
-		typedef std::vector<track_ptr> track_list;
+		typedef std::vector<sequence_ptr> sequence_list;
 		
-		track_list m_tracks;
+		sequence_list m_sequences;
 		
 		unsigned m_length;
 		

@@ -8,26 +8,31 @@
 #include <array>
 
 #include <teq/event.h>
-#include <teq/column.h>
 
 namespace teq
 {
-	struct track
+	struct sequence
 	{
-		virtual ~track() { }
+		virtual ~sequence() { }
 		
-		virtual void set_length(unsigned) = 0;
-		
-		track()
-		{
-			
-		}
+		virtual void set_length(unsigned length) = 0;
 	};
 	
-	typedef std::shared_ptr<track> track_ptr;
+	typedef std::shared_ptr<sequence> sequence_ptr;
 	
+	template<class EventType>
+	struct sequence_of : sequence
+	{
+		std::vector<EventType> m_events;
+		
+		virtual void set_length(unsigned length)
+		{
+			m_events.resize(length);
+		}
+	};
+
 	
-	struct global_track_properties
+	struct track
 	{
 		enum type { NONE, MIDI, CV, CONTROL };
 		
@@ -35,41 +40,20 @@ namespace teq
 
 		const std::string m_name;
 		
-		virtual ~global_track_properties() { }
+		virtual ~track() { }
 		
-		global_track_properties(type the_type = type::NONE)  :
+		track(type the_type = type::NONE)  :
 			m_type(the_type)
 		{
 			
 		}
 		
-		virtual track_ptr create_track() = 0;
+		virtual sequence_ptr create_sequence() = 0;
 	};
 
-	typedef std::shared_ptr<global_track_properties> global_track_properties_ptr;
-	
-	
+	typedef std::shared_ptr<track> track_ptr;
+		
 	struct midi_track : track
-	{
-		typedef event_column<midi_event> midi_column;
-		
-		typedef std::vector<midi_column> column_list;
-		
-		column_list m_columns;
-		
-		virtual void set_length(unsigned length)
-		{
-			for (auto &it: m_columns)
-			{
-				it.m_events.resize(length);
-			}
-		}
-	};
-	
-	typedef std::shared_ptr<midi_track> midi_track_ptr;
-	
-	
-	struct global_midi_track_properties : global_track_properties
 	{		
 		std::array<bool, 16> m_channels;
 		
@@ -77,37 +61,21 @@ namespace teq
 
 		void *m_port_buffer;
 		
-		global_midi_track_properties() : 
-			global_track_properties(global_track_properties::type::MIDI),
+		midi_track() : 
+			track(track::type::MIDI),
 			m_current_events(1)
 		{
 			m_channels[0] = true;
 		}
 		
-		virtual track_ptr create_track()
+		virtual sequence_ptr create_sequence()
 		{
-			midi_track_ptr new_midi_track(new midi_track);
-			
-			for (unsigned index = 0; index < m_current_events.size(); ++index)
-			{
-				new_midi_track->m_columns.push_back(midi_track::midi_column());
-			}
-			
-			return new_midi_track;
+			return sequence_ptr(new sequence_of<midi_event>);
 		}
 	};
+	
 	
 	struct cv_track : track
-	{
-		std::vector<cv_event> m_events;
-		
-		virtual void set_length(unsigned length)
-		{
-			m_events.resize(length);
-		}
-	};
-	
-	struct global_cv_track_properties : global_track_properties
 	{
 		cv_event m_current_event;
 		
@@ -115,13 +83,13 @@ namespace teq
 		
 		void *m_port_buffer;
 		
-		virtual track_ptr create_track()
+		virtual sequence_ptr create_sequence()
 		{
-			return track_ptr(new cv_track);
+			return sequence_ptr(new sequence_of<cv_event>);
 		}
 		
-		global_cv_track_properties() :
-			global_track_properties(global_track_properties::type::CV),
+		cv_track() :
+			track(track::type::CV),
 			m_current_value(0)
 		{
 			
@@ -130,23 +98,13 @@ namespace teq
 	
 	struct control_track : track
 	{
-		std::vector<control_event> m_events;
-		
-		virtual void set_length(unsigned length)
+		virtual sequence_ptr create_sequence()
 		{
-			m_events.resize(length);
-		}
-	};
-
-	struct global_control_track_properties : global_track_properties
-	{
-		virtual track_ptr create_track()
-		{
-			return track_ptr(new control_track);
+			return sequence_ptr(new sequence_of<control_event>);
 		}
 		
-		global_control_track_properties() :
-			global_track_properties(global_track_properties::type::CONTROL)
+		control_track() :
+			track(track::type::CONTROL)
 		{
 			
 		}

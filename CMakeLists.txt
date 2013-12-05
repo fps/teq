@@ -31,37 +31,54 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # BUILD DEPENDENCIES:
 #
 
-find_package(PythonLibs REQUIRED)
+message(STATUS "Checking if pkg-config is available...")
 find_package(PkgConfig REQUIRED)
 
+pkg_check_modules(JACK REQUIRED jack)
 
-pkg_check_modules(JACK jack)
+message(STATUS "checking for Python C library")	
+find_package(PythonLibs)
+if (PYTHONLIBS_FOUND)
+	message(STATUS "Python C library found. Let's see if there's boost python, too...")
 
-# BOOST
-#set(Boost_USE_STATIC_LIBS)
-find_package(Boost COMPONENTS python3 REQUIRED)
-#find_package(Boost COMPONENTS python REQUIRED)
+	message(STATUS "Checking Python3 support first...")
+	find_package(Boost COMPONENTS python3)
+	
+	if(Boost_FOUND)
+		message(STATUS "Found!")
+	else()
+		message(STATUS "Checking Python2 support...")
+		find_package(Boost COMPONENTS python)
+	endif()
 
-set(Boost_USE_STATIC_LIBS OFF)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
+	set(Boost_USE_STATIC_LIBS OFF)
+	set(Boost_USE_MULTITHREADED ON)
+	set(Boost_USE_STATIC_RUNTIME OFF)
+	
+else()
+	message(STATUS "Python C library not found. Not building Python module...")
+endif()
 
 #
 # BUILD TARGETS
 #
 
-
 include_directories(${PROJECT_SOURCE_DIR})
 
 include_directories(${JACK_INCLUDE_DIRS})
-include_directories(${PYTHON_INCLUDE_DIRS})
+if (PYTHONLIBS_FOUND)
+	include_directories(${PYTHON_INCLUDE_DIRS})
+endif()
 
-
+# The main library
 add_library(teq SHARED teq/teq.cc)
-target_link_libraries(teq ${JACK_LIBRARIES} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
+target_link_libraries(teq ${JACK_LIBRARIES})
 
-
-add_library(pyteq SHARED teq/python.cc)
-set_target_properties(pyteq PROPERTIES PREFIX "")
-set_target_properties(pyteq PROPERTIES OUTPUT_NAME "teq")
-target_link_libraries(pyteq ${JACK_LIBRARIES} teq ${PYTHON_LIBRARIES})
+# Python bindings
+if (PYTHONLIBS_FOUND)
+	message(STATUS "Adding target for Python module...")
+	add_library(pyteq SHARED teq/python.cc)
+	set_target_properties(pyteq PROPERTIES PREFIX "")
+	set_target_properties(pyteq PROPERTIES OUTPUT_NAME "teq")
+	target_link_libraries(pyteq ${JACK_LIBRARIES} teq ${PYTHON_LIBRARIES} ${BOOST_Libraries})
+endif()

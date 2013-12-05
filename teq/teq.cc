@@ -107,8 +107,8 @@ namespace teq
 		song_ptr new_song = m_song_heap.add_new(song(*m_song));
 		
 		new_song->m_tracks =
-			m_global_track_properties_list_heap
-				.add_new(song::global_track_properties_list(*m_song->m_tracks));
+			m_track_list_heap
+				.add_new(song::track_list(*m_song->m_tracks));
 		
 		new_song->m_patterns = 
 			m_pattern_list_heap
@@ -161,7 +161,7 @@ namespace teq
 		}
 	}
 	
-	global_track_properties::type teq::track_type(unsigned index)
+	track::type teq::track_type(unsigned index)
 	{
 		check_track_index(index);
 		
@@ -188,7 +188,7 @@ namespace teq
 			LIBTEQ_THROW_RUNTIME_ERROR("Failed to register jack port")
 		}
 		
-		insert_track<midi_track, global_midi_track_properties>(new_song, index, port);
+		insert_track<sequence_of<midi_event>, midi_track>(new_song, index, port);
 
 		update_song(new_song);
 	}
@@ -213,7 +213,7 @@ namespace teq
 			LIBTEQ_THROW_RUNTIME_ERROR("Failed to register jack port")
 		}
 		
-		insert_track<cv_track, global_cv_track_properties>(new_song, index, port);
+		insert_track<sequence_of<cv_event>, cv_track>(new_song, index, port);
 
 		update_song(new_song);
 	}
@@ -224,32 +224,9 @@ namespace teq
 		
 		song_ptr new_song = copy_and_prepare_song_for_track_insert();
 
-		insert_track<control_track, global_control_track_properties>(new_song, index, nullptr);
+		insert_track<sequence_of<control_event>, control_track>(new_song, index, nullptr);
 
 		update_song(new_song);
-	}
-	
-	//! For internal use only!
-	template <class TrackType, class TrackPropertiesType>
-	void teq::insert_track(song_ptr new_song, unsigned index, jack_port_t *port)
-	{
-		new_song->m_tracks->insert
-		(
-			new_song->m_tracks->begin() + index, 
-			std::make_pair(global_track_properties_ptr(new TrackPropertiesType()), port)
-		);
-		
-		for (auto &it : *new_song->m_patterns)
-		{
-			it.m_tracks.insert
-			(
-				it.m_tracks.begin() + index,
-				track_ptr(new TrackType)
-			);
-			
-			(*(it.m_tracks.begin() + index))->set_length(it.m_length);
-		}
-		
 	}
 	
 	size_t teq::number_of_tracks()
@@ -296,11 +273,11 @@ namespace teq
 		for (auto &it : *m_song->m_tracks)
 		{
 			std::cout << "Creating track" << std::endl;
-			track_ptr new_track = it.first->create_track();
+			sequence_ptr new_sequence = it.first->create_sequence();
 			
-			new_track->set_length(pattern_length);
+			new_sequence->set_length(pattern_length);
 			
-			new_pattern.m_tracks.push_back(new_track);
+			new_pattern.m_sequences.push_back(new_sequence);
 		}
 		
 		song::pattern_list_ptr new_pattern_list = m_pattern_list_heap.add_new(song::pattern_list(*m_song->m_patterns));
@@ -329,6 +306,7 @@ namespace teq
 	}
 	
 
+#if 0
 	void teq::set_midi_event
 	(
 		unsigned pattern_index, 
@@ -350,11 +328,12 @@ namespace teq
 		(
 			[this, event, pattern_index, track_index, column_index, tick_index] () mutable
 			{
-				auto track_ptr = std::dynamic_pointer_cast<midi_track>((*m_song->m_patterns)[pattern_index].m_tracks[track_index]);
-				track_ptr->m_columns[column_index].m_events[tick_index] = event;
+				auto sequence_ptr = std::dynamic_pointer_cast<sequence_of<midi_event>>((*m_song->m_patterns)[pattern_index].m_sequences[sequence_index]);
+				sequence_ptr->m_columns[column_index].m_events[tick_index] = event;
 			}
 		);			
 	}
+#endif
 
 #if 0
 	void set_midi_event
@@ -399,6 +378,7 @@ namespace teq
 	}
 #endif
 
+#if 0
 	midi_event teq::get_midi_event
 	(
 		unsigned pattern_index, 
@@ -505,6 +485,7 @@ namespace teq
 			}
 		);
 	}
+#endif
 
 	void teq::set_loop_range(const loop_range &range)
 	{
@@ -554,7 +535,7 @@ namespace teq
 	void teq::gc()
 	{
 		m_song_heap.gc();
-		m_global_track_properties_list_heap.gc();
+		m_track_list_heap.gc();
 		m_pattern_heap.gc();
 		m_pattern_list_heap.gc();
 	}
@@ -637,17 +618,17 @@ namespace teq
 			
 			switch(track_properties.m_type)
 			{
-				case global_track_properties::type::CV:
+				case track::type::CV:
 				{
-					auto &properties = *((global_cv_track_properties*)&track_properties);
+					auto &properties = *((cv_track*)&track_properties);
 					
 					properties.m_port_buffer = jack_port_get_buffer(port, nframes);
 				}
 				break;
 
-				case global_track_properties::type::MIDI:
+				case track::type::MIDI:
 				{
-					auto &properties = *((global_midi_track_properties*)&track_properties);
+					auto &properties = *((midi_track*)&track_properties);
 					
 					properties.m_port_buffer = jack_port_get_buffer(port, nframes);
 				}
@@ -707,16 +688,16 @@ namespace teq
 					
 					switch(track_properties.m_type)
 					{
-						case global_track_properties::type::MIDI:
+						case track::type::MIDI:
 						{
 							
 						}
 						break;
 							
-						case global_track_properties::type::CV:
+						case track::type::CV:
 						{
-							const auto &the_track = *std::static_pointer_cast<cv_track>(the_pattern.m_tracks[track_index]);
-							auto &cv_properties = *((global_cv_track_properties*)&track_properties);
+							const auto &the_sequence = *std::static_pointer_cast<sequence_of<cv_event>>(the_pattern.m_sequences[track_index]);
+							auto &cv_properties = *((cv_track*)&track_properties);
 							const auto &the_previous_event = cv_properties.m_current_event;
 							
 							if (cv_event::type::INTERVAL == the_previous_event.m_type)
@@ -724,15 +705,15 @@ namespace teq
 								cv_properties.m_current_value = the_previous_event.m_value2;
 							}
 							
-							const auto &the_event = the_track.m_events[current_tick];
+							const auto &the_event = the_sequence.m_events[current_tick];
 							cv_properties.m_current_event = the_event;
 						}
 						break;
 
-						case global_track_properties::type::CONTROL:
+						case track::type::CONTROL:
 						{
-							const auto &the_track = *std::static_pointer_cast<control_track>(the_pattern.m_tracks[track_index]);
-							const auto &the_event = the_track.m_events[current_tick];
+							const auto &the_sequence = *std::static_pointer_cast<sequence_of<control_event>>(the_pattern.m_sequences[track_index]);
+							const auto &the_event = the_sequence.m_events[current_tick];
 							
 							switch (the_event.m_type)
 							{
@@ -764,9 +745,9 @@ namespace teq
 				
 				switch(track_properties.m_type)
 				{
-					case global_track_properties::type::CV:
+					case track::type::CV:
 					{
-						auto &cv_properties = *((global_cv_track_properties*)&track_properties);
+						auto &cv_properties = *((cv_track*)&track_properties);
 						
 						
 					}
@@ -775,8 +756,6 @@ namespace teq
 					default:
 						break;
 				}
-				
-				
 			}
 			m_time_since_last_tick += sample_duration;
 		}
