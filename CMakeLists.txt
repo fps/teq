@@ -66,9 +66,6 @@ endif()
 include_directories(${PROJECT_SOURCE_DIR})
 
 include_directories(${JACK_INCLUDE_DIRS})
-if (PYTHONLIBS_FOUND)
-	include_directories(${PYTHON_INCLUDE_DIRS})
-endif()
 
 # The main library
 add_library(teq SHARED teq/teq.cc)
@@ -76,9 +73,12 @@ target_link_libraries(teq ${JACK_LIBRARIES})
 
 # Python bindings
 if (PYTHONLIBS_FOUND)
+	if (PYTHONLIBS_FOUND)
+		include_directories(${PYTHON_INCLUDE_DIRS})
+	endif()
 	message(STATUS "Adding target for Python module...")
 	add_library(pyteq SHARED teq/python.cc)
 	set_target_properties(pyteq PROPERTIES PREFIX "")
 	set_target_properties(pyteq PROPERTIES OUTPUT_NAME "teq")
-	target_link_libraries(pyteq ${JACK_LIBRARIES} teq ${PYTHON_LIBRARIES} ${BOOST_Libraries})
+	target_link_libraries(pyteq ${JACK_LIBRARIES} teq ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
 endif()

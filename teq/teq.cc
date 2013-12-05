@@ -168,6 +168,28 @@ namespace teq
 		return (*m_song->m_tracks)[index].first->m_type;
 	}
 	
+	//! For internal use only!
+	template <class SequenceType, class TrackType>
+	void insert_track(song_ptr new_song, unsigned index, jack_port_t *port)
+	{
+		new_song->m_tracks->insert
+		(
+			new_song->m_tracks->begin() + index, 
+			std::make_pair(track_ptr(new TrackType()), port)
+		);
+		
+		for (auto &it : *new_song->m_patterns)
+		{
+			it.m_sequences.insert
+			(
+				it.m_sequences.begin() + index,
+				sequence_ptr(new SequenceType)
+			);
+			
+			(*(it.m_sequences.begin() + index))->set_length(it.m_length);
+		}
+	}
+	
 	void teq::insert_midi_track(const std::string &track_name, unsigned index)
 	{
 		check_track_name_and_index_for_insert(track_name, index);

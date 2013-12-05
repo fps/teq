@@ -233,28 +233,7 @@ namespace teq
 			unsigned index
 		);
 		
-		//! For internal use only!
-		template <class SequenceType, class TrackType>
-		void insert_track(song_ptr new_song, unsigned index, jack_port_t *port)
-		{
-			new_song->m_tracks->insert
-			(
-				new_song->m_tracks->begin() + index, 
-				std::make_pair(track_ptr(new TrackType()), port)
-			);
-			
-			for (auto &it : *new_song->m_patterns)
-			{
-				it.m_sequences.insert
-				(
-					it.m_sequences.begin() + index,
-					sequence_ptr(new SequenceType)
-				);
-				
-				(*(it.m_sequences.begin() + index))->set_length(it.m_length);
-			}
-		}
-	
+
 		void check_column_index
 		(
 			unsigned track_index, 
@@ -349,56 +328,19 @@ namespace teq
 					auto sequence_ptr = std::dynamic_pointer_cast<sequence_of<EventType>>((*m_song->m_patterns)[pattern_index].m_sequences[track_index]);
 					sequence_ptr->m_events[tick_index] = event;
 				}
-			);			
+			);	
 		}
 		
-		void set_midi_event
+		template<class EventType>
+		EventType get_event
 		(
-			unsigned pattern_index, 
-			unsigned track_index, 
-			unsigned column_index, 
-			unsigned tick_index, 
-			const midi_event &event
-		);
-
-
-		midi_event get_midi_event
-		(
-			unsigned pattern_index, 
-			unsigned track_index, 
-			unsigned column_index, 
+			unsigned pattern_index,
+			unsigned track_index,
 			unsigned tick_index
-		);
-		
-		cv_event get_cv_event	
-		(
-			unsigned pattern_index, 
-			unsigned track_index, 
-			unsigned tick_index
-		);
-		
-		control_event get_control_event
-		(
-			unsigned pattern_index, 
-			unsigned track_index, 
-			unsigned tick_index
-		);
-
-		void set_cv_event
-		(
-			unsigned pattern_index, 
-			unsigned track_index, 
-			unsigned tick_index, 
-			const cv_event &event
-		);
-		
-		void set_control_event
-		(
-			unsigned pattern_index, 
-			unsigned track_index, 
-			unsigned tick_index, 
-			const control_event &event
-		);
+		)
+		{
+			return EventType();
+		}
 		
 		void set_loop_range
 		(

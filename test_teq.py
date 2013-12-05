@@ -47,7 +47,7 @@ t.set_control_event(0, 3, 0, teq.control_event(teq.control_event_type.GLOBAL_TEM
 
 for n in range(0, 16):
 	print ("Adding a midi note at tick ", n, " with note ", n, "...")
-	t.set_midi_event(0, 0, 0, n, teq.midi_event(teq.midi_event_type.ON, n, 64))
+	t.set_midi_event(0, 0, n, teq.midi_event(teq.midi_event_type.ON, n, 64))
 
 print ("Cleaning up some memory...")
 t.gc()
