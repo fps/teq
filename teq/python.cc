@@ -60,10 +60,10 @@ BOOST_PYTHON_MODULE(teq)
 		.value("PLAYING", teq::teq::transport_state::PLAYING)
 	;
 
-	enum_<teq::global_track_properties::type>("track_type")
-		.value("MIDI", teq::global_track_properties::type::MIDI)
-		.value("CV", teq::global_track_properties::type::CV)
-		.value("CONTROL", teq::global_track_properties::type::CONTROL)
+	enum_<teq::track::type>("track_type")
+		.value("MIDI", teq::track::type::MIDI)
+		.value("CV", teq::track::type::CV)
+		.value("CONTROL", teq::track::type::CONTROL)
 	;
 
 	enum_<teq::midi_event::type>("midi_event_type")
