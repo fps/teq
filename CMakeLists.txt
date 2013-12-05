@@ -31,37 +31,41 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # BUILD DEPENDENCIES:
 #
 
-find_package(PythonLibs REQUIRED)
 find_package(PkgConfig REQUIRED)
 
+pkg_check_modules(JACK REQUIRED jack)
 
-pkg_check_modules(JACK jack)
+find_package(PythonLibs)
+if (PythonLibs_FOUND)
+	find_package(Boost COMPONENTS python3)
+	if(not Boost_FOUND)
+		find_package(Boost COMPONENTS python)
+	endif()
 
-# BOOST
-#set(Boost_USE_STATIC_LIBS)
-#find_package(Boost COMPONENTS python3 REQUIRED)
-find_package(Boost COMPONENTS python REQUIRED)
-
-set(Boost_USE_STATIC_LIBS OFF)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
+	set(Boost_USE_STATIC_LIBS OFF)
+	set(Boost_USE_MULTITHREADED ON)
+	set(Boost_USE_STATIC_RUNTIME OFF)
+endif()
 
 #
 # BUILD TARGETS
 #
 
-
 include_directories(${PROJECT_SOURCE_DIR})
 
 include_directories(${JACK_INCLUDE_DIRS})
-include_directories(${PYTHON_INCLUDE_DIRS})
+if (PythonLibs_FOUND)
+	include_directories(${PYTHON_INCLUDE_DIRS})
+endif()
 
-
+# The main library
 add_library(teq SHARED teq/teq.cc)
-target_link_libraries(teq ${JACK_LIBRARIES} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
+target_link_libraries(teq ${JACK_LIBRARIES})
 
-
-add_library(pyteq SHARED teq/python.cc)
-set_target_properties(pyteq PROPERTIES PREFIX "")
-set_target_properties(pyteq PROPERTIES OUTPUT_NAME "teq")
-target_link_libraries(pyteq ${JACK_LIBRARIES} teq ${PYTHON_LIBRARIES})
+# Python bindings
+if (PythonLibs_FOUND)
+	add_library(pyteq SHARED teq/python.cc)
+	set_target_properties(pyteq PROPERTIES PREFIX "")
+	set_target_properties(pyteq PROPERTIES OUTPUT_NAME "teq")
+	target_link_libraries(pyteq ${JACK_LIBRARIES} teq ${PYTHON_LIBRARIES} ${BOOST_Libraries})
+endif()
