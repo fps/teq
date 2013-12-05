@@ -75,6 +75,8 @@ namespace teq
 		
 		std::vector<midi_event> m_current_events;
 
+		void *m_port_buffer;
+		
 		global_midi_track_properties() : 
 			global_track_properties(global_track_properties::type::MIDI),
 			m_current_events(1)
@@ -110,7 +112,9 @@ namespace teq
 		cv_event m_current_event;
 		
 		float m_current_value;
-				
+		
+		void *m_port_buffer;
+		
 		virtual track_ptr create_track()
 		{
 			return track_ptr(new cv_track);

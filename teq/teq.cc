@@ -188,7 +188,7 @@ namespace teq
 			LIBTEQ_THROW_RUNTIME_ERROR("Failed to register jack port")
 		}
 		
-		insert_track<midi_track, global_midi_track_properties>(new_song, index, (void *)port);
+		insert_track<midi_track, global_midi_track_properties>(new_song, index, port);
 
 		update_song(new_song);
 	}
@@ -213,7 +213,7 @@ namespace teq
 			LIBTEQ_THROW_RUNTIME_ERROR("Failed to register jack port")
 		}
 		
-		insert_track<cv_track, global_cv_track_properties>(new_song, index, (void*)port);
+		insert_track<cv_track, global_cv_track_properties>(new_song, index, port);
 
 		update_song(new_song);
 	}
@@ -224,14 +224,14 @@ namespace teq
 		
 		song_ptr new_song = copy_and_prepare_song_for_track_insert();
 
-		insert_track<control_track, global_control_track_properties>(new_song, index, (void *)nullptr);
+		insert_track<control_track, global_control_track_properties>(new_song, index, nullptr);
 
 		update_song(new_song);
 	}
 	
 	//! For internal use only!
 	template <class TrackType, class TrackPropertiesType>
-	void teq::insert_track(song_ptr new_song, unsigned index, void *port)
+	void teq::insert_track(song_ptr new_song, unsigned index, jack_port_t *port)
 	{
 		new_song->m_tracks->insert
 		(
@@ -597,8 +597,7 @@ namespace teq
 		e.render(event_buffer);
 	}
 	
-	
-	int teq::process(jack_nframes_t nframes)
+	void teq::process_commands()
 	{
 		try
 		{
@@ -617,7 +616,12 @@ namespace teq
 		catch(std::system_error &e)
 		{
 			// locking failed
-		}
+		}		
+	}
+	
+	int teq::process(jack_nframes_t nframes)
+	{
+		process_commands();
 		
 		if (m_transport_state == transport_state::STOPPED)
 		{
@@ -626,6 +630,33 @@ namespace teq
 		
 		const float sample_duration = 1.0 / jack_get_sample_rate(m_jack_client);
 		
+		for (size_t track_index = 0; track_index < m_song->m_tracks->size(); ++track_index)
+		{
+			auto &track_properties = *(*m_song->m_tracks)[track_index].first;
+			jack_port_t *port = (*m_song->m_tracks)[track_index].second;
+			
+			switch(track_properties.m_type)
+			{
+				case global_track_properties::type::CV:
+				{
+					auto &properties = *((global_cv_track_properties*)&track_properties);
+					
+					properties.m_port_buffer = jack_port_get_buffer(port, nframes);
+				}
+				break;
+
+				case global_track_properties::type::MIDI:
+				{
+					auto &properties = *((global_midi_track_properties*)&track_properties);
+					
+					properties.m_port_buffer = jack_port_get_buffer(port, nframes);
+				}
+				break;
+
+				default:
+					break;
+			}
+		}
 		const std::vector<pattern> &patterns = *m_song->m_patterns;
 		
 		for (jack_nframes_t frame_index = 0; frame_index < nframes; ++frame_index)
@@ -688,6 +719,11 @@ namespace teq
 							auto &cv_properties = *((global_cv_track_properties*)&track_properties);
 							const auto &the_previous_event = cv_properties.m_current_event;
 							
+							if (cv_event::type::INTERVAL == the_previous_event.m_type)
+							{
+								cv_properties.m_current_value = the_previous_event.m_value2;
+							}
+							
 							const auto &the_event = the_track.m_events[current_tick];
 							cv_properties.m_current_event = the_event;
 						}
@@ -722,6 +758,26 @@ namespace teq
 				}
 			}
 			
+			for (size_t track_index = 0; track_index < m_song->m_tracks->size(); ++track_index)
+			{
+				auto &track_properties = *(*m_song->m_tracks)[track_index].first;
+				
+				switch(track_properties.m_type)
+				{
+					case global_track_properties::type::CV:
+					{
+						auto &cv_properties = *((global_cv_track_properties*)&track_properties);
+						
+						
+					}
+					break;
+
+					default:
+						break;
+				}
+				
+				
+			}
 			m_time_since_last_tick += sample_duration;
 		}
 #if 0

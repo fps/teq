@@ -16,7 +16,7 @@ namespace teq
 
 		typedef std::shared_ptr<pattern_list> pattern_list_ptr;
 		
-		typedef std::pair<global_track_properties_ptr, void *> track_properties_and_payload;
+		typedef std::pair<global_track_properties_ptr, jack_port_t *> track_properties_and_payload;
 		
 		typedef std::vector<track_properties_and_payload> global_track_properties_list;
 		

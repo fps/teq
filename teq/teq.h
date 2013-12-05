@@ -221,7 +221,7 @@ namespace teq
 		
 		//! For internal use only!
 		template <class TrackType, class TrackPropertiesType>
-		void insert_track(song_ptr new_song, unsigned index, void *port);
+		void insert_track(song_ptr new_song, unsigned index, jack_port_t *port);
 		
 		size_t number_of_tracks();
 		
@@ -306,6 +306,8 @@ namespace teq
 
 
 		void render_event(const midi::midi_event &e, void *port_buffer, jack_nframes_t time);
+		
+		void process_commands();
 		
 		int process(jack_nframes_t nframes);
 		
