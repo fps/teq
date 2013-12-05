@@ -32,7 +32,11 @@ namespace teq
 {
 	extern "C" 
 	{
-		int jack_process(jack_nframes_t nframes, void *arg);
+		int jack_process
+		(
+			jack_nframes_t nframes, 
+			void *arg
+		);
 	}
 	
 	struct teq
@@ -47,7 +51,11 @@ namespace teq
 			
 			tick m_tick;
 			
-			transport_position(tick pattern = 0, tick the_tick = 0) :
+			transport_position
+			(
+				tick pattern = 0, 
+				tick the_tick = 0
+			) :
 				m_pattern(pattern),
 				m_tick(the_tick)
 			{
@@ -192,51 +200,119 @@ namespace teq
 		
 		~teq();
 		
-		void set_send_all_notes_off_on_loop(bool on);
+		void set_send_all_notes_off_on_loop
+		(
+			bool on
+		);
 		
-		void set_send_all_notes_off_on_stop(bool on);
+		void set_send_all_notes_off_on_stop
+		(
+			bool on
+		);
 		
-		bool track_name_exists(const std::string track_name);
+		bool track_name_exists
+		(
+			const std::string track_name
+		);
 		
 		song_ptr copy_and_prepare_song_for_track_insert();
 		
-		void check_track_name_and_index_for_insert(const std::string &track_name, unsigned index);
+		void check_track_name_and_index_for_insert
+		(
+			const std::string &track_name, 
+			unsigned index
+		);
 		
-		void check_track_index(unsigned index);
+		void check_track_index
+		(
+			unsigned index
+		);
 		
-		void check_pattern_index(unsigned index);
+		void check_pattern_index
+		(
+			unsigned index
+		);
 		
-		void check_column_index(unsigned track_index, unsigned column_index);
+		void check_column_index
+		(
+			unsigned track_index, 
+			unsigned column_index
+		);
 		
-		void check_tick_index(unsigned pattern_index, unsigned tick_index);
+		void check_tick_index
+		(
+			unsigned pattern_index, 
+			unsigned tick_index
+		);
 		
-		global_track_properties::type track_type(unsigned index);
+		global_track_properties::type track_type
+		(
+			unsigned index
+		);
 		
-		void insert_midi_track(const std::string &track_name, unsigned index);
+		void insert_midi_track
+		(
+			const std::string &track_name, 
+			unsigned index
+		);
 		
-		void insert_cv_track(const std::string &track_name, unsigned index);
+		void insert_cv_track
+		(
+			const std::string &track_name, 
+			unsigned index
+		);
 		
-		void insert_control_track(const std::string &track_name, unsigned index);
+		void insert_control_track
+		(
+			const std::string &track_name, 
+			unsigned index
+		);
 		
 		//! For internal use only!
 		template <class TrackType, class TrackPropertiesType>
-		void insert_track(song_ptr new_song, unsigned index, void *port);
+		void insert_track
+		(
+			song_ptr new_song, 
+			unsigned index, 
+			void *port
+		);
 		
 		size_t number_of_tracks();
 		
 		size_t number_of_patterns();
 		
-		size_t number_of_ticks(unsigned pattern_index);
+		size_t number_of_ticks
+		(
+			unsigned pattern_index
+		);
 		
-		void remove_track(unsigned index);
+		void remove_track
+		(
+			unsigned index
+		);
 		
-		void move_track(unsigned from, unsigned to);
+		void move_track
+		(
+			unsigned from, 
+			unsigned to
+		);
 		
-		void insert_pattern(unsigned index, unsigned pattern_length);
+		void insert_pattern
+		(
+			unsigned index, 
+			unsigned pattern_length
+		);
 	
-		void remove_pattern(unsigned index);
+		void remove_pattern
+		(
+			unsigned index
+		);
 		
-		void move_pattern(unsigned from, unsigned to);
+		void move_pattern
+		(
+			unsigned from, 
+			unsigned to
+		);
 		
 		void set_midi_event
 		(
@@ -286,29 +362,62 @@ namespace teq
 			const control_event &event
 		);
 		
-		void set_loop_range(const loop_range &range);
+		void set_loop_range
+		(
+			const loop_range &range
+		);
 		
-		void set_global_tempo(float tempo);
+		void set_global_tempo
+		(
+			float tempo
+		);
 		
-		void set_transport_state(transport_state state);
+		void set_transport_state
+		(
+			transport_state state
+		);
 		
 		
-		void set_transport_position(transport_position position);
+		void set_transport_position
+		(
+			transport_position position
+		);
 		
 		void gc();
 		
-		void write_command(command f);
+		void write_command
+		(
+			command f
+		);
 		
-		void write_command_and_wait(command f);
+		void write_command_and_wait
+		(
+			command f
+		);
 		
-		void update_song(song_ptr new_song);
+		void update_song
+		(
+			song_ptr new_song\
+		);
 
 
-		void render_event(const midi::midi_event &e, void *port_buffer, jack_nframes_t time);
+		void render_event
+		(
+			const midi::midi_event &e, 
+			void *port_buffer, 
+			jack_nframes_t time
+		);
 		
-		int process(jack_nframes_t nframes);
+		int process
+		(
+			jack_nframes_t nframes
+		);
 		
-		friend int jack_process(jack_nframes_t, void*);
+		friend int jack_process
+		(
+			jack_nframes_t, 
+			void*
+		);
 	};
 }
 
