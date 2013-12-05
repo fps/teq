@@ -31,20 +31,32 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # BUILD DEPENDENCIES:
 #
 
+message(STATUS "Checking if pkg-config is available...")
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(JACK REQUIRED jack)
 
+message(STATUS "checking for Python C library")	
 find_package(PythonLibs)
-if (PythonLibs_FOUND)
+if (PYTHONLIBS_FOUND)
+	message(STATUS "Python C library found. Let's see if there's boost python, too...")
+
+	message(STATUS "Checking Python3 support first...")
 	find_package(Boost COMPONENTS python3)
-	if(not Boost_FOUND)
+	
+	if(Boost_FOUND)
+		message(STATUS "Found!")
+	else()
+		message(STATUS "Checking Python2 support...")
 		find_package(Boost COMPONENTS python)
 	endif()
 
 	set(Boost_USE_STATIC_LIBS OFF)
 	set(Boost_USE_MULTITHREADED ON)
 	set(Boost_USE_STATIC_RUNTIME OFF)
+	
+else()
+	message(STATUS "Python C library not found. Not building Python module...")
 endif()
 
 #
@@ -54,7 +66,7 @@ endif()
 include_directories(${PROJECT_SOURCE_DIR})
 
 include_directories(${JACK_INCLUDE_DIRS})
-if (PythonLibs_FOUND)
+if (PYTHONLIBS_FOUND)
 	include_directories(${PYTHON_INCLUDE_DIRS})
 endif()
 
@@ -63,7 +75,8 @@ add_library(teq SHARED teq/teq.cc)
 target_link_libraries(teq ${JACK_LIBRARIES})
 
 # Python bindings
-if (PythonLibs_FOUND)
+if (PYTHONLIBS_FOUND)
+	message(STATUS "Adding target for Python module...")
 	add_library(pyteq SHARED teq/python.cc)
 	set_target_properties(pyteq PROPERTIES PREFIX "")
 	set_target_properties(pyteq PROPERTIES OUTPUT_NAME "teq")
