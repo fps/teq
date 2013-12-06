@@ -8,6 +8,8 @@
 #include <teq/pattern.h>
 #include <teq/track.h>
 
+#include <teq/exception.h>
+
 namespace teq
 {
 	struct song
@@ -37,18 +39,19 @@ namespace teq
 			
 		}
 
+		void check_track_index(unsigned index)
 		{
-			if (index >= number_of_tracks())
+			if (index >= m_tracks->size())
 			{
-				LIBTEQ_THROW_RUNTIME_ERROR("Track index out of bounds: " << index << ". Number of tracks: " << number_of_tracks())
+				LIBTEQ_THROW_RUNTIME_ERROR("Track index out of bounds: " << index << ". Number of tracks: " << m_tracks->size())
 			}
 		}
 		
 		void check_pattern_index(unsigned index)
 		{
-			if (index >= m_song->m_patterns->size())
+			if (index >= m_patterns->size())
 			{
-				LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << number_of_patterns())
+				LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << m_patterns->size())
 			}
 		}
 		
@@ -56,9 +59,9 @@ namespace teq
 		{
 			check_pattern_index(pattern_index);
 			
-			if (tick_index >=  (*(m_song->m_patterns))[pattern_index].m_length)
+			if (tick_index >=  (*m_patterns)[pattern_index].m_length)
 			{
-				LIBTEQ_THROW_RUNTIME_ERROR("Tick index out of bounds: " << tick_index << ". Pattern length: " << (*(m_song->m_patterns))[pattern_index].m_length)
+				LIBTEQ_THROW_RUNTIME_ERROR("Tick index out of bounds: " << tick_index << ". Pattern length: " << (*m_patterns)[pattern_index].m_length)
 			}
 		}
 	};

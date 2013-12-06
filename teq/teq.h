@@ -21,12 +21,6 @@
 #include <teq/midi_event.h>
 #include <teq/song.h>
 
-#define LIBTEQ_THROW_RUNTIME_ERROR(x) \
-{ \
-	std::stringstream exception_string_stream; \
-	exception_string_stream << x; \
-	throw std::runtime_error(exception_string_stream.str().c_str()); \
-}
 
 namespace teq
 {
@@ -293,11 +287,11 @@ namespace teq
 			const EventType &event
 		)
 		{
-			check_pattern_index(pattern_index);
+			m_song->check_pattern_index(pattern_index);
 			
-			check_track_index(track_index);
+			m_song->check_track_index(track_index);
 			
-			check_tick_index(pattern_index, tick_index);
+			m_song->check_tick_index(pattern_index, tick_index);
 			
 			write_command_and_wait
 			(
@@ -341,7 +335,7 @@ namespace teq
 			const pattern &the_pattern
 		)
 		{	
-			check_pattern_index(pattern_index);
+			m_song->check_pattern_index(pattern_index);
 		}
 		
 		template<class EventType>

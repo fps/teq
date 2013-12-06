@@ -130,12 +130,9 @@ namespace teq
 		}
 	}
 	
-	void teq::check_track_index(unsigned index)
-
-	
 	track::type teq::track_type(unsigned index)
 	{
-		check_track_index(index);
+		m_song->check_track_index(index);
 		
 		return (*m_song->m_tracks)[index].first->m_type;
 	}
@@ -235,7 +232,7 @@ namespace teq
 	
 	size_t teq::number_of_ticks(unsigned pattern_index)
 	{
-		check_pattern_index(pattern_index);
+		m_song->check_pattern_index(pattern_index);
 		
 		return (*m_song->m_patterns)[pattern_index].m_length;
 	}
