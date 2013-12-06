@@ -36,6 +36,31 @@ namespace teq
 		{
 			
 		}
+
+		{
+			if (index >= number_of_tracks())
+			{
+				LIBTEQ_THROW_RUNTIME_ERROR("Track index out of bounds: " << index << ". Number of tracks: " << number_of_tracks())
+			}
+		}
+		
+		void check_pattern_index(unsigned index)
+		{
+			if (index >= m_song->m_patterns->size())
+			{
+				LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << number_of_patterns())
+			}
+		}
+		
+		void check_tick_index(unsigned pattern_index, unsigned tick_index)
+		{
+			check_pattern_index(pattern_index);
+			
+			if (tick_index >=  (*(m_song->m_patterns))[pattern_index].m_length)
+			{
+				LIBTEQ_THROW_RUNTIME_ERROR("Tick index out of bounds: " << tick_index << ". Pattern length: " << (*(m_song->m_patterns))[pattern_index].m_length)
+			}
+		}
 	};
 	
 	typedef std::shared_ptr<song> song_ptr;

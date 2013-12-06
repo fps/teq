@@ -76,7 +76,9 @@ if (PYTHONLIBS_FOUND)
 	if (PYTHONLIBS_FOUND)
 		include_directories(${PYTHON_INCLUDE_DIRS})
 	endif()
+	
 	message(STATUS "Adding target for Python module...")
+	
 	add_library(pyteq SHARED teq/python.cc)
 	set_target_properties(pyteq PROPERTIES PREFIX "")
 	set_target_properties(pyteq PROPERTIES OUTPUT_NAME "teq")

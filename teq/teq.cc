@@ -131,35 +131,7 @@ namespace teq
 	}
 	
 	void teq::check_track_index(unsigned index)
-	{
-		if (index >= number_of_tracks())
-		{
-			LIBTEQ_THROW_RUNTIME_ERROR("Track index out of bounds: " << index << ". Number of tracks: " << number_of_tracks())
-		}
-	}
-	
-	void teq::check_pattern_index(unsigned index)
-	{
-		if (index >= m_song->m_patterns->size())
-		{
-			LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << number_of_patterns())
-		}
-	}
-	
-	void teq::check_column_index(unsigned track_index, unsigned column_index)
-	{
-		
-	}
-	
-	void teq::check_tick_index(unsigned pattern_index, unsigned tick_index)
-	{
-		check_pattern_index(pattern_index);
-		
-		if (tick_index >=  (*(m_song->m_patterns))[pattern_index].m_length)
-		{
-			LIBTEQ_THROW_RUNTIME_ERROR("Tick index out of bounds: " << tick_index << ". Pattern length: " << (*(m_song->m_patterns))[pattern_index].m_length)
-		}
-	}
+
 	
 	track::type teq::track_type(unsigned index)
 	{

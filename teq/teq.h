@@ -223,28 +223,6 @@ namespace teq
 			unsigned index
 		);
 		
-		void check_track_index
-		(
-			unsigned index
-		);
-		
-		void check_pattern_index
-		(
-			unsigned index
-		);
-		
-
-		void check_column_index
-		(
-			unsigned track_index, 
-			unsigned column_index
-		);
-		
-		void check_tick_index
-		(
-			unsigned pattern_index, 
-			unsigned tick_index
-		);
 		
 		track::type track_type
 		(
@@ -330,7 +308,8 @@ namespace teq
 				}
 			);	
 		}
-		
+	
+#if 0
 		template<class EventType>
 		void set_sequence
 		(
@@ -354,7 +333,17 @@ namespace teq
 				}
 			);	
 		}
+#endif
 
+		void set_pattern
+		(
+			unsigned pattern_index,
+			const pattern &the_pattern
+		)
+		{	
+			check_pattern_index(pattern_index);
+		}
+		
 		template<class EventType>
 		EventType get_event
 		(
