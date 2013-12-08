@@ -158,7 +158,7 @@ namespace teq
 		bool m_send_all_notes_off_on_stop;
 		
 		
-		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 128) :
+		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 1024) :
 			m_commands(command_buffer_size),
 			m_ack(false)
 		{
@@ -209,7 +209,7 @@ namespace teq
 			const std::string track_name
 		);
 		
-		song_ptr copy_and_prepare_song_for_track_insert();
+		song_ptr copy_and_prepare_song();
 		
 		void check_track_name_and_index_for_insert
 		(
@@ -293,7 +293,7 @@ namespace teq
 			
 			m_song->check_tick_index(pattern_index, tick_index);
 			
-			write_command_and_wait
+			write_command
 			(
 				[this, event, pattern_index, track_index, tick_index] () mutable
 				{
@@ -303,40 +303,6 @@ namespace teq
 			);	
 		}
 	
-#if 0
-		template<class EventType>
-		void set_sequence
-		(
-			unsigned pattern_index,
-			unsigned track_index,
-			const sequence_of<EventType> &sequence
-		)
-		{
-			check_pattern_index(pattern_index);
-			
-			check_track_index(track_index);
-
-			pattern new_pattern = m_pattern_heap.add_new(pattern((*m_song->m_patterns)[pattern_index]));
-			
-			write_command_and_wait
-			(
-				[this, new_pattern, pattern_index, track_index] () mutable
-				{
-					auto sequence_ptr = std::dynamic_pointer_cast<sequence_of<EventType>>((*m_song->m_patterns)[pattern_index].m_sequences[track_index]);
-					sequence_ptr->m_events[tick_index] = event;
-				}
-			);	
-		}
-#endif
-
-		void set_pattern
-		(
-			unsigned pattern_index,
-			const pattern &the_pattern
-		)
-		{	
-			m_song->check_pattern_index(pattern_index);
-		}
 		
 		template<class EventType>
 		EventType get_event
@@ -381,6 +347,8 @@ namespace teq
 		(
 			command f
 		);
+		
+		void wait();
 		
 		void update_song
 		(

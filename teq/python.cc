@@ -53,6 +53,7 @@ BOOST_PYTHON_MODULE(teq)
 		.def("get_control_event", &teq::teq::get_event<teq::control_event>)
 		.def("set_cv_event", &teq::teq::set_event<teq::cv_event>)
 		.def("get_cv_event", &teq::teq::get_event<teq::cv_event>)
+		.def("wait", &teq::teq::wait)
 	;
 	
 	enum_<teq::teq::transport_state>("transport_state")

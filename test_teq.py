@@ -49,6 +49,8 @@ for n in range(0, 16):
 	print ("Adding a midi note at tick ", n, " with note ", n, "...")
 	t.set_midi_event(0, 0, n, teq.midi_event(teq.midi_event_type.ON, n, 64))
 
+t.wait()
+
 print ("Cleaning up some memory...")
 t.gc()
 

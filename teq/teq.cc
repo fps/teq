@@ -102,7 +102,7 @@ namespace teq
 		return false;
 	}
 	
-	song_ptr teq::copy_and_prepare_song_for_track_insert()
+	song_ptr teq::copy_and_prepare_song()
 	{
 		song_ptr new_song = m_song_heap.add_new(song(*m_song));
 		
@@ -163,7 +163,7 @@ namespace teq
 	{
 		check_track_name_and_index_for_insert(track_name, index);
 		
-		song_ptr new_song = copy_and_prepare_song_for_track_insert();
+		song_ptr new_song = copy_and_prepare_song();
 		
 		jack_port_t *port = jack_port_register
 		(
@@ -188,7 +188,7 @@ namespace teq
 	{
 		check_track_name_and_index_for_insert(track_name, index);
 		
-		song_ptr new_song = copy_and_prepare_song_for_track_insert();
+		song_ptr new_song = copy_and_prepare_song();
 		
 		jack_port_t *port = jack_port_register
 		(
@@ -213,7 +213,7 @@ namespace teq
 	{
 		check_track_name_and_index_for_insert(track_name, index);
 		
-		song_ptr new_song = copy_and_prepare_song_for_track_insert();
+		song_ptr new_song = copy_and_prepare_song();
 
 		insert_track<sequence_of<control_event>, control_track>(new_song, index, nullptr);
 
@@ -371,6 +371,12 @@ namespace teq
 		m_ack_condition_variable.wait(lock, [this]() { return this->m_ack; });
 	}
 
+	
+	void teq::wait()
+	{
+		write_command_and_wait([](){});
+	}
+	
 	void teq::update_song(song_ptr new_song)
 	{
 		write_command_and_wait

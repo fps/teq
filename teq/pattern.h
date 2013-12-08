@@ -20,6 +20,13 @@ namespace teq
 		{
 			
 		}
+		
+		unsigned length()
+		{
+			return m_length;
+		}
+		
+		
 	};
 	
 	typedef std::shared_ptr<pattern> pattern_ptr;
