@@ -448,6 +448,8 @@ namespace teq
 					auto &properties = *((midi_track*)&track_properties);
 					
 					properties.m_port_buffer = jack_port_get_buffer(port, nframes);
+					
+					jack_midi_clear_buffer(properties.m_port_buffer);
 				}
 				break;
 
@@ -455,6 +457,7 @@ namespace teq
 					break;
 			}
 		}
+		
 		const std::vector<pattern> &patterns = *m_song->m_patterns;
 		
 		for (jack_nframes_t frame_index = 0; frame_index < nframes; ++frame_index)
@@ -485,8 +488,6 @@ namespace teq
 					m_loop_range.m_end.m_tick == m_transport_position.m_tick
 				)
 				{
-					std::cout << "<" << std::endl;
-					
 					m_transport_position.m_pattern = m_loop_range.m_start.m_pattern;
 					m_transport_position.m_tick = m_loop_range.m_start.m_tick;
 				}
@@ -507,7 +508,31 @@ namespace teq
 					{
 						case track::type::MIDI:
 						{
-							
+							const auto &the_sequence = *std::static_pointer_cast<sequence_of<midi_event>>(the_pattern.m_sequences[track_index]);
+							auto &properties = *((midi_track*)&track_properties);
+
+							const auto &the_event = the_sequence.m_events[current_tick];
+
+							switch(the_event.m_type)
+							{
+								case midi_event::NONE:
+									break;
+									
+								case midi_event::ON:
+									render_event(midi::midi_note_on_event(0, the_event.m_value1, the_event.m_value2), properties.m_port_buffer, frame_index);
+									break;
+									
+								case midi_event::OFF:
+									render_event(midi::midi_note_off_event(0, the_event.m_value1, the_event.m_value2), properties.m_port_buffer, frame_index);
+									break;
+									
+								case midi_event::CC:
+									render_event(midi::midi_cc_event(0, the_event.m_value1, the_event.m_value2), properties.m_port_buffer, frame_index);
+									break;
+									
+								case midi_event::PITCHBEND:
+									break;
+							}
 						}
 						break;
 							

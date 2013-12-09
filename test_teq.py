@@ -3,7 +3,7 @@ import teq
 # Create a teq object. This creates the jack client, too..
 t = teq.teq()
 
-t.set_global_tempo(250.0)
+t.set_global_tempo(8)
 
 # We want to set a loop range, so let's do it. 
 r = teq.loop_range()
@@ -13,7 +13,7 @@ r.enabled = True
 r.start.pattern = 0
 r.start.tick = 0
 
-r.end.pattern = 3
+r.end.pattern = 1
 r.end.tick = 0
 
 # Set the loop range.
@@ -23,15 +23,11 @@ t.set_loop_range(r)
 print ("Adding a midi track...")
 t.insert_midi_track("foo", 0)
 
-print ("Inserting some patterns...")
-t.insert_pattern(0, 128)
-t.insert_pattern(1, 128)
-
 print ("Adding a midi track...")
 t.insert_midi_track("bar", 1)
 
 print ("Inserting a pattern...")
-t.insert_pattern(0, 128)
+t.insert_pattern(0, 16)
 
 print ("Adding a CV track...")
 t.insert_cv_track("cv", 2)
@@ -43,7 +39,7 @@ print ("Adding a control track...")
 t.insert_control_track("control", 3)
 
 print ("Inserting a control event...")
-t.set_control_event(0, 3, 0, teq.control_event(teq.control_event_type.GLOBAL_TEMPO, 500))
+t.set_control_event(0, 3, 0, teq.control_event(teq.control_event_type.GLOBAL_TEMPO, 16))
 
 for n in range(0, 16):
 	print ("Adding a midi note at tick ", n, " with note ", n, "...")

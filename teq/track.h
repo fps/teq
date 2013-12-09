@@ -57,13 +57,10 @@ namespace teq
 	{		
 		std::array<bool, 16> m_channels;
 		
-		std::vector<midi_event> m_current_events;
-
 		void *m_port_buffer;
 		
 		midi_track() : 
-			track(track::type::MIDI),
-			m_current_events(1)
+			track(track::type::MIDI)
 		{
 			m_channels[0] = true;
 		}
