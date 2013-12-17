@@ -14,21 +14,41 @@ namespace teq
 {
 	struct song
 	{
+		/**
+		 * The patterns are the material used for arrangement
+		 */
 		typedef std::vector<pattern> pattern_list;
 
 		typedef std::shared_ptr<pattern_list> pattern_list_ptr;
 		
+
+		/**
+		 * This violates separation of concern, but since we don't plan
+		 * to support backends other than jack, it's ok.
+		 * 
+		 * A track is tied to a port, so here's where we store the port
+		 * handle.
+		 */
 		typedef std::pair<track_ptr, jack_port_t *> track_properties_and_payload;
 		
 		typedef std::vector<track_properties_and_payload> track_list;
 		
 		typedef std::shared_ptr<track_list> track_list_ptr;
 		
+
+		/**
+		 * The arrangement consists of indices into the pattern list
+		 */
+		typedef std::shared_ptr<std::vector<unsigned>> arrangement_ptr;
+		
+		
 		std::string m_name;
 	
 		std::string m_description;
 		
 		pattern_list_ptr m_patterns;
+
+		arrangement_ptr m_arrangement;
 		
 		track_list_ptr m_tracks;
 		
