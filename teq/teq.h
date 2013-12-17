@@ -20,6 +20,8 @@
 #include <teq/event.h>
 #include <teq/midi_event.h>
 #include <teq/song.h>
+#include <teq/range.h>
+#include <teq/transport.h>
 
 
 namespace teq
@@ -37,78 +39,9 @@ namespace teq
 	{
 		typedef std::function<void()> command;
 		
-		typedef uint64_t tick;
 
-		struct transport_position
-		{
-			tick m_pattern;
-			
-			tick m_tick;
-			
-			transport_position
-			(
-				tick pattern = 0, 
-				tick the_tick = 0
-			) :
-				m_pattern(pattern),
-				m_tick(the_tick)
-			{
-				
-			}
-		};
-		
-		struct range
-		{
-			transport_position m_start;
-			
-			transport_position m_end;
-		};
-		
-		struct loop_range : range
-		{
-			bool m_enabled;
-			
-			loop_range
-			(
-				bool enabled = false
-			) :
-				m_enabled(enabled)
-			{
-				
-			}
-		};
-		
-		template <class T>
-		struct heap
-		{
-			typedef std::shared_ptr<T> T_ptr;
-			
-			std::list<T_ptr> m_heap;
-			
-			T_ptr add(T_ptr ptr)
-			{
-				m_heap.push_back(ptr);
-				return ptr;
-			}
-			
-			T_ptr add_new(T &&t)
-			{
-				T_ptr ptr = std::make_shared<T>(t);
-				return add(ptr);
-			}
-			
-			void gc()
-			{
-				for (auto it = m_heap.begin(); it != m_heap.end();) {
-					if (it->unique()) {
-						std::cout << "Erasing..." << std::endl;
-						it = m_heap.erase(it);
-					} else {
-						++it;
-					}
-				}	
-			}
-		};
+
+
 		
 		enum transport_state { STOPPED, PLAYING };		
 		
