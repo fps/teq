@@ -11,17 +11,40 @@ BOOST_PYTHON_MODULE(teq)
 		.def_readwrite("tick", &teq::transport_position::m_tick)
 	;
 	
+	enum_<teq::transport_state>("transport_state")
+		.value("STOPPED", teq::transport_state::STOPPED)
+		.value("PLAYING", teq::transport_state::PLAYING)
+	;
+
+
 	class_<teq::loop_range>("loop_range")
 		.def_readwrite("enabled", &teq::loop_range::m_enabled)
 		.def_readwrite("start", &teq::loop_range::m_start)
 		.def_readwrite("end", &teq::loop_range::m_end)
 	;
 	
+
+	enum_<teq::track::type>("track_type")
+		.value("MIDI", teq::track::type::MIDI)
+		.value("CV", teq::track::type::CV)
+		.value("CONTROL", teq::track::type::CONTROL)
+	;
+
+
 	class_<teq::midi_event>("midi_event", init<optional<teq::midi_event::type, unsigned, unsigned>>())
 		.def_readwrite("type", &teq::midi_event::m_type)
 		.def_readwrite("value1", &teq::midi_event::m_value1)
 		.def_readwrite("value2", &teq::midi_event::m_value2)
 	;
+
+	enum_<teq::midi_event::type>("midi_event_type")
+		.value("NONE", teq::midi_event::type::NONE)
+		.value("ON", teq::midi_event::type::ON)
+		.value("OFF", teq::midi_event::type::OFF)
+		.value("CC", teq::midi_event::type::CC)
+		.value("PITCHBEND", teq::midi_event::PITCHBEND)
+	;
+
 
 	class_<teq::cv_event>("cv_event", init<optional<teq::cv_event::type, float, float>>())
 		.def_readwrite("type", &teq::cv_event::m_type)
@@ -29,11 +52,33 @@ BOOST_PYTHON_MODULE(teq)
 		.def_readwrite("value2", &teq::cv_event::m_value2)
 	;
 
+	enum_<teq::cv_event::type>("cv_event_type")
+		.value("NONE", teq::cv_event::type::NONE)
+		.value("INTERVAL", teq::cv_event::type::INTERVAL)
+	;
+	
+
 	class_<teq::control_event>("control_event", init<optional<teq::control_event::type, float>>())
 		.def_readwrite("type", &teq::control_event::m_type)
 		.def_readwrite("value1", &teq::control_event::m_value)
 	;
 
+	enum_<teq::control_event::type>("control_event_type")
+		.value("NONE", teq::control_event::type::NONE)
+		.value("GLOBAL_TEMPO", teq::control_event::type::GLOBAL_TEMPO)
+		.value("RELATIVE_TEMPO", teq::control_event::type::RELATIVE_TEMPO)
+	;
+
+	class_<teq::pattern>("pattern")
+		.def("set_midi_event", &teq::pattern::set_event<teq::midi_event>)
+		.def("get_midi_event", &teq::pattern::get_event<teq::midi_event>)
+		.def("set_control_event", &teq::pattern::set_event<teq::control_event>)
+		.def("get_control_event", &teq::pattern::get_event<teq::control_event>)
+		.def("set_cv_event", &teq::pattern::set_event<teq::cv_event>)
+		.def("get_cv_event", &teq::pattern::get_event<teq::cv_event>)
+	;
+	
+	
 	class_<teq::teq>("teq", init<optional<std::string, unsigned>>())
 		.def("gc", &teq::teq::gc)
 		.def("set_global_tempo", &teq::teq::set_global_tempo)
@@ -47,42 +92,6 @@ BOOST_PYTHON_MODULE(teq)
 		.def("insert_cv_track", &teq::teq::insert_cv_track)
 		.def("insert_control_track", &teq::teq::insert_control_track)
 		.def("insert_pattern", &teq::teq::insert_pattern)
-		.def("set_midi_event", &teq::teq::set_event<teq::midi_event>)
-		.def("get_midi_event", &teq::teq::get_event<teq::midi_event>)
-		.def("set_control_event", &teq::teq::set_event<teq::control_event>)
-		.def("get_control_event", &teq::teq::get_event<teq::control_event>)
-		.def("set_cv_event", &teq::teq::set_event<teq::cv_event>)
-		.def("get_cv_event", &teq::teq::get_event<teq::cv_event>)
 		.def("wait", &teq::teq::wait)
-	;
-	
-	enum_<teq::transport_state>("transport_state")
-		.value("STOPPED", teq::transport_state::STOPPED)
-		.value("PLAYING", teq::transport_state::PLAYING)
-	;
-
-	enum_<teq::track::type>("track_type")
-		.value("MIDI", teq::track::type::MIDI)
-		.value("CV", teq::track::type::CV)
-		.value("CONTROL", teq::track::type::CONTROL)
-	;
-
-	enum_<teq::midi_event::type>("midi_event_type")
-		.value("NONE", teq::midi_event::type::NONE)
-		.value("ON", teq::midi_event::type::ON)
-		.value("OFF", teq::midi_event::type::OFF)
-		.value("CC", teq::midi_event::type::CC)
-		.value("PITCHBEND", teq::midi_event::PITCHBEND)
-	;
-
-	enum_<teq::cv_event::type>("cv_event_type")
-		.value("NONE", teq::cv_event::type::NONE)
-		.value("INTERVAL", teq::cv_event::type::INTERVAL)
-	;
-	
-	enum_<teq::control_event::type>("control_event_type")
-		.value("NONE", teq::control_event::type::NONE)
-		.value("GLOBAL_TEMPO", teq::control_event::type::GLOBAL_TEMPO)
-		.value("RELATIVE_TEMPO", teq::control_event::type::RELATIVE_TEMPO)
 	;
 }

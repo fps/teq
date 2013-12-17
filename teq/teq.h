@@ -153,44 +153,21 @@ namespace teq
 		void remove_pattern(unsigned index);
 		
 		void move_pattern(unsigned from, unsigned to);
+		
+		void set_pattern(const pattern& the_pattern);
 
-		template<class EventType>
-		void set_event
-		(
-			unsigned pattern_index,
-			unsigned track_index,
-			unsigned tick_index,
-			const EventType &event
-		)
+		/**
+		 * Use this function to create new patterns. 
+		 * 
+		 * NOTE: If you change the number or ordering of tracks
+		 * in the song after creating a pattern adding this pattern
+		 * to the song will lead to undefined behaviour.
+		 */
+		void create_pattern(unsigned length)
 		{
-			m_song->check_pattern_index(pattern_index);
 			
-			m_song->check_track_index(track_index);
-			
-			m_song->check_tick_index(pattern_index, tick_index);
-			
-			write_command
-			(
-				[this, event, pattern_index, track_index, tick_index] () mutable
-				{
-					auto sequence_ptr = std::dynamic_pointer_cast<sequence_of<EventType>>((*m_song->m_patterns)[pattern_index].m_sequences[track_index]);
-					sequence_ptr->m_events[tick_index] = event;
-				}
-			);	
 		}
-	
-		
-		template<class EventType>
-		EventType get_event
-		(
-			unsigned pattern_index,
-			unsigned track_index,
-			unsigned tick_index
-		)
-		{
-			return EventType();
-		}
-		
+
 		void set_loop_range(const loop_range &range);
 		
 		void set_global_tempo(float tempo);
