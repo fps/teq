@@ -28,11 +28,7 @@ namespace teq
 {
 	extern "C" 
 	{
-		int jack_process
-		(
-			jack_nframes_t nframes, 
-			void *arg
-		);
+		int jack_process(jack_nframes_t nframes, void *arg);
 	}
 	
 	struct teq
@@ -121,89 +117,40 @@ namespace teq
 		
 		~teq();
 		
-		void set_send_all_notes_off_on_loop
-		(
-			bool on
-		);
+		void set_send_all_notes_off_on_loop(bool on);
 		
-		void set_send_all_notes_off_on_stop
-		(
-			bool on
-		);
+		void set_send_all_notes_off_on_stop(bool on);
 		
-		bool track_name_exists
-		(
-			const std::string track_name
-		);
+		bool track_name_exists(const std::string track_name);
 		
 		song_ptr copy_and_prepare_song();
 		
-		void check_track_name_and_index_for_insert
-		(
-			const std::string &track_name, 
-			unsigned index
-		);
+		void check_track_name_and_index_for_insert(const std::string &track_name, unsigned index);
 		
 		
-		track::type track_type
-		(
-			unsigned index
-		);
+		track::type track_type(unsigned index);
 		
-		void insert_midi_track
-		(
-			const std::string &track_name, 
-			unsigned index
-		);
+		void insert_midi_track(const std::string &track_name, unsigned index);
 		
-		void insert_cv_track
-		(
-			const std::string &track_name, 
-			unsigned index
-		);
+		void insert_cv_track(const std::string &track_name, unsigned index);
 		
-		void insert_control_track
-		(
-			const std::string &track_name, 
-			unsigned index
-		);
+		void insert_control_track(const std::string &track_name, unsigned index);
 		
 		size_t number_of_tracks();
 		
 		size_t number_of_patterns();
 		
-		size_t number_of_ticks
-		(
-			unsigned pattern_index
-		);
+		size_t number_of_ticks(unsigned pattern_index);
 		
-		void remove_track
-		(
-			unsigned index
-		);
+		void remove_track(unsigned index);
 		
-		void move_track
-		(
-			unsigned from, 
-			unsigned to
-		);
+		void move_track(unsigned from, unsigned to);
 		
-		void insert_pattern
-		(
-			unsigned index, 
-			unsigned pattern_length
-		);
+		void insert_pattern(unsigned index, unsigned pattern_length);
 	
-		void remove_pattern
-		(
-			unsigned index
-		);
+		void remove_pattern(unsigned index);
 		
-		void move_pattern
-		(
-			unsigned from, 
-			unsigned to
-		);
+		void move_pattern(unsigned from, unsigned to);
 
 		template<class EventType>
 		void set_event
@@ -242,66 +189,33 @@ namespace teq
 			return EventType();
 		}
 		
-		void set_loop_range
-		(
-			const loop_range &range
-		);
+		void set_loop_range(const loop_range &range);
 		
-		void set_global_tempo
-		(
-			float tempo
-		);
+		void set_global_tempo(float tempo);
 		
-		void set_transport_state
-		(
-			transport_state state
-		);
+		void set_transport_state(transport_state state);
 		
 		
-		void set_transport_position
-		(
-			transport_position position
-		);
+		void set_transport_position(transport_position position);
 		
 		void gc();
 		
-		void write_command
-		(
-			command f
-		);
+		void write_command(command f);
 		
-		void write_command_and_wait
-		(
-			command f
-		);
+		void write_command_and_wait(command f);
 		
 		void wait();
 		
-		void update_song
-		(
-			song_ptr new_song\
-		);
+		void update_song(song_ptr new_song);
 
 
-		void render_event
-		(
-			const midi::midi_event &e, 
-			void *port_buffer, 
-			jack_nframes_t time
-		);
+		void render_event(const midi::midi_event &e, void *port_buffer, jack_nframes_t time);
 		
 		void process_commands();
 		
-		int process
-		(
-			jack_nframes_t nframes
-		);
+		int process(jack_nframes_t nframes);
 		
-		friend int jack_process
-		(
-			jack_nframes_t, 
-			void*
-		);
+		friend int jack_process(jack_nframes_t, void*);
 	};
 }
 
