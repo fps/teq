@@ -6,15 +6,15 @@ BOOST_PYTHON_MODULE(teq)
 {
 	using namespace boost::python;
 	
-	class_<teq::teq::transport_position>("transport_position")
-		.def_readwrite("pattern", &teq::teq::transport_position::m_pattern)
-		.def_readwrite("tick", &teq::teq::transport_position::m_tick)
+	class_<teq::transport_position>("transport_position")
+		.def_readwrite("pattern", &teq::transport_position::m_pattern)
+		.def_readwrite("tick", &teq::transport_position::m_tick)
 	;
 	
-	class_<teq::teq::loop_range>("loop_range")
-		.def_readwrite("enabled", &teq::teq::loop_range::m_enabled)
-		.def_readwrite("start", &teq::teq::loop_range::m_start)
-		.def_readwrite("end", &teq::teq::loop_range::m_end)
+	class_<teq::loop_range>("loop_range")
+		.def_readwrite("enabled", &teq::loop_range::m_enabled)
+		.def_readwrite("start", &teq::loop_range::m_start)
+		.def_readwrite("end", &teq::loop_range::m_end)
 	;
 	
 	class_<teq::midi_event>("midi_event", init<optional<teq::midi_event::type, unsigned, unsigned>>())
@@ -56,9 +56,9 @@ BOOST_PYTHON_MODULE(teq)
 		.def("wait", &teq::teq::wait)
 	;
 	
-	enum_<teq::teq::transport_state>("transport_state")
-		.value("STOPPED", teq::teq::transport_state::STOPPED)
-		.value("PLAYING", teq::teq::transport_state::PLAYING)
+	enum_<teq::transport_state>("transport_state")
+		.value("STOPPED", teq::transport_state::STOPPED)
+		.value("PLAYING", teq::transport_state::PLAYING)
 	;
 
 	enum_<teq::track::type>("track_type")

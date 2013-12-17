@@ -5,6 +5,8 @@ namespace teq
 {
 	typedef uint64_t tick;
 
+	enum transport_state { STOPPED, PLAYING };		
+		
 	struct transport_position
 	{
 		tick m_pattern;

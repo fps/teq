@@ -1,6 +1,8 @@
 #ifndef LIBTEQ_RANGE_HH
 #define LIBTEQ_RANGE_HH
 
+#include <teq/transport.h>
+
 namespace teq
 {
 	struct range

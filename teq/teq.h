@@ -22,7 +22,7 @@
 #include <teq/song.h>
 #include <teq/range.h>
 #include <teq/transport.h>
-
+#include <teq/heap.h>
 
 namespace teq
 {
@@ -38,12 +38,6 @@ namespace teq
 	struct teq
 	{
 		typedef std::function<void()> command;
-		
-
-
-
-		
-		enum transport_state { STOPPED, PLAYING };		
 		
 		heap<song> m_song_heap;
 		
