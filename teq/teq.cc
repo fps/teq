@@ -247,7 +247,7 @@ namespace teq
 	
 	void teq::move_track(unsigned from, unsigned to)
 	{
-	
+		throw std::logic_error("Not implemented yet");
 	}
 	
 	void teq::insert_pattern(unsigned index, unsigned pattern_length)
@@ -288,12 +288,12 @@ namespace teq
 
 	void teq::remove_pattern(unsigned index)
 	{
-		
+		throw std::logic_error("Not implemented yet");
 	}
 	
 	void teq::move_pattern(unsigned from, unsigned to)
 	{
-		
+		throw std::logic_error("Not implemented yet");		
 	}
 	
 

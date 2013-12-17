@@ -116,6 +116,7 @@ namespace teq
 		);
 		
 		~teq();
+
 		
 		void set_send_all_notes_off_on_loop(bool on);
 		
@@ -128,6 +129,8 @@ namespace teq
 		void check_track_name_and_index_for_insert(const std::string &track_name, unsigned index);
 		
 		
+		size_t number_of_tracks();
+		
 		track::type track_type(unsigned index);
 		
 		void insert_midi_track(const std::string &track_name, unsigned index);
@@ -136,15 +139,14 @@ namespace teq
 		
 		void insert_control_track(const std::string &track_name, unsigned index);
 		
-		size_t number_of_tracks();
-		
-		size_t number_of_patterns();
-		
-		size_t number_of_ticks(unsigned pattern_index);
-		
 		void remove_track(unsigned index);
 		
 		void move_track(unsigned from, unsigned to);
+		
+
+		size_t number_of_patterns();
+		
+		size_t number_of_ticks(unsigned pattern_index);
 		
 		void insert_pattern(unsigned index, unsigned pattern_length);
 	
