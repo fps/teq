@@ -166,7 +166,6 @@ namespace teq
 		pattern create_pattern(unsigned length);
 		
 		
-
 		void set_loop_range(const loop_range &range);
 		
 		loop_range get_loop_range();
@@ -194,6 +193,7 @@ namespace teq
 		void render_event(const midi::midi_event &e, void *port_buffer, jack_nframes_t time);
 		
 		void process_commands();
+		
 		
 		int process(jack_nframes_t nframes);
 		
