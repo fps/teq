@@ -483,11 +483,6 @@ namespace teq
 				
 				++m_transport_position.m_tick;
 				
-				if (m_transport_position.m_pattern >= patterns.size())
-				{
-					return 0;
-				}
-				
 				if (m_transport_position.m_tick >= patterns[m_transport_position.m_pattern].m_length)
 				{
 					std::cout << "+" << std::endl;
@@ -509,6 +504,7 @@ namespace teq
 				
 				if (m_transport_position.m_pattern >= patterns.size())
 				{
+					std::cout << "end" << std::endl;
 					return 0;
 				}
 				

@@ -12,7 +12,7 @@ t = teq.teq()
 # Set the loop range.
 set_loop_range(t, 0, 0, 1, 0, True)
 
-# Create some tracks. Tracks have a name that do no need to be unique.
+# Create some tracks. Tracks have a name that do not need to be unique.
 print ("Adding a midi track...")
 t.insert_midi_track("foo", 0)
 
@@ -33,7 +33,7 @@ print ("Inserting a CV event...")
 p.set_cv_event(2, 0, teq.cv_event(teq.cv_event_type.INTERVAL, 1, 1))
 
 print ("Inserting a control event...")
-p.set_control_event(3, 0, teq.control_event(teq.control_event_type.GLOBAL_TEMPO, 32))
+#p.set_control_event(3, 0, teq.control_event(teq.control_event_type.GLOBAL_TEMPO, 32))
 
 for n in range(0, 16):
 	print ("Adding a midi note at tick ", n, " with note ", n, "...")
@@ -47,7 +47,7 @@ t.wait()
 print ("Cleaning up some memory...")
 t.gc()
 
-t.set_global_tempo(4)
+t.set_global_tempo(16)
 
 print ("Setting the transport position and starting playback...")
 set_transport_position(t, 0, 0)
