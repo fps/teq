@@ -269,30 +269,15 @@ namespace teq
 		return new_pattern;
 	}
 	
-	void teq::insert_pattern(unsigned index, unsigned pattern_length)
+	void teq::insert_pattern(unsigned index, const pattern &the_pattern)
 	{
 		if (index > m_song->m_patterns->size())
 		{
 			LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << number_of_patterns())
 		}
-		
-		pattern new_pattern;
-		
-		new_pattern.m_length = pattern_length;
-		
-		for (auto &it : *m_song->m_tracks)
-		{
-			std::cout << "Creating track" << std::endl;
-			sequence_ptr new_sequence = it.first->create_sequence();
-			
-			new_sequence->set_length(pattern_length);
-			
-			new_pattern.m_sequences.push_back(new_sequence);
-		}
-		
 		song::pattern_list_ptr new_pattern_list = m_pattern_list_heap.add_new(song::pattern_list(*m_song->m_patterns));
 		
-		new_pattern_list->insert(new_pattern_list->begin() + index, new_pattern);
+		new_pattern_list->insert(new_pattern_list->begin() + index, the_pattern);
 
 		std::cout << "Pattern list has # of entries: " << new_pattern_list->size() << std::endl;
 		write_command_and_wait

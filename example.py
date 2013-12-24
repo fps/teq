@@ -31,7 +31,7 @@ print ("Inserting a CV event...")
 #t.set_cv_event(0, 2, 0, teq.cv_event(teq.cv_event_type.INTERVAL, 1, 1))
 
 print ("Adding a control track...")
-#t.insert_control_track("control", 3)
+t.insert_control_track("control", 3)
 
 print ("Inserting a control event...")
 #t.set_control_event(0, 3, 0, teq.control_event(teq.control_event_type.GLOBAL_TEMPO, 16))

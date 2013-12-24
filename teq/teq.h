@@ -148,7 +148,7 @@ namespace teq
 		
 		size_t number_of_ticks(unsigned pattern_index);
 		
-		void insert_pattern(unsigned index, unsigned pattern_length);
+		void insert_pattern(unsigned index, const pattern &the_pattern);
 	
 		void remove_pattern(unsigned index);
 		
