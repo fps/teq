@@ -9,6 +9,9 @@ from pyteq import *
 # Create a teq object. This creates the jack client, too..
 t = teq.teq()
 
+# Set the loop range.
+set_loop_range(t, 0, 0, 1, 0, True)
+
 # Create some tracks. Tracks have a name that do no need to be unique.
 print ("Adding a midi track...")
 t.insert_midi_track("foo", 0)
@@ -45,9 +48,6 @@ print ("Cleaning up some memory...")
 t.gc()
 
 t.set_global_tempo(4)
-
-# Set the loop range.
-set_loop_range(t, 0, 0, 1, 0, True)
 
 print ("Setting the transport position and starting playback...")
 set_transport_position(t, 0, 0)
