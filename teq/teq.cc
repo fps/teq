@@ -490,6 +490,7 @@ namespace teq
 				
 				if (m_transport_position.m_tick >= patterns[m_transport_position.m_pattern].m_length)
 				{
+					std::cout << "<" << std::endl;
 					m_transport_position.m_tick = 0;
 					++m_transport_position.m_pattern;
 				}
