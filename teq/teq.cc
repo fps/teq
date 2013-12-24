@@ -493,8 +493,8 @@ namespace teq
 				if 
 				(
 					true == m_loop_range.m_enabled &&
-					m_loop_range.m_end.m_pattern >= m_transport_position.m_pattern &&
-					m_loop_range.m_end.m_tick >= m_transport_position.m_tick
+					m_loop_range.m_end.m_pattern == m_transport_position.m_pattern &&
+					m_loop_range.m_end.m_tick == m_transport_position.m_tick
 				)
 				{
 					std::cout << "<" << std::endl;
