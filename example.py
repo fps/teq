@@ -21,25 +21,28 @@ t.insert_midi_track("foo", 0)
 print ("Adding a midi track...")
 t.insert_midi_track("bar", 1)
 
-print ("Inserting a pattern...")
-t.insert_pattern(0, 16)
-
 print ("Adding a CV track...")
 t.insert_cv_track("cv", 2)
-
-print ("Inserting a CV event...")
-#t.set_cv_event(0, 2, 0, teq.cv_event(teq.cv_event_type.INTERVAL, 1, 1))
 
 print ("Adding a control track...")
 t.insert_control_track("control", 3)
 
-print ("Inserting a control event...")
-#t.set_control_event(0, 3, 0, teq.control_event(teq.control_event_type.GLOBAL_TEMPO, 16))
+# Let's create a pattern. We can only create patterns using the factory function of 
+# the teq instance. It knows how many sequences the pattern has to have and their types.
+p = t.create_pattern(16)
 
-#for n in range(0, 16):
-#	print ("Adding a midi note at tick ", n, " with note ", n, "...")
-#t.set_midi_event(0, 0, n, teq.midi_event(teq.midi_event_type.ON, n, 64))
-#	t.set_midi_event(0, 1, n, teq.midi_event(teq.midi_event_type.CC, n, 64))
+print ("Inserting a CV event...")
+p.set_cv_event(2, 0, teq.cv_event(teq.cv_event_type.INTERVAL, 1, 1))
+
+print ("Inserting a control event...")
+p.set_control_event(3, 0, teq.control_event(teq.control_event_type.GLOBAL_TEMPO, 16))
+
+for n in range(0, 16):
+	print ("Adding a midi note at tick ", n, " with note ", n, "...")
+	p.set_midi_event(0, n, teq.midi_event(teq.midi_event_type.ON, n, 64))
+	p.set_midi_event(1, n, teq.midi_event(teq.midi_event_type.CC, n, 64))
+
+t.insert_pattern(0, p)
 
 t.wait()
 
