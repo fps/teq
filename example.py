@@ -47,11 +47,7 @@ print ("Cleaning up some memory...")
 t.gc()
 
 print ("Setting the transport position and starting playback...")
-p = teq.transport_position()
-p.pattern = 0
-p.tick = 0
-
-t.set_transport_position(p)
+set_transport_position(t, 0, 0)
 
 t.set_transport_state(teq.transport_state.PLAYING)
 
