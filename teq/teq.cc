@@ -270,7 +270,7 @@ namespace teq
 	}
 	
 	void teq::insert_pattern(unsigned index, const pattern &the_pattern)
-	{
+	{	
 		if (index > m_song->m_patterns->size())
 		{
 			LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << number_of_patterns())

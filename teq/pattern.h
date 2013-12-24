@@ -60,6 +60,12 @@ namespace teq
 			check_tick_index(tick_index);
 			
 			auto sequence_ptr = std::dynamic_pointer_cast<sequence_of<EventType>>(m_sequences[track_index]);
+			
+			if (!sequence_ptr)
+			{
+				LIBTEQ_THROW_RUNTIME_ERROR("Cast to sequence type failed. Did you try to set a wrong event type?")
+			}
+			
 			sequence_ptr->m_events[tick_index] = event;
 		}
 	
