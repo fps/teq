@@ -1,3 +1,5 @@
+import teq
+
 # Some utility functions to make life easier in the long run
 def set_loop_range(t, start_pattern, start_tick, end_pattern, end_tick, onoff):
 	r = teq.loop_range()

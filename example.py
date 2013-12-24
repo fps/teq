@@ -3,7 +3,7 @@
 import teq
 
 # Let's import the little python library that makes interoperability much easier
-import pyteq
+from pyteq import *
 
 
 # Create a teq object. This creates the jack client, too..
