@@ -250,6 +250,25 @@ namespace teq
 		throw std::logic_error("Not implemented yet");
 	}
 	
+	pattern teq::create_pattern(unsigned pattern_length)
+	{
+		pattern new_pattern;
+		
+		new_pattern.m_length = pattern_length;
+		
+		for (auto &it : *m_song->m_tracks)
+		{
+			std::cout << "Creating track" << std::endl;
+			sequence_ptr new_sequence = it.first->create_sequence();
+			
+			new_sequence->set_length(pattern_length);
+			
+			new_pattern.m_sequences.push_back(new_sequence);
+		}
+		
+		return new_pattern;
+	}
+	
 	void teq::insert_pattern(unsigned index, unsigned pattern_length)
 	{
 		if (index > m_song->m_patterns->size())
@@ -297,6 +316,10 @@ namespace teq
 	}
 	
 
+	loop_range teq::get_loop_range()
+	{
+		return m_loop_range;
+	}
 
 	void teq::set_loop_range(const loop_range &range)
 	{
@@ -307,6 +330,11 @@ namespace teq
 				this->m_loop_range = range;
 			}
 		);
+	}
+	
+	float teq::get_global_tempo()
+	{
+		return m_global_tempo;
 	}
 	
 	void teq::set_global_tempo(float tempo)

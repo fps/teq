@@ -163,13 +163,17 @@ namespace teq
 		 * in the song after creating a pattern adding this pattern
 		 * to the song will lead to undefined behaviour.
 		 */
-		void create_pattern(unsigned length);
+		pattern create_pattern(unsigned length);
 		
 		
 
 		void set_loop_range(const loop_range &range);
 		
+		loop_range get_loop_range();
+		
 		void set_global_tempo(float tempo);
+		
+		float get_global_tempo();
 		
 		void set_transport_state(transport_state state);
 		
