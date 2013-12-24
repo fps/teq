@@ -22,7 +22,7 @@ def set_transport_position(t, pattern, tick):
 	t.set_transport_position(p)
 
 def play(t):
-	pass
+	t.set_transport_state(teq.transport_state.PLAYING)
 
 def stop(t):
-	pass
+	t.set_transport_state(teq.transport_state.STOPPED)
