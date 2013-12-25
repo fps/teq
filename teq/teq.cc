@@ -467,7 +467,33 @@ namespace teq
 			}
 		}
 	}
-	
+
+	void teq::write_cv_ports(unsigned frame_index)
+	{
+		/**
+			* Write out CV values. This has to happen for every single frame
+			* since it's a continous signal as opposed to the event based 
+			* midi and control signals
+			*/
+		for (size_t track_index = 0; track_index < m_song->m_tracks->size(); ++track_index)
+		{
+			auto &track_properties = *(*m_song->m_tracks)[track_index].first;
+			
+			switch(track_properties.m_type)
+			{
+				case track::type::CV:
+				{
+					auto &cv_properties = *((cv_track*)&track_properties);
+					
+					((float*)(cv_properties.m_port_buffer))[frame_index] = cv_properties.m_current_value;
+				}
+				break;
+
+				default:
+					break;
+			}
+		}
+	}
 	int teq::process(jack_nframes_t nframes)
 	{
 		process_commands();
@@ -602,24 +628,8 @@ namespace teq
 				}
 			}
 			
-			for (size_t track_index = 0; track_index < m_song->m_tracks->size(); ++track_index)
-			{
-				auto &track_properties = *(*m_song->m_tracks)[track_index].first;
-				
-				switch(track_properties.m_type)
-				{
-					case track::type::CV:
-					{
-						auto &cv_properties = *((cv_track*)&track_properties);
-						
-						((float*)(cv_properties.m_port_buffer))[frame_index] = cv_properties.m_current_value;
-					}
-					break;
-
-					default:
-						break;
-				}
-			}
+			write_cv_ports(frame_index);
+			
 			m_time_since_last_tick += sample_duration;
 		}
 

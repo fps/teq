@@ -197,6 +197,8 @@ namespace teq
 		
 		void process_commands();
 		
+		void write_cv_ports(unsigned frame_index);
+		
 		void update_transport();
 		
 		void fetch_port_buffers(jack_nframes_t nframes);
