@@ -47,16 +47,12 @@ t.wait()
 print ("Cleaning up some memory...")
 t.gc()
 
-t.set_global_tempo(16)
+t.set_global_tempo(4)
 
 print ("Setting the transport position and starting playback...")
 set_transport_position(t, 0, 0)
 
 play(t)
-
-p = teq.loop_range()
-
-p.start.patternjgf = 0
 
 # Wait for the user to press a key...
 try:
