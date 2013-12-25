@@ -56,7 +56,7 @@ play(t)
 
 p = teq.loop_range()
 
-p.start_pattern = 0
+p.start.patternjgf = 0
 
 # Wait for the user to press a key...
 try:
