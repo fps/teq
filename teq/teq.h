@@ -34,6 +34,7 @@ namespace teq
 	struct teq
 	{
 	protected:
+		
 		typedef std::function<void()> command;
 		
 		heap<song> m_song_heap;
@@ -82,6 +83,7 @@ namespace teq
 		bool m_send_all_notes_off_on_stop;
 		
 	public:
+		
 		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 1024) :
 			m_commands(command_buffer_size),
 			m_ack(false)

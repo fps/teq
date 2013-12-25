@@ -1,4 +1,5 @@
 #include <teq/teq.h>
+#include <cassert>
 
 namespace teq
 {
@@ -494,6 +495,7 @@ namespace teq
 			}
 		}
 	}
+	
 	int teq::process(jack_nframes_t nframes)
 	{
 		process_commands();
@@ -513,6 +515,12 @@ namespace teq
 		{
 			const float tick_duration = 1.0 / (m_relative_tempo * m_global_tempo);
 			
+			update_transport();
+			
+			/**
+			 * Here come all the state transitions that depend on the ticks
+			 * and not individual frames.
+			 */
 			if (m_time_since_last_tick >= tick_duration)
 			{
 				m_time_since_last_tick -= tick_duration;
@@ -521,11 +529,11 @@ namespace teq
 				
 				if (m_transport_position.m_tick >= patterns[m_transport_position.m_pattern].m_length)
 				{
-					std::cout << "+" << std::endl;
+					std::cout << "pattern end" << std::endl;
 					m_transport_position.m_tick = 0;
 					++m_transport_position.m_pattern;
 				}
-		
+
 				if 
 				(
 					true == m_loop_range.m_enabled &&
@@ -533,7 +541,7 @@ namespace teq
 					m_loop_range.m_end.m_tick == m_transport_position.m_tick
 				)
 				{
-					std::cout << "<" << std::endl;
+					std::cout << "loop end" << std::endl;
 					m_transport_position.m_pattern = m_loop_range.m_start.m_pattern;
 					m_transport_position.m_tick = m_loop_range.m_start.m_tick;
 				}
@@ -543,6 +551,11 @@ namespace teq
 					std::cout << "end" << std::endl;
 					return 0;
 				}
+				
+				assert(m_transport_position.m_pattern < m_loop_range.m_end.m_pattern);
+				assert(m_transport_position.m_pattern >= m_loop_range.m_start.m_pattern);
+				assert(m_transport_position.m_tick < m_loop_range.m_end.m_tick);
+				assert(m_transport_position.m_tick >= m_loop_range.m_start.m_tick);
 				
 				const pattern &the_pattern = patterns[m_transport_position.m_pattern];
 				const int current_tick = m_transport_position.m_tick;
