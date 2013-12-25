@@ -54,6 +54,10 @@ set_transport_position(t, 0, 0)
 
 play(t)
 
+p = teq.loop_range()
+
+p.start_pattern = 0
+
 # Wait for the user to press a key...
 try:
 	i = input("Press Enter to continue...")
