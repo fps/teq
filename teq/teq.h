@@ -33,6 +33,7 @@ namespace teq
 	
 	struct teq
 	{
+	protected:
 		typedef std::function<void()> command;
 		
 		heap<song> m_song_heap;
@@ -80,7 +81,7 @@ namespace teq
 		
 		bool m_send_all_notes_off_on_stop;
 		
-		
+	public:
 		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 1024) :
 			m_commands(command_buffer_size),
 			m_ack(false)
@@ -179,21 +180,26 @@ namespace teq
 		
 		void set_transport_position(transport_position position);
 		
+		
 		void gc();
+		
+		void wait();
+		
+	protected:
 		
 		void write_command(command f);
 		
 		void write_command_and_wait(command f);
 		
-		void wait();
-		
 		void update_song(song_ptr new_song);
-
 
 		void render_event(const midi::midi_event &e, void *port_buffer, jack_nframes_t time);
 		
 		void process_commands();
 		
+		void update_transport();
+		
+		void fetch_port_buffers(jack_nframes_t nframes);
 		
 		int process(jack_nframes_t nframes);
 		

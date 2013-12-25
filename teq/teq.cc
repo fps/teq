@@ -430,17 +430,13 @@ namespace teq
 		}		
 	}
 	
-	int teq::process(jack_nframes_t nframes)
+	void teq::update_transport()
 	{
-		process_commands();
 		
-		if (m_transport_state == transport_state::STOPPED)
-		{
-			return 0;
-		}
-		
-		const float sample_duration = 1.0 / jack_get_sample_rate(m_jack_client);
-		
+	}
+	
+	void teq::fetch_port_buffers(jack_nframes_t nframes)
+	{
 		for (size_t track_index = 0; track_index < m_song->m_tracks->size(); ++track_index)
 		{
 			auto &track_properties = *(*m_song->m_tracks)[track_index].first;
@@ -470,6 +466,20 @@ namespace teq
 					break;
 			}
 		}
+	}
+	
+	int teq::process(jack_nframes_t nframes)
+	{
+		process_commands();
+		
+		if (m_transport_state == transport_state::STOPPED)
+		{
+			return 0;
+		}
+		
+		const float sample_duration = 1.0 / jack_get_sample_rate(m_jack_client);
+		
+		fetch_port_buffers(nframes);
 		
 		const std::vector<pattern> &patterns = *m_song->m_patterns;
 		
