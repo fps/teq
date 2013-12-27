@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -105,9 +105,25 @@ typedef std::vector&lt; sequence_ptr &gt;&#160;</td><td class="memItemRight" val
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a47fd52338209d436a8b085222741e8b3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a47fd52338209d436a8b085222741e8b3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>pattern</b> (unsigned length=128)</td></tr>
+<tr class="memitem:a47fd52338209d436a8b085222741e8b3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structteq_1_1pattern.html#a47fd52338209d436a8b085222741e8b3">pattern</a> (unsigned length=128)</td></tr>
 <tr class="separator:a47fd52338209d436a8b085222741e8b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2f6c57ce9182e3332f8a4de6cbb07f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad2f6c57ce9182e3332f8a4de6cbb07f2"></a>
+unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>length</b> ()</td></tr>
+<tr class="separator:ad2f6c57ce9182e3332f8a4de6cbb07f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb694364b01df809d99a27b91cf46f82"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abb694364b01df809d99a27b91cf46f82"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>check_tick_index</b> (unsigned the_tick)</td></tr>
+<tr class="separator:abb694364b01df809d99a27b91cf46f82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41c5853af27bfcc6fcf8e6968b106afc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a41c5853af27bfcc6fcf8e6968b106afc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>check_track_index</b> (unsigned the_track)</td></tr>
+<tr class="separator:a41c5853af27bfcc6fcf8e6968b106afc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe319e6605e5ee1804b62b13b5bae6e9"><td class="memTemplParams" colspan="2"><a class="anchor" id="afe319e6605e5ee1804b62b13b5bae6e9"></a>
+template&lt;class EventType &gt; </td></tr>
+<tr class="memitem:afe319e6605e5ee1804b62b13b5bae6e9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_event</b> (unsigned track_index, unsigned tick_index, const EventType &amp;event)</td></tr>
+<tr class="separator:afe319e6605e5ee1804b62b13b5bae6e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab70b769f96edd6aca8b3e46ff5aae7f4"><td class="memTemplParams" colspan="2"><a class="anchor" id="ab70b769f96edd6aca8b3e46ff5aae7f4"></a>
+template&lt;class EventType &gt; </td></tr>
+<tr class="memitem:ab70b769f96edd6aca8b3e46ff5aae7f4"><td class="memTemplItemLeft" align="right" valign="top">EventType&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_event</b> (unsigned track_index, unsigned tick_index)</td></tr>
+<tr class="separator:ab70b769f96edd6aca8b3e46ff5aae7f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -118,13 +134,39 @@ sequence_list&#160;</td><td class="memItemRight" valign="bottom"><b>m_sequences<
 unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>m_length</b></td></tr>
 <tr class="separator:a0dde6b257b0c14903deb32f2837ba6f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a47fd52338209d436a8b085222741e8b3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">teq::pattern::pattern </td>
+          <td>(</td>
+          <td class="paramtype">unsigned&#160;</td>
+          <td class="paramname"><em>length</em> = <code>128</code>)</td><td></td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Patterns should only ever be created by the <a class="el" href="structteq_1_1teq.html#a7f6381213d5c4aefc3a4fd536389c0fd">teq::create_pattern</a> method. See that method for more information on how to safely create and edit patterns </p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>teq/<a class="el" href="pattern_8h_source.html">pattern.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 6 2013 11:59:26 for teq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Dec 27 2013 07:46:40 for teq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.4
 </small></address>

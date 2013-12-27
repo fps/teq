@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -99,25 +99,26 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a96f4eb361bc3d06f42c0c17186e4dc67"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a96f4eb361bc3d06f42c0c17186e4dc67"></a>
-typedef std::vector&lt; <a class="el" href="structteq_1_1pattern.html">pattern</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pattern_list</b></td></tr>
+<tr class="memitem:a96f4eb361bc3d06f42c0c17186e4dc67"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="structteq_1_1pattern.html">pattern</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structteq_1_1song.html#a96f4eb361bc3d06f42c0c17186e4dc67">pattern_list</a></td></tr>
 <tr class="separator:a96f4eb361bc3d06f42c0c17186e4dc67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ff919b4a7c210fdb8df4f4c5aae8061"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8ff919b4a7c210fdb8df4f4c5aae8061"></a>
 typedef std::shared_ptr<br class="typebreak"/>
-&lt; pattern_list &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pattern_list_ptr</b></td></tr>
+&lt; <a class="el" href="structteq_1_1song.html#a96f4eb361bc3d06f42c0c17186e4dc67">pattern_list</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pattern_list_ptr</b></td></tr>
 <tr class="separator:a8ff919b4a7c210fdb8df4f4c5aae8061"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67810c67c7da60d680e9cb1bc09b3dcf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a67810c67c7da60d680e9cb1bc09b3dcf"></a>
-typedef std::pair&lt; track_ptr, <br class="typebreak"/>
-jack_port_t * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>track_properties_and_payload</b></td></tr>
+<tr class="memitem:a67810c67c7da60d680e9cb1bc09b3dcf"><td class="memItemLeft" align="right" valign="top">typedef std::pair&lt; track_ptr, <br class="typebreak"/>
+jack_port_t * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structteq_1_1song.html#a67810c67c7da60d680e9cb1bc09b3dcf">track_properties_and_payload</a></td></tr>
 <tr class="separator:a67810c67c7da60d680e9cb1bc09b3dcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27da7e66baee92e51df73a61c0653f07"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a27da7e66baee92e51df73a61c0653f07"></a>
 typedef std::vector<br class="typebreak"/>
-&lt; track_properties_and_payload &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>track_list</b></td></tr>
+&lt; <a class="el" href="structteq_1_1song.html#a67810c67c7da60d680e9cb1bc09b3dcf">track_properties_and_payload</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>track_list</b></td></tr>
 <tr class="separator:a27da7e66baee92e51df73a61c0653f07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e961afcad7ac838e4f570067d1dcdc6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4e961afcad7ac838e4f570067d1dcdc6"></a>
 typedef std::shared_ptr<br class="typebreak"/>
 &lt; track_list &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>track_list_ptr</b></td></tr>
 <tr class="separator:a4e961afcad7ac838e4f570067d1dcdc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2efcd1b89e468ee397fa023a4268e103"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr<br class="typebreak"/>
+&lt; std::vector&lt; unsigned &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structteq_1_1song.html#a2efcd1b89e468ee397fa023a4268e103">arrangement_ptr</a></td></tr>
+<tr class="separator:a2efcd1b89e468ee397fa023a4268e103"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -142,17 +143,61 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_description<
 <tr class="memitem:a1cb644f8a0a0449eee26f54124a70882"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1cb644f8a0a0449eee26f54124a70882"></a>
 pattern_list_ptr&#160;</td><td class="memItemRight" valign="bottom"><b>m_patterns</b></td></tr>
 <tr class="separator:a1cb644f8a0a0449eee26f54124a70882"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa90456d21aaba6fddd5633bb68cc3c5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaa90456d21aaba6fddd5633bb68cc3c5"></a>
+<a class="el" href="structteq_1_1song.html#a2efcd1b89e468ee397fa023a4268e103">arrangement_ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_arrangement</b></td></tr>
+<tr class="separator:aaa90456d21aaba6fddd5633bb68cc3c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abefc4fd62ee74c587b8f7a703c7ed2cc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abefc4fd62ee74c587b8f7a703c7ed2cc"></a>
 track_list_ptr&#160;</td><td class="memItemRight" valign="bottom"><b>m_tracks</b></td></tr>
 <tr class="separator:abefc4fd62ee74c587b8f7a703c7ed2cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a class="anchor" id="a2efcd1b89e468ee397fa023a4268e103"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::shared_ptr&lt;std::vector&lt;unsigned&gt; &gt; <a class="el" href="structteq_1_1song.html#a2efcd1b89e468ee397fa023a4268e103">teq::song::arrangement_ptr</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The arrangement consists of indices into the pattern list </p>
+
+</div>
+</div>
+<a class="anchor" id="a96f4eb361bc3d06f42c0c17186e4dc67"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::vector&lt;<a class="el" href="structteq_1_1pattern.html">pattern</a>&gt; <a class="el" href="structteq_1_1song.html#a96f4eb361bc3d06f42c0c17186e4dc67">teq::song::pattern_list</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The patterns are the material used for arrangement </p>
+
+</div>
+</div>
+<a class="anchor" id="a67810c67c7da60d680e9cb1bc09b3dcf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::pair&lt;track_ptr, jack_port_t *&gt; <a class="el" href="structteq_1_1song.html#a67810c67c7da60d680e9cb1bc09b3dcf">teq::song::track_properties_and_payload</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>This violates separation of concern, but since we don't plan to support backends other than jack, it's ok.</p>
+<p>A track is tied to a port, so here's where we store the port handle. </p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>teq/<a class="el" href="song_8h_source.html">song.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 6 2013 11:59:27 for teq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Dec 27 2013 07:46:41 for teq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.4
 </small></address>

@@ -70,7 +70,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow3" class="tabs2">
     <ul class="tablist">
       <li class="current"><a href="functions.html"><span>All</span></a></li>
+      <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_type.html"><span>Typedefs</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -79,7 +81,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -90,6 +92,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div class="contents">
 <div class="textblock">Here is a list of all documented class members with links to the class documentation for each member:</div><ul>
+<li>arrangement_ptr
+: <a class="el" href="structteq_1_1song.html#a2efcd1b89e468ee397fa023a4268e103">teq::song</a>
+</li>
+<li>create_pattern()
+: <a class="el" href="structteq_1_1teq.html#a7f6381213d5c4aefc3a4fd536389c0fd">teq::teq</a>
+</li>
 <li>m_value
 : <a class="el" href="structteq_1_1control__event.html#aa61eaaad81ca7840bbc669ce297e6405">teq::control_event</a>
 </li>
@@ -101,11 +109,26 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structteq_1_1cv__event.html#a135f37708e5709c1d0c676a36e8f721f">teq::cv_event</a>
 , <a class="el" href="structteq_1_1midi__event.html#a3f2c4c963a3113c149b2167a09d734f1">teq::midi_event</a>
 </li>
+<li>pattern()
+: <a class="el" href="structteq_1_1pattern.html#a47fd52338209d436a8b085222741e8b3">teq::pattern</a>
+</li>
+<li>pattern_list
+: <a class="el" href="structteq_1_1song.html#a96f4eb361bc3d06f42c0c17186e4dc67">teq::song</a>
+</li>
+<li>process()
+: <a class="el" href="structteq_1_1teq.html#a87a5804d5e630901718c069f0097ad7f">teq::teq</a>
+</li>
+<li>track_properties_and_payload
+: <a class="el" href="structteq_1_1song.html#a67810c67c7da60d680e9cb1bc09b3dcf">teq::song</a>
+</li>
+<li>write_cv_ports()
+: <a class="el" href="structteq_1_1teq.html#aded9e9279fb3faf581567617ef0795b2">teq::teq</a>
+</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 6 2013 11:59:29 for teq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Dec 27 2013 07:46:43 for teq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.4
 </small></address>
