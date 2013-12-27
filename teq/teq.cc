@@ -140,12 +140,12 @@ namespace teq
 	
 	//! For internal use only!
 	template <class SequenceType, class TrackType>
-	void insert_track(song_ptr new_song, unsigned index, jack_port_t *port)
+	void insert_track(const std::string &name, song_ptr new_song, unsigned index, jack_port_t *port)
 	{
 		new_song->m_tracks->insert
 		(
 			new_song->m_tracks->begin() + index, 
-			std::make_pair(track_ptr(new TrackType()), port)
+			std::make_pair(track_ptr(new TrackType(name)), port)
 		);
 		
 		for (auto &it : *new_song->m_patterns)
@@ -180,7 +180,7 @@ namespace teq
 			LIBTEQ_THROW_RUNTIME_ERROR("Failed to register jack port")
 		}
 		
-		insert_track<sequence_of<midi_event>, midi_track>(new_song, index, port);
+		insert_track<sequence_of<midi_event>, midi_track>(track_name, new_song, index, port);
 
 		update_song(new_song);
 	}
@@ -205,7 +205,7 @@ namespace teq
 			LIBTEQ_THROW_RUNTIME_ERROR("Failed to register jack port")
 		}
 		
-		insert_track<sequence_of<cv_event>, cv_track>(new_song, index, port);
+		insert_track<sequence_of<cv_event>, cv_track>(track_name, new_song, index, port);
 
 		update_song(new_song);
 	}
@@ -216,7 +216,7 @@ namespace teq
 		
 		song_ptr new_song = copy_and_prepare_song();
 
-		insert_track<sequence_of<control_event>, control_track>(new_song, index, nullptr);
+		insert_track<sequence_of<control_event>, control_track>(track_name, new_song, index, nullptr);
 
 		update_song(new_song);
 	}
@@ -224,6 +224,11 @@ namespace teq
 	size_t teq::number_of_tracks()
 	{
 		return m_song->m_tracks->size();
+	}
+	
+	std::string teq::track_name(unsigned index)
+	{
+		return (*m_song->m_tracks)[index].first->m_name;
 	}
 	
 	size_t teq::number_of_patterns()

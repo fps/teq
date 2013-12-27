@@ -42,8 +42,9 @@ namespace teq
 		
 		virtual ~track() { }
 		
-		track(type the_type = type::NONE)  :
-			m_type(the_type)
+		track(const std::string &name, type the_type = type::NONE)  :
+			m_type(the_type),
+			m_name(name)
 		{
 			
 		}
@@ -59,8 +60,8 @@ namespace teq
 		
 		void *m_port_buffer;
 		
-		midi_track() : 
-			track(track::type::MIDI)
+		midi_track(const std::string &name) : 
+			track(name, track::type::MIDI)
 		{
 			m_channels[0] = true;
 		}
@@ -85,8 +86,8 @@ namespace teq
 			return sequence_ptr(new sequence_of<cv_event>);
 		}
 		
-		cv_track() :
-			track(track::type::CV),
+		cv_track(const std::string &name) :
+			track(name, track::type::CV),
 			m_current_value(0)
 		{
 			
@@ -100,8 +101,8 @@ namespace teq
 			return sequence_ptr(new sequence_of<control_event>);
 		}
 		
-		control_track() :
-			track(track::type::CONTROL)
+		control_track(const std::string &name) :
+			track(name, track::type::CONTROL)
 		{
 			
 		}

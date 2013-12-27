@@ -136,6 +136,8 @@ namespace teq
 		
 		track::type track_type(unsigned index);
 		
+		std::string track_name(unsigned index);
+		
 		void insert_midi_track(const std::string &track_name, unsigned index);
 		
 		void insert_cv_track(const std::string &track_name, unsigned index);
