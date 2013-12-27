@@ -2,17 +2,19 @@
 # make sure that python finds teq.so (the python module).
 import teq
 
-# Let's import the little python library that makes interoperability much easier
+# Let's import the little python library that makes some things a little easier
 from pyteq import *
 
 
 # Create a teq object. This creates the jack client, too..
 t = teq.teq()
 
-# Set the loop range.
+# Set the loop range. This is a function from pyteq that wraps creating the loop_range 
+# object and passing it to the teq instance.
 set_loop_range(t, 0, 0, 1, 0, True)
 
-# Create some tracks. Tracks have a name that do not need to be unique.
+# Create some tracks. Tracks have a name that MUST be unique. Otherwise track creation will 
+# fail with an exception.
 print ("Adding a midi track...")
 t.insert_midi_track("foo", 0)
 
@@ -27,6 +29,10 @@ t.insert_control_track("control", 3)
 
 # Let's create a pattern. We can only create patterns using the factory function of 
 # the teq instance. It knows how many sequences the pattern has to have and their types.
+#
+# Note: you MUST NOT alter the tracks of the teq instance before calling insert_pattern() or 
+# set_pattern() with the created pattern. Otherwise these operations will fail
+# throwing an exception.
 p = t.create_pattern(16)
 
 print ("Inserting a CV event...")
@@ -44,6 +50,7 @@ t.insert_pattern(0, p)
 
 t.wait()
 
+# Client processes MUST call gc() sometimes after altering state to clear up unused objects.
 print ("Cleaning up some memory...")
 t.gc()
 
@@ -54,7 +61,7 @@ set_transport_position(t, 0, 0)
 
 play(t)
 
-# Wait for the user to press a key...
+# Wait for the user to press Enter...
 try:
 	i = input("Press Enter to continue...")
 except:
