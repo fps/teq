@@ -96,8 +96,9 @@ BOOST_PYTHON_MODULE(teq)
 		.def("insert_cv_track", &teq::teq::insert_cv_track)
 		.def("insert_control_track", &teq::teq::insert_control_track)
 		.def("insert_pattern", &teq::teq::insert_pattern)
+		.def("number_of_patterns", &teq::teq::number_of_patterns)
+		.def("create_pattern", &teq::teq::create_pattern)
 		.def("get_pattern", &teq::teq::get_pattern)
 		.def("wait", &teq::teq::wait)
-		.def("create_pattern", &teq::teq::create_pattern)
 	;
 }
