@@ -296,6 +296,11 @@ namespace teq
 		);
 	}
 
+	pattern teq::get_pattern(unsigned index)
+	{
+		return (*m_song->m_patterns)[index];	
+	}
+	
 	void teq::remove_pattern(unsigned index)
 	{
 		throw std::logic_error("Not implemented yet");

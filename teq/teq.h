@@ -160,6 +160,8 @@ namespace teq
 		void move_pattern(unsigned from, unsigned to);
 		
 		void set_pattern(const pattern& the_pattern);
+		
+		pattern get_pattern(unsigned pattern_index);
 
 		/**
 		 * Use this function to create new patterns. 
