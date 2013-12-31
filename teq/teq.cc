@@ -520,6 +520,11 @@ namespace teq
 	
 	int teq::process(jack_nframes_t nframes)
 	{
+		if (true == m_transport_position_buffer.can_write())
+		{
+			m_transport_position_buffer.write(m_transport_position);
+		}
+		
 		process_commands();
 		
 		if (m_transport_state == transport_state::STOPPED)
