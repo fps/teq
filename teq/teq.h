@@ -191,6 +191,14 @@ namespace teq
 		
 		void set_transport_position(transport_position position);
 		
+		/**
+		 * @short Get a recent transport position
+		 * 
+		 * NOTE: This function throws if it is called before 
+		 * a new transport position is available. So make sure
+		 * you catch that exception
+		 */
+		transport_position get_transport_position();
 		
 		void gc();
 		

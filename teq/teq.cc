@@ -355,6 +355,18 @@ namespace teq
 		);
 	}
 	
+	transport_position teq::get_transport_position()
+	{
+		if (true == m_transport_position_buffer.can_read())
+		{
+			transport_position pos = m_transport_position_buffer.read();
+			return pos;
+		}
+		else
+		{
+			LIBTEQ_THROW_RUNTIME_ERROR("No transport position available")
+		}
+	}
 	
 	void teq::set_transport_position(transport_position position)
 	{
