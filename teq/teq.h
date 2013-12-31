@@ -46,7 +46,10 @@ namespace teq
 		heap<song::pattern_list> m_pattern_list_heap;
 		
 		
-		lart::ringbuffer<command> m_commands;
+		
+		lart::ringbuffer<command> m_command_buffer;
+		
+		lart::ringbuffer<transport_position> m_transport_position_buffer;
 		
 		std::mutex m_ack_mutex;
 		
@@ -85,7 +88,8 @@ namespace teq
 	public:
 		
 		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 1024) :
-			m_commands(command_buffer_size),
+			m_command_buffer(command_buffer_size),
+			m_transport_position_buffer(1),
 			m_ack(false)
 		{
 			init
@@ -98,7 +102,8 @@ namespace teq
 		}
 		
 		teq(const teq &other) :
-			m_commands(other.m_commands.size),
+			m_command_buffer(other.m_command_buffer.size),
+			m_transport_position_buffer(1),
 			m_ack(false)
 		{
 			init

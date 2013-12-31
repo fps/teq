@@ -377,12 +377,12 @@ namespace teq
 	
 	void teq::write_command(command f)
 	{
-		if (false == m_commands.can_write())
+		if (false == m_command_buffer.can_write())
 		{
 			throw std::runtime_error("Failed to write command");
 		}
 		
-		m_commands.write(f);
+		m_command_buffer.write(f);
 	}
 	
 	void teq::write_command_and_wait(command f)
@@ -425,10 +425,10 @@ namespace teq
 		{
 			std::unique_lock<std::mutex> lock(m_ack_mutex, std::try_to_lock);
 			
-			while(m_commands.can_read())
+			while(m_command_buffer.can_read())
 			{
-				m_commands.snoop()();
-				m_commands.read_advance();
+				m_command_buffer.snoop()();
+				m_command_buffer.read_advance();
 			}
 			
 			m_ack = true;
