@@ -188,7 +188,6 @@ namespace teq
 		
 		void set_transport_state(transport_state state);
 		
-		
 		void set_transport_position(transport_position position);
 		
 		/**

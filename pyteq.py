@@ -26,3 +26,6 @@ def play(t):
 
 def stop(t):
 	t.set_transport_state(teq.transport_state.STOPPED)
+	
+def toggle_playback(t):
+	state = t.get_transport_state()
