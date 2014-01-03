@@ -33,6 +33,12 @@ namespace teq
 	
 	struct teq
 	{
+		struct state_info
+		{
+			transport_state m_transport_state;
+			transport_position m_transport_position;
+		};
+		
 	protected:
 		
 		typedef std::function<void()> command;
@@ -49,7 +55,7 @@ namespace teq
 		
 		lart::ringbuffer<command> m_command_buffer;
 		
-		lart::ringbuffer<transport_position> m_transport_position_buffer;
+		lart::ringbuffer<state_info> m_state_info_buffer;
 		
 		std::mutex m_ack_mutex;
 		
@@ -89,7 +95,7 @@ namespace teq
 		
 		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 1024) :
 			m_command_buffer(command_buffer_size),
-			m_transport_position_buffer(1),
+			m_state_info_buffer(1),
 			m_ack(false)
 		{
 			init
@@ -103,7 +109,7 @@ namespace teq
 		
 		teq(const teq &other) :
 			m_command_buffer(other.m_command_buffer.size),
-			m_transport_position_buffer(1),
+			m_state_info_buffer(1),
 			m_ack(false)
 		{
 			init
@@ -191,13 +197,13 @@ namespace teq
 		void set_transport_position(transport_position position);
 		
 		/**
-		 * @short Get a recent transport position
+		 * @short Get a recent state_info
 		 * 
 		 * NOTE: This function throws if it is called before 
-		 * a new transport position is available. So make sure
+		 * a new state_info is available. So make sure
 		 * you catch that exception
 		 */
-		transport_position get_transport_position();
+		state_info get_state_info();
 		
 		void gc();
 		

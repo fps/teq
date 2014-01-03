@@ -16,6 +16,10 @@ BOOST_PYTHON_MODULE(teq)
 		.value("PLAYING", teq::transport_state::PLAYING)
 	;
 
+	class_<teq::teq::state_info>("state_info")
+		.def_readwrite("transport_state", &teq::teq::state_info::m_transport_state)
+		.def_readwrite("transport_position", &teq::teq::state_info::m_transport_position)
+	;
 
 	class_<teq::loop_range>("loop_range")
 		.def_readwrite("enabled", &teq::loop_range::m_enabled)
@@ -100,6 +104,7 @@ BOOST_PYTHON_MODULE(teq)
 		.def("number_of_patterns", &teq::teq::number_of_patterns)
 		.def("create_pattern", &teq::teq::create_pattern)
 		.def("get_pattern", &teq::teq::get_pattern)
+		.def("get_state_info", &teq::teq::get_state_info)
 		.def("wait", &teq::teq::wait)
 	;
 }

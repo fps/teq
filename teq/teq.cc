@@ -355,11 +355,11 @@ namespace teq
 		);
 	}
 	
-	transport_position teq::get_transport_position()
+	teq::state_info teq::get_state_info()
 	{
-		if (true == m_transport_position_buffer.can_read())
+		if (true == m_state_info_buffer.can_read())
 		{
-			transport_position pos = m_transport_position_buffer.read();
+			state_info pos = m_state_info_buffer.read();
 			return pos;
 		}
 		else
@@ -520,9 +520,13 @@ namespace teq
 	
 	int teq::process(jack_nframes_t nframes)
 	{
-		if (true == m_transport_position_buffer.can_write())
+		if (true == m_state_info_buffer.can_write())
 		{
-			m_transport_position_buffer.write(m_transport_position);
+			state_info info;
+			info.m_transport_position = m_transport_position;
+			info.m_transport_state = m_transport_state;
+			
+			m_state_info_buffer.write(info);
 		}
 		
 		process_commands();
