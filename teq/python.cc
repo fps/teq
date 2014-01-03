@@ -19,6 +19,7 @@ BOOST_PYTHON_MODULE(teq)
 	class_<teq::teq::state_info>("state_info")
 		.def_readwrite("transport_state", &teq::teq::state_info::m_transport_state)
 		.def_readwrite("transport_position", &teq::teq::state_info::m_transport_position)
+		.def_readwrite("loop_range", &teq::teq::state_info::m_loop_range)
 	;
 
 	class_<teq::loop_range>("loop_range")

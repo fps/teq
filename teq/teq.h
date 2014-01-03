@@ -37,6 +37,7 @@ namespace teq
 		{
 			transport_state m_transport_state;
 			transport_position m_transport_position;
+			loop_range m_loop_range;
 		};
 		
 	protected:
