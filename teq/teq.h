@@ -96,7 +96,7 @@ namespace teq
 		
 		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 1024) :
 			m_command_buffer(command_buffer_size),
-			m_state_info_buffer(1),
+			m_state_info_buffer(2),
 			m_ack(false)
 		{
 			init
@@ -110,7 +110,7 @@ namespace teq
 		
 		teq(const teq &other) :
 			m_command_buffer(other.m_command_buffer.size),
-			m_state_info_buffer(1),
+			m_state_info_buffer(2),
 			m_ack(false)
 		{
 			init

@@ -25,7 +25,7 @@ namespace teq
 		
 		m_transport_state = the_transport_state;
 		
-		m_global_tempo = 125.0;
+		m_global_tempo = 8.0;
 		
 		m_relative_tempo = 1.0;
 		
@@ -298,7 +298,7 @@ namespace teq
 
 	pattern teq::get_pattern(unsigned index)
 	{
-		return (*m_song->m_patterns)[index];	
+		return (*m_song->m_patterns)[index];
 	}
 	
 	void teq::remove_pattern(unsigned index)
@@ -359,12 +359,17 @@ namespace teq
 	{
 		if (true == m_state_info_buffer.can_read())
 		{
-			state_info pos = m_state_info_buffer.read();
-			return pos;
+			state_info info;
+			
+			while(true == m_state_info_buffer.can_read())
+			{
+				info = m_state_info_buffer.read();
+			}
+			return info;
 		}
 		else
 		{
-			LIBTEQ_THROW_RUNTIME_ERROR("No transport position available")
+			LIBTEQ_THROW_RUNTIME_ERROR("No state info available right now.")
 		}
 	}
 	
@@ -520,9 +525,12 @@ namespace teq
 	
 	int teq::process(jack_nframes_t nframes)
 	{
+		//std::cout << ".";
 		if (true == m_state_info_buffer.can_write())
 		{
+			//std::cout << ".";
 			state_info info;
+			
 			info.m_transport_position = m_transport_position;
 			info.m_transport_state = m_transport_state;
 			info.m_loop_range = m_loop_range;
