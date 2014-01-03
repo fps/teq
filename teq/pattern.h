@@ -26,6 +26,8 @@ namespace teq
 		
 		unsigned m_length;
 		
+		std::string m_name;
+		
 		unsigned length()
 		{
 			return m_length;

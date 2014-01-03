@@ -82,6 +82,7 @@ BOOST_PYTHON_MODULE(teq)
 		.def("set_cv_event", &teq::pattern::set_event<teq::cv_event>)
 		.def("get_cv_event", &teq::pattern::get_event<teq::cv_event>)
 		.def("length", &teq::pattern::length)
+		.def_readwrite("name", &teq::pattern::m_name)
 	;
 	
 	
