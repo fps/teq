@@ -629,15 +629,16 @@ namespace teq
 									break;
 									
 								case midi_event::ON:
-									render_event(midi::midi_note_on_event(0, the_event.m_value1, the_event.m_value2), properties.m_port_buffer, frame_index);
+									render_event(midi::midi_note_on_event(properties.m_channel, the_event.m_value1, the_event.m_value2), properties.m_port_buffer, frame_index);
+									properties.m_last_note = the_event.m_value1;
 									break;
 									
 								case midi_event::OFF:
-									render_event(midi::midi_note_off_event(0, the_event.m_value1, the_event.m_value2), properties.m_port_buffer, frame_index);
+									render_event(midi::midi_note_off_event(properties.m_channel, properties.m_last_note, 127), properties.m_port_buffer, frame_index);
 									break;
 									
 								case midi_event::CC:
-									render_event(midi::midi_cc_event(0, the_event.m_value1, the_event.m_value2), properties.m_port_buffer, frame_index);
+									render_event(midi::midi_cc_event(properties.m_channel, the_event.m_value1, the_event.m_value2), properties.m_port_buffer, frame_index);
 									break;
 									
 								case midi_event::PITCHBEND:

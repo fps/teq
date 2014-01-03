@@ -56,14 +56,19 @@ namespace teq
 		
 	struct midi_track : track
 	{		
-		std::array<bool, 16> m_channels;
+		unsigned m_last_note;
+
+		unsigned m_channel;
 		
 		void *m_port_buffer;
 		
 		midi_track(const std::string &name) : 
-			track(name, track::type::MIDI)
+			track(name, track::type::MIDI),
+			m_last_note(0),
+			m_channel(0)
 		{
-			m_channels[0] = true;
+
+			
 		}
 		
 		virtual sequence_ptr create_sequence()
