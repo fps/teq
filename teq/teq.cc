@@ -264,7 +264,7 @@ namespace teq
 		
 		for (auto &it : *m_song->m_tracks)
 		{
-			std::cout << "Creating track" << std::endl;
+			// std::cout << "Creating track" << std::endl;
 			sequence_ptr new_sequence = it.first->create_sequence();
 			
 			new_sequence->set_length(pattern_length);
@@ -285,7 +285,7 @@ namespace teq
 		
 		new_pattern_list->insert(new_pattern_list->begin() + index, the_pattern);
 
-		std::cout << "Pattern list has # of entries: " << new_pattern_list->size() << std::endl;
+		// std::cout << "Pattern list has # of entries: " << new_pattern_list->size() << std::endl;
 		write_command_and_wait
 		(
 			[this, new_pattern_list] () mutable
@@ -306,7 +306,7 @@ namespace teq
 		
 		(*new_pattern_list)[index] = the_pattern;
 
-		std::cout << "Pattern list has # of entries: " << new_pattern_list->size() << std::endl;
+		// std::cout << "Pattern list has # of entries: " << new_pattern_list->size() << std::endl;
 		write_command_and_wait
 		(
 			[this, new_pattern_list] () mutable
@@ -619,7 +619,7 @@ namespace teq
 				 */
 				if (m_transport_position.m_pattern >= patterns.size())
 				{
-					std::cout << "end" << std::endl;
+					// std::cout << "end" << std::endl;
 					return 0;
 				}
 				

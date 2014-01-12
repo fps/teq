@@ -29,7 +29,7 @@ namespace teq
 		{
 			for (auto it = m_heap.begin(); it != m_heap.end();) {
 				if (it->unique()) {
-					std::cout << "Erasing..." << std::endl;
+					// std::cout << "Erasing..." << std::endl;
 					it = m_heap.erase(it);
 				} else {
 					++it;
