@@ -296,6 +296,27 @@ namespace teq
 		);
 	}
 
+	void teq::set_pattern(unsigned index, const pattern &the_pattern)
+	{	
+		if (index >= m_song->m_patterns->size())
+		{
+			LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << number_of_patterns())
+		}
+		song::pattern_list_ptr new_pattern_list = m_pattern_list_heap.add_new(song::pattern_list(*m_song->m_patterns));
+		
+		(*new_pattern_list)[index] = the_pattern;
+
+		std::cout << "Pattern list has # of entries: " << new_pattern_list->size() << std::endl;
+		write_command_and_wait
+		(
+			[this, new_pattern_list] () mutable
+			{
+				m_song->m_patterns = new_pattern_list;
+				new_pattern_list.reset();
+			}
+		);
+	}
+
 	pattern teq::get_pattern(unsigned index)
 	{
 		return (*m_song->m_patterns)[index];
