@@ -319,6 +319,7 @@ namespace teq
 
 	pattern teq::get_pattern(unsigned index)
 	{
+		m_song->check_pattern_index(index);
 		return (*m_song->m_patterns)[index];
 	}
 	
@@ -586,41 +587,48 @@ namespace teq
 			{
 				m_time_since_last_tick -= tick_duration;
 				
-				++m_transport_position.m_tick;
-				
-				/**
-				 * Wrap tick around if we meet the pattern boundary
-				 */
-				if (m_transport_position.m_tick >= patterns[m_transport_position.m_pattern].m_length)
+				/** 
+					Safeguard around being off the song..
+				*/
+				if (m_transport_position.m_pattern < patterns.size() && m_transport_position.m_tick < patterns[m_transport_position.m_pattern].m_length)
 				{
-					//std::cout << "pattern end" << std::endl;
-					m_transport_position.m_tick = 0;
-					++m_transport_position.m_pattern;
-				}
+					++m_transport_position.m_tick;
+				
+					/**
+					* Wrap tick around if we meet the pattern boundary
+					*/
+					if (m_transport_position.m_tick >= patterns[m_transport_position.m_pattern].m_length)
+					{
+						//std::cout << "pattern end" << std::endl;
+						m_transport_position.m_tick = 0;
+						++m_transport_position.m_pattern;
+					}
 
-				/**
-				 * Wrap aound to loop start if we hit the loop endl
-				 */
-				if 
-				(
-					true == m_loop_range.m_enabled &&
-					m_loop_range.m_end.m_pattern == m_transport_position.m_pattern &&
-					m_loop_range.m_end.m_tick == m_transport_position.m_tick
-				)
-				{
-					//std::cout << "loop end" << std::endl;
-					m_transport_position.m_pattern = m_loop_range.m_start.m_pattern;
-					m_transport_position.m_tick = m_loop_range.m_start.m_tick;
-				}
-				
-				/**
-				 * And stop the transport and do nothing if we ran out of the
-				 * end of the song
-				 */
-				if (m_transport_position.m_pattern >= patterns.size())
-				{
-					// std::cout << "end" << std::endl;
-					return 0;
+					/**
+					* Wrap aound to loop start if we hit the loop endl
+					*/
+					if 
+					(
+						true == m_loop_range.m_enabled &&
+						m_loop_range.m_end.m_pattern == m_transport_position.m_pattern &&
+						m_loop_range.m_end.m_tick == m_transport_position.m_tick
+					)
+					{
+						//std::cout << "loop end" << std::endl;
+						m_transport_position.m_pattern = m_loop_range.m_start.m_pattern;
+						m_transport_position.m_tick = m_loop_range.m_start.m_tick;
+					}
+					
+					/**
+					* And stop the transport and do nothing if we ran out of the
+					* end of the song
+					*/
+					if (m_transport_position.m_pattern >= patterns.size())
+					{
+						m_transport_state = transport_state::STOPPED;
+						// std::cout << "end" << std::endl;
+						return 0;
+					}
 				}
 				
 				assert(m_transport_position.m_pattern < m_loop_range.m_end.m_pattern);
