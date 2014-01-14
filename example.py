@@ -16,7 +16,7 @@ set_loop_range(t, 0, 0, 1, 0, True)
 # Create some tracks. Tracks have a name that MUST be unique. Otherwise track creation will 
 # fail with an exception.
 print ("Adding a midi track...")
-t.insert_midi_track("foo", 0)
+t.insert_midi_track("bd", 0)
 
 print ("Adding a midi track...")
 t.insert_midi_track("bar", 1)
