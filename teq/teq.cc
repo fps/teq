@@ -561,6 +561,7 @@ namespace teq
 			info.m_transport_position = m_transport_position;
 			info.m_transport_state = m_transport_state;
 			info.m_loop_range = m_loop_range;
+			info.m_frame_time = jack_last_frame_time(m_jack_client);
 			
 			m_state_info_buffer.write(info);
 		}

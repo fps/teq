@@ -38,6 +38,7 @@ namespace teq
 			transport_state m_transport_state;
 			transport_position m_transport_position;
 			loop_range m_loop_range;
+			jack_nframes_t m_frame_time;
 		};
 		
 	protected:
@@ -94,9 +95,9 @@ namespace teq
 		
 	public:
 		
-		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 1024) :
+		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 1024, unsigned state_info_buffer_size = 1024) :
 			m_command_buffer(command_buffer_size),
- 			m_state_info_buffer(2),
+ 			m_state_info_buffer(state_info_buffer_size),
 			m_ack(false)
 		{
 			init
@@ -111,7 +112,7 @@ namespace teq
 		
 		teq(const teq &other) :
 			m_command_buffer(other.m_command_buffer.size),
-			m_state_info_buffer(2),
+			m_state_info_buffer(other.m_state_info_buffer.size),
 			m_ack(false)
 		{
 			init
