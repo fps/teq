@@ -39,6 +39,7 @@ namespace teq
 			transport_position m_transport_position;
 			loop_range m_loop_range;
 			jack_nframes_t m_frame_time;
+			bool m_is_tick;
 		};
 		
 	protected:

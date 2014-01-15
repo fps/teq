@@ -386,13 +386,7 @@ namespace teq
 	{
 		if (true == m_state_info_buffer.can_read())
 		{
-			state_info info;
-			
-			while(true == m_state_info_buffer.can_read())
-			{
-				info = m_state_info_buffer.read();
-			}
-			return info;
+			return m_state_info_buffer.read();
 		}
 		else
 		{
@@ -562,6 +556,7 @@ namespace teq
 			info.m_transport_state = m_transport_state;
 			info.m_loop_range = m_loop_range;
 			info.m_frame_time = jack_last_frame_time(m_jack_client);
+			info.m_is_tick = false;
 			
 			m_state_info_buffer.write(info);
 		}
@@ -593,6 +588,20 @@ namespace teq
 			{
 				m_time_since_last_tick -= tick_duration;
 				
+				if (true == m_state_info_buffer.can_write())
+				{
+					//std::cout << ".";
+					state_info info;
+					
+					info.m_transport_position = m_transport_position;
+					info.m_transport_state = m_transport_state;
+					info.m_loop_range = m_loop_range;
+					info.m_frame_time = jack_last_frame_time(m_jack_client) + frame_index;
+					info.m_is_tick = true;
+					
+					m_state_info_buffer.write(info);
+				}
+
 				/** 
 					Safeguard around being off the song..
 				*/
