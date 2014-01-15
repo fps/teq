@@ -103,6 +103,7 @@ namespace teq
 			(
 				client_name,
 				transport_state::STOPPED,
+				transport_position(),
 				true,
 				true
 			);
@@ -117,6 +118,7 @@ namespace teq
 			(
 				other.m_client_name,
 				other.m_transport_state,
+				other.m_transport_position,
 				other.m_send_all_notes_off_on_loop,
 				other.m_send_all_notes_off_on_stop
 			);
@@ -126,6 +128,7 @@ namespace teq
 		(
 			const std::string &client_name,
 			transport_state the_transport_state,
+			transport_position the_transport_position,
 			bool send_all_notes_off_on_loop,
 			bool send_all_notes_off_on_stop
 		);

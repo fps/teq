@@ -15,6 +15,7 @@ namespace teq
 	(
 		const std::string &client_name,
 		transport_state the_transport_state,
+		transport_position the_transport_position,
 		bool send_all_notes_off_on_loop,
 		bool send_all_notes_off_on_stop
 	)
@@ -22,6 +23,8 @@ namespace teq
 		m_client_name = client_name;
 		
 		m_ack = false;
+		
+		m_transport_position = the_transport_position;
 		
 		m_transport_state = the_transport_state;
 		
@@ -52,6 +55,8 @@ namespace teq
 		}
 		
 		m_last_transport_state = transport_state::STOPPED;
+		
+		m_time_since_last_tick = 0;
 		
 		int activate_return_code = jack_activate(m_jack_client);
 		
