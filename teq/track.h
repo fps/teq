@@ -16,6 +16,15 @@ namespace teq
 		virtual ~sequence() { }
 		
 		virtual void set_length(unsigned length) = 0;
+
+		bool m_muted;
+		
+		sequence() :
+			m_muted(false)
+		{
+			
+		}
+		
 	};
 	
 	typedef std::shared_ptr<sequence> sequence_ptr;
@@ -24,14 +33,6 @@ namespace teq
 	struct sequence_of : sequence
 	{
 		std::vector<EventType> m_events;
-		
-		bool m_muted;
-		
-		sequence_of() :
-			m_muted(false)
-		{
-			
-		}
 		
 		virtual void set_length(unsigned length)
 		{

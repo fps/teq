@@ -31,6 +31,13 @@ namespace teq
 		
 		bool m_muted;
 		
+		void mute_sequence(unsigned index, bool muted)
+		{
+			check_track_index(index);
+			
+			m_sequences[index]->m_muted = muted;
+		}
+		
 		unsigned length()
 		{
 			return m_length;
