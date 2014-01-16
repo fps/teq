@@ -61,12 +61,13 @@ BOOST_PYTHON_MODULE(teq)
 	enum_<teq::cv_event::type>("cv_event_type")
 		.value("NONE", teq::cv_event::type::NONE)
 		.value("INTERVAL", teq::cv_event::type::INTERVAL)
+		.value("CONSTANT", teq::cv_event::type::CONSTANT)
 	;
 	
 
 	class_<teq::control_event>("control_event", init<optional<teq::control_event::type, float>>())
 		.def_readwrite("type", &teq::control_event::m_type)
-		.def_readwrite("value1", &teq::control_event::m_value)
+		.def_readwrite("value", &teq::control_event::m_value)
 	;
 
 	enum_<teq::control_event::type>("control_event_type")

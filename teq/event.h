@@ -24,7 +24,7 @@ namespace teq
 	
 	struct cv_event
 	{
-		enum type { NONE, INTERVAL };
+		enum type { NONE, CONSTANT, INTERVAL };
 		
 		type m_type;
 		
