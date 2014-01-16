@@ -67,8 +67,10 @@ namespace teq
 	typedef std::shared_ptr<track> track_ptr;
 		
 	struct midi_track : track
-	{		
-		unsigned m_last_note;
+	{
+		bool m_note_off_on_new_note_on;
+		
+		midi_event m_last_note_on_event;
 
 		unsigned m_channel;
 		
@@ -76,7 +78,7 @@ namespace teq
 		
 		midi_track(const std::string &name) : 
 			track(name, track::type::MIDI),
-			m_last_note(0),
+			m_note_off_on_new_note_on(true),
 			m_channel(0)
 		{
 

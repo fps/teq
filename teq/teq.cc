@@ -667,18 +667,30 @@ namespace teq
 
 							const auto &the_event = the_sequence.m_events[current_tick];
 
+							midi_event last_note_on_event = properties.m_last_note_on_event;
+								
 							switch(the_event.m_type)
 							{
 								case midi_event::NONE:
 									break;
 									
 								case midi_event::ON:
+									if (properties.m_note_off_on_new_note_on &&last_note_on_event.m_type == midi_event::ON)
+									{
+										
+										render_event(midi::midi_note_off_event(properties.m_channel, last_note_on_event.m_value1, 127), properties.m_port_buffer, frame_index);
+									}
+									
 									render_event(midi::midi_note_on_event(properties.m_channel, the_event.m_value1, the_event.m_value2), properties.m_port_buffer, frame_index);
-									properties.m_last_note = the_event.m_value1;
+									
+									properties.m_last_note_on_event = midi_event(midi_event::ON, the_event.m_value1, the_event.m_value2);
 									break;
 									
 								case midi_event::OFF:
-									render_event(midi::midi_note_off_event(properties.m_channel, properties.m_last_note, 127), properties.m_port_buffer, frame_index);
+									if (properties.m_last_note_on_event.m_type == midi_event::ON)
+									{
+										render_event(midi::midi_note_off_event(properties.m_channel, properties.m_last_note_on_event.m_value1, 127), properties.m_port_buffer, frame_index);
+									}
 									break;
 									
 								case midi_event::CC:
