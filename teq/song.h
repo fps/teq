@@ -61,7 +61,7 @@ namespace teq
 
 		void check_track_index(int index)
 		{
-			if (index >= (int)m_tracks->size())
+			if (index < 0 || index >= (int)m_tracks->size())
 			{
 				LIBTEQ_THROW_RUNTIME_ERROR("Track index out of bounds: " << index << ". Number of tracks: " << m_tracks->size())
 			}
@@ -69,7 +69,7 @@ namespace teq
 		
 		void check_pattern_index(int index)
 		{
-			if (index >= (int)m_patterns->size())
+			if (index < 0 || index >= (int)m_patterns->size())
 			{
 				LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << m_patterns->size())
 			}
@@ -79,7 +79,7 @@ namespace teq
 		{
 			check_pattern_index(pattern_index);
 			
-			if (tick_index >=  (*m_patterns)[pattern_index].m_length)
+			if (tick_index < 0 || tick_index >=  (*m_patterns)[pattern_index].m_length)
 			{
 				LIBTEQ_THROW_RUNTIME_ERROR("Tick index out of bounds: " << tick_index << ". Pattern length: " << (*m_patterns)[pattern_index].m_length)
 			}

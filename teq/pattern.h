@@ -56,7 +56,7 @@ namespace teq
 		
 		void check_tick_index(int the_tick)
 		{
-			if (the_tick >= length()) 
+			if (the_tick < 0 || the_tick >= length()) 
 			{
 				LIBTEQ_THROW_RUNTIME_ERROR("tick out of range: " << the_tick << " >= " << length())
 			}
@@ -64,7 +64,7 @@ namespace teq
 		
 		void check_track_index(int the_track)
 		{
-			if (the_track >= (int)m_sequences.size())
+			if (the_track < 0 || the_track >= (int)m_sequences.size())
 			{
 				LIBTEQ_THROW_RUNTIME_ERROR("track out of range: " << the_track << " >= " << m_sequences.size())
 			}

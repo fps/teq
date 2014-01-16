@@ -130,7 +130,7 @@ namespace teq
 			LIBTEQ_THROW_RUNTIME_ERROR("Track name already exists: " << track_name)
 		}
 		
-		if (index > number_of_tracks())
+		if (index < 0 || index > number_of_tracks())
 		{
 			LIBTEQ_THROW_RUNTIME_ERROR("Track index out of bounds: " << index << ". Number of tracks: " << number_of_tracks())
 		}
