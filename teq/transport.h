@@ -3,7 +3,7 @@
 
 namespace teq
 {
-	typedef uint64_t tick;
+	typedef int tick;
 
 	enum transport_state { STOPPED, PLAYING };		
 		

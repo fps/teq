@@ -14,7 +14,7 @@ namespace teq
 		 * Patterns should only ever be created by the teq::create_pattern method. See that
 		 * method for more information on how to safely create and edit patterns
 		 */
-		pattern(unsigned length = 128) :
+		pattern(int length = 128) :
 			m_length(length),
 			m_muted(false)
 		{
@@ -36,25 +36,25 @@ namespace teq
 		
 		sequence_list m_sequences;
 		
-		unsigned m_length;
+		int m_length;
 		
 		std::string m_name;
 		
 		bool m_muted;
 		
-		void mute_sequence(unsigned index, bool muted)
+		void mute_sequence(int index, bool muted)
 		{
 			check_track_index(index);
 			
 			m_sequences[index]->m_muted = muted;
 		}
 		
-		unsigned length()
+		int length()
 		{
 			return m_length;
 		}
 		
-		void check_tick_index(unsigned the_tick)
+		void check_tick_index(int the_tick)
 		{
 			if (the_tick >= length()) 
 			{
@@ -62,9 +62,9 @@ namespace teq
 			}
 		}
 		
-		void check_track_index(unsigned the_track)
+		void check_track_index(int the_track)
 		{
-			if (the_track >= m_sequences.size())
+			if (the_track >= (int)m_sequences.size())
 			{
 				LIBTEQ_THROW_RUNTIME_ERROR("track out of range: " << the_track << " >= " << m_sequences.size())
 			}
@@ -73,8 +73,8 @@ namespace teq
 		template<class EventType>
 		void set_event
 		(
-			unsigned track_index,
-			unsigned tick_index,
+			int track_index,
+			int tick_index,
 			const EventType &event
 		)
 		{
@@ -96,8 +96,8 @@ namespace teq
 		template<class EventType>
 		EventType get_event
 		(
-			unsigned track_index,
-			unsigned tick_index
+			int track_index,
+			int tick_index
 		)
 		{
 			check_track_index(track_index);

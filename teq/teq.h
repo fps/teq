@@ -50,8 +50,6 @@ namespace teq
 		
 		heap<song::track_list> m_track_list_heap;
 		
-		heap<pattern> m_pattern_heap;
-		
 		heap<song::pattern_list> m_pattern_list_heap;
 		
 		
@@ -96,7 +94,7 @@ namespace teq
 		
 	public:
 		
-		teq(const std::string &client_name = "teq", unsigned command_buffer_size = 1024, unsigned state_info_buffer_size = 1024) :
+		teq(const std::string client_name = "teq", int command_buffer_size = 1024, int state_info_buffer_size = 1024) :
 			m_command_buffer(command_buffer_size),
  			m_state_info_buffer(state_info_buffer_size),
 			m_ack(false)
@@ -128,7 +126,7 @@ namespace teq
 	
 		void init
 		(
-			const std::string &client_name,
+			const std::string client_name,
 			transport_state the_transport_state,
 			transport_position the_transport_position,
 			bool send_all_notes_off_on_loop,
@@ -146,39 +144,39 @@ namespace teq
 		
 		song_ptr copy_and_prepare_song();
 		
-		void check_track_name_and_index_for_insert(const std::string &track_name, unsigned index);
+		void check_track_name_and_index_for_insert(const std::string track_name, int index);
 		
 		
-		size_t number_of_tracks();
+		int number_of_tracks();
 		
-		track::type track_type(unsigned index);
+		track::type track_type(int index);
 		
-		std::string track_name(unsigned index);
+		std::string track_name(int index);
 		
-		void insert_midi_track(const std::string &track_name, unsigned index);
+		void insert_midi_track(const std::string track_name, int index);
 		
-		void insert_cv_track(const std::string &track_name, unsigned index);
+		void insert_cv_track(const std::string track_name, int index);
 		
-		void insert_control_track(const std::string &track_name, unsigned index);
+		void insert_control_track(const std::string track_name, int index);
 		
-		void remove_track(unsigned index);
+		void remove_track(int index);
 		
-		void move_track(unsigned from, unsigned to);
+		void move_track(int from, int to);
 		
 
-		size_t number_of_patterns();
+		int number_of_patterns();
 		
-		size_t number_of_ticks(unsigned pattern_index);
+		int number_of_ticks(int pattern_index);
 		
-		void insert_pattern(unsigned index, const pattern &the_pattern);
+		void insert_pattern(int index, const pattern the_pattern);
 	
-		void remove_pattern(unsigned index);
+		void remove_pattern(int index);
 		
-		void move_pattern(unsigned from, unsigned to);
+		void move_pattern(int from, int to);
 		
-		void set_pattern(unsigned index, const pattern& the_pattern);
+		void set_pattern(int index, const pattern the_pattern);
 		
-		pattern get_pattern(unsigned pattern_index);
+		pattern get_pattern(int pattern_index);
 
 		/**
 		 * Use this function to create new patterns. 
@@ -187,10 +185,10 @@ namespace teq
 		 * in the song after creating a pattern adding this pattern
 		 * to the song will lead to undefined behaviour.
 		 */
-		pattern create_pattern(unsigned length);
+		pattern create_pattern(int length);
 		
 		
-		void set_loop_range(const loop_range &range);
+		void set_loop_range(const loop_range range);
 		
 		loop_range get_loop_range();
 		
@@ -227,7 +225,7 @@ namespace teq
 		
 		void process_commands();
 		
-		void write_cv_ports(unsigned frame_index);
+		void write_cv_ports(int frame_index);
 		
 		void update_transport();
 		

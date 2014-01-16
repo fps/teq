@@ -13,7 +13,7 @@ namespace teq
 
 	void teq::init
 	(
-		const std::string &client_name,
+		const std::string client_name,
 		transport_state the_transport_state,
 		transport_position the_transport_position,
 		bool send_all_notes_off_on_loop,
@@ -123,7 +123,7 @@ namespace teq
 		return new_song;
 	}
 	
-	void teq::check_track_name_and_index_for_insert(const std::string &track_name, unsigned index)
+	void teq::check_track_name_and_index_for_insert(const std::string track_name, int index)
 	{
 		if (true == track_name_exists(track_name))
 		{
@@ -136,7 +136,7 @@ namespace teq
 		}
 	}
 	
-	track::type teq::track_type(unsigned index)
+	track::type teq::track_type(int index)
 	{
 		m_song->check_track_index(index);
 		
@@ -145,7 +145,7 @@ namespace teq
 	
 	//! For internal use only!
 	template <class SequenceType, class TrackType>
-	void insert_track(const std::string &name, song_ptr new_song, unsigned index, jack_port_t *port)
+	void insert_track(const std::string &name, song_ptr new_song, int index, jack_port_t *port)
 	{
 		new_song->m_tracks->insert
 		(
@@ -165,7 +165,7 @@ namespace teq
 		}
 	}
 	
-	void teq::insert_midi_track(const std::string &track_name, unsigned index)
+	void teq::insert_midi_track(const std::string track_name, int index)
 	{
 		check_track_name_and_index_for_insert(track_name, index);
 		
@@ -190,7 +190,7 @@ namespace teq
 		update_song(new_song);
 	}
 	
-	void teq::insert_cv_track(const std::string &track_name, unsigned index)
+	void teq::insert_cv_track(const std::string track_name, int index)
 	{
 		check_track_name_and_index_for_insert(track_name, index);
 		
@@ -215,7 +215,7 @@ namespace teq
 		update_song(new_song);
 	}
 	
-	void teq::insert_control_track(const std::string &track_name, unsigned index)
+	void teq::insert_control_track(const std::string track_name, int index)
 	{
 		check_track_name_and_index_for_insert(track_name, index);
 		
@@ -226,29 +226,29 @@ namespace teq
 		update_song(new_song);
 	}
 	
-	size_t teq::number_of_tracks()
+	int teq::number_of_tracks()
 	{
 		return m_song->m_tracks->size();
 	}
 	
-	std::string teq::track_name(unsigned index)
+	std::string teq::track_name(int index)
 	{
 		return (*m_song->m_tracks)[index].first->m_name;
 	}
 	
-	size_t teq::number_of_patterns()
+	int teq::number_of_patterns()
 	{
 		return m_song->m_patterns->size();
 	}
 	
-	size_t teq::number_of_ticks(unsigned pattern_index)
+	int teq::number_of_ticks(int pattern_index)
 	{
 		m_song->check_pattern_index(pattern_index);
 		
 		return (*m_song->m_patterns)[pattern_index].m_length;
 	}
 	
-	void teq::remove_track(unsigned index)
+	void teq::remove_track(int index)
 	{
 		if (index >= number_of_tracks())
 		{
@@ -256,12 +256,12 @@ namespace teq
 		}
 	}
 	
-	void teq::move_track(unsigned from, unsigned to)
+	void teq::move_track(int from, int to)
 	{
 		throw std::logic_error("Not implemented yet");
 	}
 	
-	pattern teq::create_pattern(unsigned pattern_length)
+	pattern teq::create_pattern(int pattern_length)
 	{
 		pattern new_pattern;
 		
@@ -280,9 +280,9 @@ namespace teq
 		return new_pattern;
 	}
 	
-	void teq::insert_pattern(unsigned index, const pattern &the_pattern)
+	void teq::insert_pattern(int index, const pattern the_pattern)
 	{	
-		if (index > m_song->m_patterns->size())
+		if (index > (int)m_song->m_patterns->size())
 		{
 			LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << number_of_patterns())
 		}
@@ -301,9 +301,9 @@ namespace teq
 		);
 	}
 
-	void teq::set_pattern(unsigned index, const pattern &the_pattern)
+	void teq::set_pattern(int index, const pattern the_pattern)
 	{	
-		if (index >= m_song->m_patterns->size())
+		if (index >= (int)m_song->m_patterns->size())
 		{
 			LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << number_of_patterns())
 		}
@@ -322,18 +322,18 @@ namespace teq
 		);
 	}
 
-	pattern teq::get_pattern(unsigned index)
+	pattern teq::get_pattern(int index)
 	{
 		m_song->check_pattern_index(index);
 		return (*m_song->m_patterns)[index];
 	}
 	
-	void teq::remove_pattern(unsigned index)
+	void teq::remove_pattern(int index)
 	{
 		throw std::logic_error("Not implemented yet");
 	}
 	
-	void teq::move_pattern(unsigned from, unsigned to)
+	void teq::move_pattern(int from, int to)
 	{
 		throw std::logic_error("Not implemented yet");		
 	}
@@ -344,7 +344,7 @@ namespace teq
 		return m_loop_range;
 	}
 
-	void teq::set_loop_range(const loop_range &range)
+	void teq::set_loop_range(const loop_range range)
 	{
 		write_command_and_wait
 		(
@@ -409,7 +409,6 @@ namespace teq
 	{
 		m_song_heap.gc();
 		m_track_list_heap.gc();
-		m_pattern_heap.gc();
 		m_pattern_list_heap.gc();
 	}
 	
@@ -517,7 +516,7 @@ namespace teq
 		}
 	}
 
-	void teq::write_cv_ports(unsigned frame_index)
+	void teq::write_cv_ports(int frame_index)
 	{
 		/**
 			* Write out CV values. This has to happen for every single frame
@@ -605,7 +604,7 @@ namespace teq
 				/** 
 					Safeguard around being off the song..
 				*/
-				if (m_transport_position.m_pattern < patterns.size() && m_transport_position.m_tick < patterns[m_transport_position.m_pattern].m_length)
+				if (m_transport_position.m_pattern < (int)patterns.size() && m_transport_position.m_tick < patterns[m_transport_position.m_pattern].m_length)
 				{
 					++m_transport_position.m_tick;
 				
@@ -638,7 +637,7 @@ namespace teq
 					* And stop the transport and do nothing if we ran out of the
 					* end of the song
 					*/
-					if (m_transport_position.m_pattern >= patterns.size())
+					if (m_transport_position.m_pattern >= (int)patterns.size())
 					{
 						m_transport_state = transport_state::STOPPED;
 						// std::cout << "end" << std::endl;
@@ -646,11 +645,12 @@ namespace teq
 					}
 				}
 				
-				assert(m_transport_position.m_pattern < m_loop_range.m_end.m_pattern);
+#if 0
+				assert(m_transport_position.m_pattern <= m_loop_range.m_end.m_pattern);
 				assert(m_transport_position.m_pattern >= m_loop_range.m_start.m_pattern);
 				assert(m_transport_position.m_tick < m_loop_range.m_end.m_tick);
 				assert(m_transport_position.m_tick >= m_loop_range.m_start.m_tick);
-				
+#endif				
 				const pattern &the_pattern = patterns[m_transport_position.m_pattern];
 				const int current_tick = m_transport_position.m_tick;
 				
