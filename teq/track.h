@@ -16,6 +16,15 @@ namespace teq
 		virtual ~sequence() { }
 		
 		virtual void set_length(unsigned length) = 0;
+
+		bool m_muted;
+		
+		sequence() :
+			m_muted(false)
+		{
+			
+		}
+		
 	};
 	
 	typedef std::shared_ptr<sequence> sequence_ptr;
@@ -40,11 +49,14 @@ namespace teq
 
 		const std::string m_name;
 		
+		bool m_muted;
+		
 		virtual ~track() { }
 		
 		track(const std::string &name, type the_type = type::NONE)  :
 			m_type(the_type),
-			m_name(name)
+			m_name(name),
+			m_muted(false)
 		{
 			
 		}

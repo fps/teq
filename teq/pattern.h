@@ -15,7 +15,8 @@ namespace teq
 		 * method for more information on how to safely create and edit patterns
 		 */
 		pattern(unsigned length = 128) :
-			m_length(length)
+			m_length(length),
+			m_muted(false)
 		{
 			
 		}
@@ -27,6 +28,15 @@ namespace teq
 		unsigned m_length;
 		
 		std::string m_name;
+		
+		bool m_muted;
+		
+		void mute_sequence(unsigned index, bool muted)
+		{
+			check_track_index(index);
+			
+			m_sequences[index]->m_muted = muted;
+		}
 		
 		unsigned length()
 		{
