@@ -25,6 +25,14 @@ namespace teq
 	{
 		std::vector<EventType> m_events;
 		
+		bool m_muted;
+		
+		sequence_of() :
+			m_muted(false)
+		{
+			
+		}
+		
 		virtual void set_length(unsigned length)
 		{
 			m_events.resize(length);
@@ -40,11 +48,14 @@ namespace teq
 
 		const std::string m_name;
 		
+		bool m_muted;
+		
 		virtual ~track() { }
 		
 		track(const std::string &name, type the_type = type::NONE)  :
 			m_type(the_type),
-			m_name(name)
+			m_name(name),
+			m_muted(false)
 		{
 			
 		}
