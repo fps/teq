@@ -11,6 +11,10 @@
 
 namespace teq
 {
+	class sequence;
+	
+	typedef std::shared_ptr<sequence> sequence_ptr;
+
 	struct sequence
 	{
 		virtual ~sequence() { }
@@ -18,6 +22,8 @@ namespace teq
 		virtual void set_length(unsigned length) = 0;
 
 		bool m_muted;
+		
+		virtual sequence_ptr clone() = 0;
 		
 		sequence() :
 			m_muted(false)
@@ -27,7 +33,6 @@ namespace teq
 		
 	};
 	
-	typedef std::shared_ptr<sequence> sequence_ptr;
 	
 	template<class EventType>
 	struct sequence_of : sequence
@@ -37,6 +42,13 @@ namespace teq
 		virtual void set_length(unsigned length)
 		{
 			m_events.resize(length);
+		}
+		
+		virtual sequence_ptr clone()
+		{
+			std::shared_ptr<sequence_of<EventType>> s(new sequence_of<EventType>());
+			s->m_events = m_events;
+			return s;
 		}
 	};
 

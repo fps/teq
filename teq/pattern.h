@@ -20,6 +20,17 @@ namespace teq
 		{
 			
 		}
+		
+		pattern(const pattern &other) :
+			m_length(other.m_length),
+			m_name(other.m_name),
+			m_muted(other.m_muted)
+		{
+			for (auto &s : other.m_sequences)
+			{
+				m_sequences.push_back(s->clone());
+			}
+		}
 
 		typedef std::vector<sequence_ptr> sequence_list;
 		
