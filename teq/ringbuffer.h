@@ -20,8 +20,7 @@ namespace lart
 
 		Note that the objects remain in the ringbuffer until they are overwritten again
 		when the ringbuffer returns to the current position the next time around. I.e. a
-		read() does not assign a T() to the read object as that could cause destructors
-		to be called, etc..
+		read() does not assign a T() to the read object that was read.
 	*/
 	template <class T> 
 	struct ringbuffer {
