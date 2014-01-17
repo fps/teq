@@ -10,7 +10,10 @@ namespace lart
 
 	/**
 		T needs to be a default constructable type.. And it has to have valid
-		copy constructor/assignment operator
+		copy constructor/assignment operator.
+		
+		Note that if you want to use this ringbuffer in a realtime context then the
+		assignment operator and copy constructor must be realtime safe.
 
 		Note that this class needs to construct n objects of type T (with n == size)  so 
 		that the places in the ringbuffer become assignable
@@ -19,8 +22,6 @@ namespace lart
 		when the ringbuffer returns to the current position the next time around. I.e. a
 		read() does not assign a T() to the read object as that could cause destructors
 		to be called, etc..
-
-		Note that read() creates a copy of the T, so the T(const T&) should be non blocking
 	*/
 	template <class T> 
 	struct ringbuffer {
@@ -78,7 +79,11 @@ namespace lart
 			return elements[n];
 		}
 
-		T snoop() {
+		/**
+			The reference returned here must only be used until the next
+			read() call.
+		*/
+		T& snoop() {
 			size_t n;	
 			jack_ringbuffer_peek(jack_ringbuffer, (char*)&n, sizeof(size_t));
 			return elements[n];
