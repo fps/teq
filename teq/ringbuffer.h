@@ -3,6 +3,7 @@
 
 #include <jack/ringbuffer.h>
 #include <memory>
+#include <vector>
 
 namespace lart
 {
@@ -27,22 +28,24 @@ namespace lart
 
 		jack_ringbuffer_t *jack_ringbuffer;
 		
-		char *m_transfer_buffer;
+		std::vector<T> elements;
 
-		ringbuffer(unsigned int size) : size(size) {
-			m_transfer_buffer = new char[sizeof(T)];
-			
-			jack_ringbuffer = jack_ringbuffer_create(sizeof(T) * size);
+		size_t elements_write_pos;
+
+		ringbuffer(unsigned int size) : 
+			size(size),
+			elements(size), 
+			elements_write_pos(0)
+		{
+			jack_ringbuffer = jack_ringbuffer_create(sizeof(size_t) * size);
 		}
 
 		~ringbuffer() {
-			delete m_transfer_buffer;
-			
 			jack_ringbuffer_free(jack_ringbuffer);
 		}
 
 		bool can_write() {
-			if (jack_ringbuffer_write_space(jack_ringbuffer) >= sizeof(T)) {
+			if (jack_ringbuffer_write_space(jack_ringbuffer) >= sizeof(size_t)) {
 				return true;
 			}
 
@@ -50,12 +53,14 @@ namespace lart
 		}
 
 		void write(const T &t) {
-			*((T*)m_transfer_buffer) = t;
-			jack_ringbuffer_write(jack_ringbuffer, m_transfer_buffer, sizeof(T));
+			elements[elements_write_pos] = t;
+			jack_ringbuffer_write(jack_ringbuffer, (char *)&elements_write_pos, sizeof(size_t));
+			++elements_write_pos;
+			elements_write_pos = elements_write_pos % size;
 		}
 
 		bool can_read() {
-			if (jack_ringbuffer_read_space(jack_ringbuffer) >= sizeof(T)) {
+			if (jack_ringbuffer_read_space(jack_ringbuffer) >= sizeof(size_t)) {
 				return true;
 			}
 
@@ -64,17 +69,19 @@ namespace lart
 
 		void read_advance()
 		{
-			jack_ringbuffer_read_advance(jack_ringbuffer, sizeof(T));
+			jack_ringbuffer_read_advance(jack_ringbuffer, sizeof(size_t));
 		}
 		
 		T read() {
-			jack_ringbuffer_read(jack_ringbuffer, m_transfer_buffer, sizeof(T));
-			return *((T*)m_transfer_buffer);
+			size_t n;
+			jack_ringbuffer_read(jack_ringbuffer, (char*)&n, sizeof(size_t));
+			return elements[n];
 		}
 
 		T snoop() {
-			jack_ringbuffer_peek(jack_ringbuffer, m_transfer_buffer, sizeof(T));
-			return *((T*)m_transfer_buffer);
+			size_t n;	
+			jack_ringbuffer_peek(jack_ringbuffer, (char*)&n, sizeof(size_t));
+			return elements[n];
 		}
 	};
 }
