@@ -26,8 +26,12 @@ namespace lart
 		unsigned int size;
 
 		jack_ringbuffer_t *jack_ringbuffer;
+		
+		char *m_transfer_buffer;
 
 		ringbuffer(unsigned int size) : size(size) {
+			m_transfer_buffer = new char[sizeof(T)];
+			
 			jack_ringbuffer = jack_ringbuffer_create(sizeof(T) * size);
 
 			for (unsigned int i = 0; i < size; ++i) {
@@ -36,6 +40,8 @@ namespace lart
 		}
 
 		~ringbuffer() {
+			delete m_transfer_buffer;
+			
 			for (unsigned int i = 0; i < size; ++i) {
 				((T*)(jack_ringbuffer->buf + sizeof(T) * i))->~T();
 			}
@@ -52,10 +58,8 @@ namespace lart
 		}
 
 		void write(const T &t) {
-			jack_ringbuffer_data_t rb_data[2];
-			jack_ringbuffer_get_write_vector(jack_ringbuffer, rb_data);
-			*((T*)rb_data->buf) = t;
-			jack_ringbuffer_write_advance(jack_ringbuffer, sizeof(T));
+			*((T*)m_transfer_buffer) = t;
+			jack_ringbuffer_write(jack_ringbuffer, m_transfer_buffer, sizeof(T));
 		}
 
 		bool can_read() {
@@ -72,17 +76,13 @@ namespace lart
 		}
 		
 		T read() {
-			jack_ringbuffer_data_t rb_data[2];
-			jack_ringbuffer_get_read_vector(jack_ringbuffer, rb_data);
-			T t = *((T*)rb_data->buf);
-			jack_ringbuffer_read_advance(jack_ringbuffer, sizeof(T));
-			return t;
+			jack_ringbuffer_read(jack_ringbuffer, m_transfer_buffer, sizeof(T));
+			return *((T*)m_transfer_buffer);
 		}
 
-		T& snoop() {
-			jack_ringbuffer_data_t rb_data[2];
-			jack_ringbuffer_get_read_vector(jack_ringbuffer, rb_data);
-			return *((T*)rb_data->buf);
+		T snoop() {
+			jack_ringbuffer_peek(jack_ringbuffer, m_transfer_buffer, sizeof(T));
+			return *((T*)m_transfer_buffer);
 		}
 	};
 }
