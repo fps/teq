@@ -66,3 +66,5 @@ try:
 	i = input("Press Enter to continue...")
 except:
 	pass
+
+t.deactivate()

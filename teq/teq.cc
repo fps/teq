@@ -1,6 +1,8 @@
 #include <teq/teq.h>
 #include <cassert>
 
+#include <chrono>
+
 namespace teq
 {
 	extern "C" 
@@ -67,9 +69,14 @@ namespace teq
 		}
 	}
 	
-	teq::~teq()
+	void teq::deactivate()
 	{
 		jack_deactivate(m_jack_client);
+	}
+	
+	teq::~teq()
+	{
+		// jack_deactivate(m_jack_client);
 		jack_client_close(m_jack_client);
 	}
 	
@@ -429,7 +436,14 @@ namespace teq
 		
 		write_command(f);
 		
-		m_ack_condition_variable.wait(lock, [this]() { return this->m_ack; });
+		while(false == m_ack)
+		{
+			std::cv_status status = m_ack_condition_variable.wait_for(lock, std::chrono::seconds(1));
+			if (status == std::cv_status::timeout)
+			{
+					LIBTEQ_THROW_RUNTIME_ERROR("Timeout waiting for ack for command. Is jack not running anymore?")
+			}
+		}
 	}
 
 	

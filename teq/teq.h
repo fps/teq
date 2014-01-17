@@ -135,6 +135,7 @@ namespace teq
 		
 		~teq();
 
+		void deactivate();
 		
 		void set_send_all_notes_off_on_loop(bool on);
 		

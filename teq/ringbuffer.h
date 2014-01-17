@@ -33,19 +33,11 @@ namespace lart
 			m_transfer_buffer = new char[sizeof(T)];
 			
 			jack_ringbuffer = jack_ringbuffer_create(sizeof(T) * size);
-
-			for (unsigned int i = 0; i < size; ++i) {
-				new (jack_ringbuffer->buf + sizeof(T) * i) T();
-			}
 		}
 
 		~ringbuffer() {
 			delete m_transfer_buffer;
 			
-			for (unsigned int i = 0; i < size; ++i) {
-				((T*)(jack_ringbuffer->buf + sizeof(T) * i))->~T();
-			}
-
 			jack_ringbuffer_free(jack_ringbuffer);
 		}
 

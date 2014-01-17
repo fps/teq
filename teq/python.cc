@@ -114,5 +114,6 @@ BOOST_PYTHON_MODULE(teq)
 		.def("get_pattern", &teq::teq::get_pattern)
 		.def("get_state_info", &teq::teq::get_state_info)
 		.def("wait", &teq::teq::wait)
+		.def("deactivate", &teq::teq::deactivate)
 	;
 }
