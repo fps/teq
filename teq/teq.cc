@@ -576,11 +576,6 @@ namespace teq
 		
 		process_commands();
 		
-		if (m_transport_state == transport_state::STOPPED)
-		{
-			return 0;
-		}
-		
 		const float sample_duration = 1.0 / jack_get_sample_rate(m_jack_client);
 		
 		fetch_port_buffers(nframes);
@@ -597,7 +592,7 @@ namespace teq
 			 * Here come all the state transitions that depend on the ticks
 			 * and not individual frames.
 			 */
-			if (m_time_since_last_tick >= tick_duration)
+			if (m_transport_state == transport_state::PLAYING && m_time_since_last_tick >= tick_duration)
 			{
 				m_time_since_last_tick -= tick_duration;
 				
@@ -764,7 +759,10 @@ namespace teq
 			
 			write_cv_ports(frame_index);
 			
-			m_time_since_last_tick += sample_duration;
+			if (m_transport_state == transport_state::PLAYING)
+			{
+				m_time_since_last_tick += sample_duration;
+			}
 		}
 
 		return 0;
