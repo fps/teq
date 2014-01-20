@@ -197,6 +197,29 @@ namespace teq
 		update_song(new_song);
 	}
 	
+	void teq::rename_track(int index, const std::string name)
+	{
+		if (true == track_name_exists(name))
+		{
+			LIBTEQ_THROW_RUNTIME_ERROR("Track name already exists: " << name)
+		}
+
+		m_song->check_track_index(index);
+		
+		if (track_type(index) == track::MIDI || track_type(index) == track::CV)
+		{
+			if (0 != jack_port_set_name((*(m_song->m_tracks))[index].second, name.c_str()))
+			{
+				LIBTEQ_THROW_RUNTIME_ERROR("Failed to set track name")
+			}
+		}
+#if 0
+		write_command_and_wait([this, name, index](){
+			(*(m_song->m_tracks))[index].first.m_name = name;
+		});
+#endif
+	}
+	
 	void teq::insert_cv_track(const std::string track_name, int index)
 	{
 		check_track_name_and_index_for_insert(track_name, index);
@@ -654,16 +677,10 @@ namespace teq
 					}
 				}
 				
-#if 0
-				assert(m_transport_position.m_pattern <= m_loop_range.m_end.m_pattern);
-				assert(m_transport_position.m_pattern >= m_loop_range.m_start.m_pattern);
-				assert(m_transport_position.m_tick < m_loop_range.m_end.m_tick);
-				assert(m_transport_position.m_tick >= m_loop_range.m_start.m_tick);
-#endif				
 				const pattern &the_pattern = patterns[m_transport_position.m_pattern];
 				const int current_tick = m_transport_position.m_tick;
 				
-				for (size_t track_index = 0; track_index < m_song->m_tracks->size(); ++track_index)
+				for (size_t track_index = 0; track_index < m_song->m_tracks->size() && m_transport_position.m_pattern < (int)m_song->m_patterns->size(); ++track_index)
 				{
 					auto &track_properties = *(*m_song->m_tracks)[track_index].first;
 					

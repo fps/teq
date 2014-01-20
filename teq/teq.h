@@ -162,6 +162,8 @@ namespace teq
 		
 		void remove_track(int index);
 		
+		void rename_track(int index, const std::string name);
+		
 		void move_track(int from, int to);
 		
 
