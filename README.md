@@ -3,6 +3,13 @@ teq
 
 A library implementing a jack midi client for sequencing purposes. The organization of the musical data is tracker-like, i.e. patterns with columns.
 
+Requirements
+============
+
+* A C++11 compatible compiler
+* libboost-python for the python module
+* python2 C library for the python module
+
 
 API Docs
 ========
