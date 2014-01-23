@@ -43,6 +43,8 @@ namespace teq
 		};
 		
 	protected:
+		jack_port_t *m_multi_out_port;
+		jack_port_t *m_midi_in_port;
 		
 		typedef std::function<void()> command;
 		

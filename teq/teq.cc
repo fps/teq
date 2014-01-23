@@ -48,6 +48,20 @@ namespace teq
 			throw std::runtime_error("Failed to open jack client");
 		}
 		
+		m_multi_out_port = jack_port_register(m_jack_client, "multi", JACK_DEFAULT_MIDI_TYPE, JackPortIsTerminal | JackPortIsOutput, 0);
+		
+		if (0 == m_multi_out_port)
+		{
+			throw std::runtime_error("Failed to register multi output port");
+		}
+		
+		m_midi_in_port = jack_port_register(m_jack_client, "in", JACK_DEFAULT_MIDI_TYPE, JackPortIsTerminal | JackPortIsInput, 0);
+		
+		if (0 == m_midi_in_port)
+		{
+			throw std::runtime_error("Failed to register in  port");
+		}
+		
 		int set_process_return_code = jack_set_process_callback(m_jack_client, jack_process, this);
 		
 		if (0 != set_process_return_code)
@@ -495,6 +509,10 @@ namespace teq
 	void teq::render_event(const midi::midi_event &e, void *port_buffer, jack_nframes_t time)
 	{
 		jack_midi_data_t *event_buffer = jack_midi_event_reserve(port_buffer, time, e.size());
+		if (0 == event_buffer)
+		{
+			return;
+		}
 		e.render(event_buffer);
 	}
 	
@@ -606,7 +624,12 @@ namespace teq
 		
 		const float sample_duration = 1.0 / jack_get_sample_rate(m_jack_client);
 		
-		fetch_port_buffers(nframes);
+		void *multi_out_buffer = jack_port_get_buffer(m_multi_out_port, nframes);
+		jack_midi_clear_buffer(multi_out_buffer);
+		
+		fetch_port_buffers(nframes);		
+		
+		// std::cout << (long long)multi_out_buffer << std::endl;
 		
 		const std::vector<pattern> &patterns = *m_song->m_patterns;
 		
@@ -685,6 +708,8 @@ namespace teq
 				const pattern &the_pattern = patterns[m_transport_position.m_pattern];
 				const int current_tick = m_transport_position.m_tick;
 				
+				int midi_track_index = 0;
+				
 				for (size_t track_index = 0; track_index < m_song->m_tracks->size() && m_transport_position.m_pattern < (int)m_song->m_patterns->size(); ++track_index)
 				{
 					auto &track_properties = *(*m_song->m_tracks)[track_index].first;
@@ -713,6 +738,7 @@ namespace teq
 									}
 									
 									render_event(midi::midi_note_on_event(properties.m_channel, the_event.m_value1, the_event.m_value2), properties.m_port_buffer, frame_index);
+									render_event(midi::midi_note_on_event(midi_track_index % 16, the_event.m_value1, the_event.m_value2), multi_out_buffer, frame_index);
 									
 									properties.m_last_note_on_event = midi_event(midi_event::ON, the_event.m_value1, the_event.m_value2);
 									break;
@@ -721,16 +747,20 @@ namespace teq
 									if (properties.m_last_note_on_event.m_type == midi_event::ON)
 									{
 										render_event(midi::midi_note_off_event(properties.m_channel, properties.m_last_note_on_event.m_value1, 127), properties.m_port_buffer, frame_index);
+										render_event(midi::midi_note_off_event(midi_track_index % 16, properties.m_last_note_on_event.m_value1, 127), multi_out_buffer, frame_index);
 									}
 									break;
 									
 								case midi_event::CC:
 									render_event(midi::midi_cc_event(properties.m_channel, the_event.m_value1, the_event.m_value2), properties.m_port_buffer, frame_index);
+									render_event(midi::midi_cc_event(midi_track_index % 16, the_event.m_value1, the_event.m_value2), multi_out_buffer, frame_index);
 									break;
 									
 								case midi_event::PITCHBEND:
 									break;
 							}
+							
+							++midi_track_index;
 						}
 						break;
 							
