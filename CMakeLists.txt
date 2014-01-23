@@ -14,7 +14,7 @@ add_custom_target(dist
 
 add_definitions(-DPROJECT_VERSION=\"${PROJECT_VERSION}\")
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pthread -std=c++0x -fPIC")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pthread -std=c++11 -fPIC")
 
 if(CMAKE_BUILD_TYPE MATCHES DEBUG)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -march=native -msse -mfpmath=sse")
