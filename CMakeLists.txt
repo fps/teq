@@ -31,33 +31,15 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # BUILD DEPENDENCIES:
 #
 
-message(STATUS "Checking if pkg-config is available...")
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(JACK REQUIRED jack)
 
-message(STATUS "checking for Python C library")	
-find_package(PythonLibs)
-if (PYTHONLIBS_FOUND)
-	message(STATUS "Python C library found. Let's see if there's boost python, too...")
-
-	message(STATUS "Checking Python3 support first...")
-	find_package(Boost COMPONENTS python3)
-	
-	if(Boost_FOUND)
-		message(STATUS "Found!")
-	else()
-		message(STATUS "Checking Python2 support...")
-		find_package(Boost COMPONENTS python)
-	endif()
-
-	set(Boost_USE_STATIC_LIBS OFF)
-	set(Boost_USE_MULTITHREADED ON)
-	set(Boost_USE_STATIC_RUNTIME OFF)
-	
-else()
-	message(STATUS "Python C library not found. Not building Python module...")
-endif()
+find_package(PythonLibs REQUIRED)
+find_package(Boost COMPONENTS python)
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
 
 #
 # BUILD TARGETS

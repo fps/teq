@@ -203,13 +203,7 @@ namespace teq
 		
 		void set_transport_position(transport_position position);
 		
-		/**
-		 * @short Get a recent state_info
-		 * 
-		 * NOTE: This function throws if it is called before 
-		 * a new state_info is available. So make sure
-		 * you catch that exception
-		 */
+		bool has_state_info();
 		state_info get_state_info();
 		
 		void gc();

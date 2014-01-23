@@ -412,6 +412,11 @@ namespace teq
 		);
 	}
 	
+	bool teq::has_state_info()
+	{
+		return m_state_info_buffer.can_read();
+	}
+	
 	teq::state_info teq::get_state_info()
 	{
 		if (true == m_state_info_buffer.can_read())
