@@ -419,6 +419,33 @@ namespace teq
 		);
 	}	
 	
+	void teq::set_ticks_per_beat(int ticks)
+	{
+		write_command_and_wait
+		(
+			[this, ticks]()
+			{
+				this->m_ticks_per_beat = ticks;
+			}
+		);
+	}	
+
+	int teq::get_ticks_per_beat()
+	{
+		return m_ticks_per_beat;
+	}
+
+	void teq::set_transport_source(transport_source source)
+	{
+		write_command_and_wait
+		(
+			[this, source]()
+			{
+				this->m_transport_source = source;
+			}
+		);
+	}
+
 	void teq::set_transport_state(transport_state state)
 	{
 		write_command_and_wait

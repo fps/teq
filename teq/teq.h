@@ -204,7 +204,13 @@ namespace teq
 		
 		float get_global_tempo();
 		
+		int get_ticks_per_beat();
+		
+		void set_ticks_per_beat(int ticks);
+
 		void set_transport_state(transport_state state);
+
+		void set_transport_source(transport_source source);
 		
 		void set_transport_position(transport_position position);
 		
