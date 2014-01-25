@@ -844,7 +844,7 @@ namespace teq
 					ticks_per_second = 8;
 				}
 				
-				double tick_time_in_song = time_in_song  / ticks_per_second;
+				double tick_time_in_song = time_in_song  * ticks_per_second;
 				
 				double tick_duration = 1.0 / ticks_per_second;
 				
