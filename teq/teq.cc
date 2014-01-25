@@ -842,7 +842,7 @@ namespace teq
 				
 				m_transport_position.m_pattern = 0;
 
-				while(tick_time_in_song >= 0)
+				while(tick_time_in_song >= 0 && m_transport_position.m_pattern < (tick)patterns.size())
 				{
 					time_in_song -= (double)patterns[m_transport_position.m_pattern].length();
 					
