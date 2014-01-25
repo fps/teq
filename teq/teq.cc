@@ -840,7 +840,7 @@ namespace teq
 
 				//! Find the pattern - O(number_of_patterns) :(
 
-				if (patterns.size() == 0)
+				if (patterns.size() > 0)
 				{
 					m_transport_position.m_pattern = 0;
 
