@@ -815,22 +815,22 @@ namespace teq
 		
 		
 		jack_transport_state_t jack_transport_state;
-		jack_position_t *jack_position = nullptr;
+		jack_position_t jack_position;
 		tick frame_in_song = 0;
 		
 		const std::vector<pattern> &patterns = *m_song->m_patterns;
 		
 		if (m_transport_source == transport_source::JACK_TRANSPORT)
 		{
-			jack_transport_state = jack_transport_query(m_jack_client, jack_position);
+			jack_transport_state = jack_transport_query(m_jack_client, &jack_position);
 			
 			if (jack_transport_state == JackTransportRolling)
 			{
-				frame_in_song = jack_position->frame;
+				frame_in_song = jack_position.frame;
 				
 				double time_in_song = (double)frame_in_song / jack_get_sample_rate(m_jack_client);
 				
-				double ticks_per_second = ((double)m_ticks_per_beat * (jack_position->beats_per_minute / 60.0));
+				double ticks_per_second = ((double)m_ticks_per_beat * (jack_position.beats_per_minute / 60.0));
 				
 				double tick_time_in_song = time_in_song  / ticks_per_second;
 				
