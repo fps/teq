@@ -1,9 +1,11 @@
 #ifndef LIBTEQ_TRANSPORT_HH
 #define LIBTEQ_TRANSPORT_HH
 
+#include <cstdint>
+
 namespace teq
 {
-	typedef long long int tick;
+	typedef int64_t tick;
 
 	enum transport_state { STOPPED, PLAYING };		
 	

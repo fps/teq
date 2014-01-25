@@ -26,6 +26,10 @@ namespace teq
 		
 		m_ack = false;
 		
+		m_ticks_per_beat = 4;
+		
+		m_transport_source = transport_source::INTERNAL;
+		
 		m_transport_position = the_transport_position;
 		
 		m_transport_state = the_transport_state;

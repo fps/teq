@@ -82,6 +82,9 @@ namespace teq
 		
 		float m_relative_tempo;
 		
+		int m_ticks_per_beat;
+		
+		transport_source m_transport_source;
 		
 		transport_state m_transport_state;
 		
