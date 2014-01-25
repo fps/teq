@@ -76,7 +76,7 @@ namespace teq
 		
 		m_last_transport_state = transport_state::STOPPED;
 		
-		m_time_since_last_tick = 0;
+		m_time_until_next_tick = 0;
 		
 		int activate_return_code = jack_activate(m_jack_client);
 		
@@ -812,9 +812,13 @@ namespace teq
 		
 		fetch_port_buffers(nframes);		
 		
+		
+		jack_transport_state_t jack_transport_state;
+		jack_position_t *jack_transport_position = nullptr;
+		
 		if (m_transport_source == transport_source::JACK_TRANSPORT)
 		{
-			
+			jack_transport_state = jack_transport_query(m_jack_client, jack_transport_position);
 		}
 		
 		// std::cout << (long long)multi_out_buffer << std::endl;
@@ -825,13 +829,20 @@ namespace teq
 		{
 			const float tick_duration = 1.0f / (m_relative_tempo * m_global_tempo);
 			
+			if (m_transport_source == transport_source::JACK_TRANSPORT && jack_transport_state == JackTransportRolling)
+			{
+				tick frame_in_song = jack_transport_position->frame + frame_index;
+				
+				++frame_in_song;
+			}
+			
 			/**
 			 * Here come all the state transitions that depend on the ticks
 			 * and not individual frames.
 			 */
-			if (m_transport_state == transport_state::PLAYING && m_time_since_last_tick >= tick_duration)
+			if (m_transport_source == transport_source::INTERNAL && m_transport_state == transport_state::PLAYING && m_time_until_next_tick <= 0)
 			{
-				m_time_since_last_tick -= tick_duration;
+				m_time_until_next_tick += tick_duration;
 				
 				advance_transport_by_one_tick(patterns);
 				
@@ -849,7 +860,6 @@ namespace teq
 					m_state_info_buffer.write(info);
 				}
 
-
 				process_tick(m_transport_position, frame_index, multi_out_buffer, patterns);
 			}
 			
@@ -857,7 +867,7 @@ namespace teq
 			
 			if (m_transport_state == transport_state::PLAYING)
 			{
-				m_time_since_last_tick += sample_duration;
+				m_time_until_next_tick -= sample_duration;
 			}
 		}
 

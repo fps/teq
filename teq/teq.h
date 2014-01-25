@@ -90,7 +90,7 @@ namespace teq
 		
 		transport_position m_transport_position;
 		
-		float m_time_since_last_tick;
+		float m_time_until_next_tick;
 		
 		
 		bool m_send_all_notes_off_on_loop;
