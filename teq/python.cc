@@ -17,8 +17,8 @@ BOOST_PYTHON_MODULE(teq)
 	;
 
 	enum_<teq::transport_source>("transport_source")
-		.value("STOPPED", teq::transport_source::JACK_TRANSPORT)
-		.value("PLAYING", teq::transport_source::INTERNAL)
+		.value("JACK_TRANSPORT", teq::transport_source::JACK_TRANSPORT)
+		.value("INTERNAL", teq::transport_source::INTERNAL)
 	;
 
 	class_<teq::teq::state_info>("state_info")
