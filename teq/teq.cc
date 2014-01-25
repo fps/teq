@@ -839,21 +839,29 @@ namespace teq
 				m_time_until_next_tick = fmod(tick_time_in_song, tick_duration);
 
 				//! Find the pattern - O(number_of_patterns) :(
-				
-				m_transport_position.m_pattern = 0;
 
-				while(tick_time_in_song >= 0 && m_transport_position.m_pattern < (tick)patterns.size())
+				if (patterns.size() == 0)
 				{
-					time_in_song -= (double)patterns[m_transport_position.m_pattern].length();
+					m_transport_position.m_pattern = 0;
+
+					while(tick_time_in_song >= 0 && m_transport_position.m_pattern < (tick)patterns.size())
+					{
+						time_in_song -= (double)patterns[m_transport_position.m_pattern].length();
+						
+						++m_transport_position.m_pattern;
+					}
 					
-					++m_transport_position.m_pattern;
+					--m_transport_position.m_pattern;
+					
+					//! Find the tick 
+					
+					m_transport_position.m_tick = (tick)floor((tick_time_in_song + (double)patterns[m_transport_position.m_pattern].length()) / tick_duration);
 				}
-				
-				--m_transport_position.m_pattern;
-				
-				//! Find the tick 
-				
-				m_transport_position.m_tick = (tick)floor((tick_time_in_song + (double)patterns[m_transport_position.m_pattern].length()) / tick_duration);
+				else
+				{
+					m_transport_position.m_pattern = 0;
+					m_transport_position.m_tick = 0;
+				}
 			}
 		}
 		
