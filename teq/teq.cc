@@ -481,6 +481,7 @@ namespace teq
 			[this, position]()
 			{
 				this->m_transport_position = position;
+				this->m_time_until_next_tick = 0;
 			}
 		);
 	}
