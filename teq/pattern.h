@@ -49,7 +49,7 @@ namespace teq
 			m_sequences[index]->m_muted = muted;
 		}
 		
-		int length()
+		int length() const
 		{
 			return m_length;
 		}

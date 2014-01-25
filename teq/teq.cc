@@ -806,7 +806,7 @@ namespace teq
 		
 		process_commands();
 		
-		const float sample_duration = 1.0f / (float)jack_get_sample_rate(m_jack_client);
+		const double sample_duration = 1.0 / jack_get_sample_rate(m_jack_client);
 		
 		void *multi_out_buffer = jack_port_get_buffer(m_multi_out_port, nframes);
 		jack_midi_clear_buffer(multi_out_buffer);
@@ -816,15 +816,48 @@ namespace teq
 		
 		jack_transport_state_t jack_transport_state;
 		jack_position_t *jack_transport_position = nullptr;
+		tick frame_in_song = 0;
+		
+		const std::vector<pattern> &patterns = *m_song->m_patterns;
 		
 		if (m_transport_source == transport_source::JACK_TRANSPORT)
 		{
 			jack_transport_state = jack_transport_query(m_jack_client, jack_transport_position);
+			
+			if (jack_transport_state == JackTransportRolling)
+			{
+				frame_in_song = jack_transport_position->frame;
+				
+				double time_in_song = (double)frame_in_song / jack_get_sample_rate(m_jack_client);
+				
+				double ticks_per_second = ((double)m_ticks_per_beat * (jack_transport_position->beats_per_minute / 60.0));
+				
+				double tick_time_in_song = time_in_song  / ticks_per_second;
+				
+				double tick_duration = 1.0 / ticks_per_second;
+				
+				m_time_until_next_tick = fmod(tick_time_in_song, tick_duration);
+
+				//! Find the pattern - O(number_of_patterns) :(
+				
+				m_transport_position.m_pattern = 0;
+
+				while(tick_time_in_song >= 0)
+				{
+					time_in_song -= (double)patterns[m_transport_position.m_pattern].length();
+					
+					++m_transport_position.m_pattern;
+				}
+				
+				--m_transport_position.m_pattern;
+				
+				//! Find the tick 
+				
+				m_transport_position.m_tick = (tick)floor((tick_time_in_song + (double)patterns[m_transport_position.m_pattern].length()) / tick_duration);
+			}
 		}
 		
 		// std::cout << (long long)multi_out_buffer << std::endl;
-		
-		const std::vector<pattern> &patterns = *m_song->m_patterns;
 		
 		for (jack_nframes_t frame_index = 0; frame_index < nframes; ++frame_index)
 		{
@@ -832,8 +865,6 @@ namespace teq
 			
 			if (m_transport_source == transport_source::JACK_TRANSPORT && jack_transport_state == JackTransportRolling)
 			{
-				tick frame_in_song = jack_transport_position->frame + frame_index;
-				
 				++frame_in_song;
 			}
 			
