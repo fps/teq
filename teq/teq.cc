@@ -272,7 +272,7 @@ namespace teq
 	
 	int teq::number_of_tracks()
 	{
-		return m_song->m_tracks->size();
+		return (int)m_song->m_tracks->size();
 	}
 	
 	std::string teq::track_name(int index)
@@ -282,7 +282,7 @@ namespace teq
 	
 	int teq::number_of_patterns()
 	{
-		return m_song->m_patterns->size();
+		return (int)m_song->m_patterns->size();
 	}
 	
 	int teq::number_of_ticks(int pattern_index)
@@ -622,7 +622,7 @@ namespace teq
 		
 		process_commands();
 		
-		const float sample_duration = 1.0 / jack_get_sample_rate(m_jack_client);
+		const float sample_duration = 1.0f / (float)jack_get_sample_rate(m_jack_client);
 		
 		void *multi_out_buffer = jack_port_get_buffer(m_multi_out_port, nframes);
 		jack_midi_clear_buffer(multi_out_buffer);
@@ -635,7 +635,7 @@ namespace teq
 		
 		for (jack_nframes_t frame_index = 0; frame_index < nframes; ++frame_index)
 		{
-			const float tick_duration = 1.0 / (m_relative_tempo * m_global_tempo);
+			const float tick_duration = 1.0f / (m_relative_tempo * m_global_tempo);
 			
 			update_transport();
 			
@@ -706,7 +706,7 @@ namespace teq
 				}
 				
 				const pattern &the_pattern = patterns[m_transport_position.m_pattern];
-				const int current_tick = m_transport_position.m_tick;
+				const tick current_tick = m_transport_position.m_tick;
 				
 				int midi_track_index = 0;
 				
@@ -734,11 +734,12 @@ namespace teq
 									if (properties.m_note_off_on_new_note_on &&last_note_on_event.m_type == midi_event::ON)
 									{
 										
-										render_event(midi::midi_note_off_event(properties.m_channel, last_note_on_event.m_value1, 127), properties.m_port_buffer, frame_index);
+										render_event(midi::midi_note_off_event(properties.m_channel, (unsigned char)last_note_on_event.m_value1, 127), properties.m_port_buffer, frame_index);
 									}
 									
-									render_event(midi::midi_note_on_event(properties.m_channel, the_event.m_value1, the_event.m_value2), properties.m_port_buffer, frame_index);
-									render_event(midi::midi_note_on_event(midi_track_index % 16, the_event.m_value1, the_event.m_value2), multi_out_buffer, frame_index);
+									render_event(midi::midi_note_on_event(properties.m_channel, (unsigned char)the_event.m_value1, (unsigned char)the_event.m_value2), properties.m_port_buffer, frame_index);
+
+									render_event(midi::midi_note_on_event((unsigned char)(midi_track_index % 16), (unsigned char)the_event.m_value1, (unsigned char)the_event.m_value2), multi_out_buffer, frame_index);
 									
 									properties.m_last_note_on_event = midi_event(midi_event::ON, the_event.m_value1, the_event.m_value2);
 									break;
@@ -746,14 +747,16 @@ namespace teq
 								case midi_event::OFF:
 									if (properties.m_last_note_on_event.m_type == midi_event::ON)
 									{
-										render_event(midi::midi_note_off_event(properties.m_channel, properties.m_last_note_on_event.m_value1, 127), properties.m_port_buffer, frame_index);
-										render_event(midi::midi_note_off_event(midi_track_index % 16, properties.m_last_note_on_event.m_value1, 127), multi_out_buffer, frame_index);
+										render_event(midi::midi_note_off_event(properties.m_channel, (unsigned char)properties.m_last_note_on_event.m_value1, 127), properties.m_port_buffer, frame_index);
+										
+										render_event(midi::midi_note_off_event((unsigned char)(midi_track_index % 16), (unsigned char)properties.m_last_note_on_event.m_value1, 127), multi_out_buffer, frame_index);
 									}
 									break;
 									
 								case midi_event::CC:
-									render_event(midi::midi_cc_event(properties.m_channel, the_event.m_value1, the_event.m_value2), properties.m_port_buffer, frame_index);
-									render_event(midi::midi_cc_event(midi_track_index % 16, the_event.m_value1, the_event.m_value2), multi_out_buffer, frame_index);
+									render_event(midi::midi_cc_event(properties.m_channel, (unsigned char)the_event.m_value1, (unsigned char)the_event.m_value2), properties.m_port_buffer, frame_index);
+
+									render_event(midi::midi_cc_event((unsigned char)(midi_track_index % 16), (unsigned char)the_event.m_value1, (unsigned char)the_event.m_value2), multi_out_buffer, frame_index);
 									break;
 									
 								case midi_event::PITCHBEND:

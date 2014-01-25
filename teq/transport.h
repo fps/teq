@@ -3,10 +3,12 @@
 
 namespace teq
 {
-	typedef int tick;
+	typedef long long int tick;
 
 	enum transport_state { STOPPED, PLAYING };		
-		
+	
+	enum transport_source { JACK_TRANSPORT, INTERNAL };
+	
 	struct transport_position
 	{
 		tick m_pattern;

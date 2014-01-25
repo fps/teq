@@ -61,10 +61,10 @@ namespace teq
 		struct midi_channel_event : midi_event
 		{
 			protected:
-				unsigned m_channel;
+				unsigned char m_channel;
 				
 			public:
-				midi_channel_event(unsigned channel) :
+				midi_channel_event(unsigned char channel) :
 					m_channel(channel)
 				{
 					
@@ -74,12 +74,12 @@ namespace teq
 		struct midi_note_on_event : midi_channel_event
 		{
 			protected:
-				unsigned m_note;
+				unsigned char m_note;
 				
-				unsigned m_velocity;
+				unsigned char m_velocity;
 				
 			public:
-				midi_note_on_event(unsigned channel, unsigned note, unsigned velocity) :
+				midi_note_on_event(unsigned char channel, unsigned char note, unsigned char velocity) :
 					midi_channel_event(channel),
 					m_note(note),
 					m_velocity(velocity)
@@ -103,12 +103,12 @@ namespace teq
 		struct midi_note_off_event : midi_channel_event
 		{
 			protected:
-				unsigned m_note;
+				unsigned char m_note;
 				
-				unsigned m_velocity;
+				unsigned char m_velocity;
 				
 			public:
-				midi_note_off_event(unsigned channel, unsigned note, unsigned velocity) :
+				midi_note_off_event(unsigned char channel, unsigned char note, unsigned char velocity) :
 					midi_channel_event(channel),
 					m_note(note),
 					m_velocity(velocity)
@@ -132,12 +132,12 @@ namespace teq
 		struct midi_cc_event : midi_channel_event
 		{
 			protected:
-				unsigned m_cc;
+				unsigned char m_cc;
 				
-				unsigned m_value;
+				unsigned char m_value;
 				
 			public:
-				midi_cc_event(unsigned channel, unsigned cc, unsigned value) :
+				midi_cc_event(unsigned char channel, unsigned char cc, unsigned char value) :
 					midi_channel_event(channel),
 					m_cc(cc),
 					m_value(value)
@@ -160,7 +160,7 @@ namespace teq
 		
 		struct midi_all_notes_off_event : midi_cc_event
 		{
-			midi_all_notes_off_event(unsigned channel) :
+			midi_all_notes_off_event(unsigned char channel) :
 				midi_cc_event(channel, 123, 0)
 			{
 				

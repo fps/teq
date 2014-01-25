@@ -16,6 +16,11 @@ BOOST_PYTHON_MODULE(teq)
 		.value("PLAYING", teq::transport_state::PLAYING)
 	;
 
+	enum_<teq::transport_source>("transport_source")
+		.value("STOPPED", teq::transport_source::JACK_TRANSPORT)
+		.value("PLAYING", teq::transport_source::INTERNAL)
+	;
+
 	class_<teq::teq::state_info>("state_info")
 		.def_readwrite("transport_state", &teq::teq::state_info::m_transport_state)
 		.def_readwrite("transport_position", &teq::teq::state_info::m_transport_position)

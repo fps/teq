@@ -84,7 +84,7 @@ namespace teq
 		
 		midi_event m_last_note_on_event;
 
-		unsigned m_channel;
+		unsigned char m_channel;
 		
 		void *m_port_buffer;
 		
