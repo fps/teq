@@ -849,7 +849,7 @@ namespace teq
 					bool in_range = false;
 					while(tick_time_in_song >= 0 && m_transport_position.m_pattern < (tick)patterns.size())
 					{
-						time_in_song -= (double)patterns[m_transport_position.m_pattern].length();
+						tick_time_in_song -= (double)patterns[m_transport_position.m_pattern].length();
 						in_range = true;
 						++m_transport_position.m_pattern;
 					}
