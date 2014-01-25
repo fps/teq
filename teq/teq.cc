@@ -844,14 +844,18 @@ namespace teq
 				{
 					m_transport_position.m_pattern = 0;
 
+					bool in_range = false;
 					while(tick_time_in_song >= 0 && m_transport_position.m_pattern < (tick)patterns.size())
 					{
 						time_in_song -= (double)patterns[m_transport_position.m_pattern].length();
-						
+						in_range = true;
 						++m_transport_position.m_pattern;
 					}
 					
-					--m_transport_position.m_pattern;
+					if (true == in_range)
+					{
+						--m_transport_position.m_pattern;
+					}
 					
 					//! Find the tick 
 					
