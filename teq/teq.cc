@@ -568,12 +568,7 @@ namespace teq
 			// locking failed
 		}		
 	}
-	
-	void teq::update_transport()
-	{
 		
-	}
-	
 	void teq::fetch_port_buffers(jack_nframes_t nframes)
 	{
 		for (size_t track_index = 0; track_index < m_song->m_tracks->size(); ++track_index)
@@ -634,10 +629,8 @@ namespace teq
 		}
 	}
 	
-	void teq::process_tick(transport_position position, jack_nframes_t frame, void *multi_out_buffer)
+	void teq::process_tick(transport_position position, jack_nframes_t frame, void *multi_out_buffer, const std::vector<pattern> &patterns)
 	{
-		const std::vector<pattern> &patterns = *m_song->m_patterns;
-
 		const pattern &the_pattern = patterns[m_transport_position.m_pattern];
 		const tick current_tick = m_transport_position.m_tick;
 		
@@ -746,6 +739,53 @@ namespace teq
 		
 	}
 	
+	void teq::advance_transport_by_one_tick(const std::vector<pattern> &patterns)
+	{
+		/** 
+			Safeguard around being off the song..
+		*/
+		if (m_transport_position.m_pattern < (int)patterns.size() && m_transport_position.m_tick < patterns[m_transport_position.m_pattern].m_length)
+		{
+			++m_transport_position.m_tick;
+		
+			/**
+			* Wrap tick around if we meet the pattern boundary
+			*/
+			if (m_transport_position.m_tick >= patterns[m_transport_position.m_pattern].m_length)
+			{
+				//std::cout << "pattern end" << std::endl;
+				m_transport_position.m_tick = 0;
+				++m_transport_position.m_pattern;
+			}
+
+			/**
+			* Wrap aound to loop start if we hit the loop end
+			*/
+			if 
+			(
+				true == m_loop_range.m_enabled &&
+				m_transport_position.m_pattern == m_loop_range.m_end.m_pattern &&
+				m_transport_position.m_tick == m_loop_range.m_end.m_tick
+			)
+			{
+				//std::cout << "loop end" << std::endl;
+				m_transport_position.m_pattern = m_loop_range.m_start.m_pattern;
+				m_transport_position.m_tick = m_loop_range.m_start.m_tick;
+			}
+			
+			/**
+			* And stop the transport and do nothing if we ran out of the
+			* end of the song
+			*/
+			if (m_transport_position.m_pattern >= (int)patterns.size())
+			{
+				m_transport_state = transport_state::STOPPED;
+				// std::cout << "end" << std::endl;
+				return;
+			}
+		}
+	}
+	
 	int teq::process(jack_nframes_t nframes)
 	{
 		//std::cout << ".";
@@ -785,8 +825,6 @@ namespace teq
 		{
 			const float tick_duration = 1.0f / (m_relative_tempo * m_global_tempo);
 			
-			update_transport();
-			
 			/**
 			 * Here come all the state transitions that depend on the ticks
 			 * and not individual frames.
@@ -794,6 +832,8 @@ namespace teq
 			if (m_transport_state == transport_state::PLAYING && m_time_since_last_tick >= tick_duration)
 			{
 				m_time_since_last_tick -= tick_duration;
+				
+				advance_transport_by_one_tick(patterns);
 				
 				if (true == m_state_info_buffer.can_write())
 				{
@@ -809,52 +849,8 @@ namespace teq
 					m_state_info_buffer.write(info);
 				}
 
-				/** 
-					Safeguard around being off the song..
-				*/
-				if (m_transport_position.m_pattern < (int)patterns.size() && m_transport_position.m_tick < patterns[m_transport_position.m_pattern].m_length)
-				{
-					++m_transport_position.m_tick;
-				
-					/**
-					* Wrap tick around if we meet the pattern boundary
-					*/
-					if (m_transport_position.m_tick >= patterns[m_transport_position.m_pattern].m_length)
-					{
-						//std::cout << "pattern end" << std::endl;
-						m_transport_position.m_tick = 0;
-						++m_transport_position.m_pattern;
-					}
 
-					/**
-					* Wrap aound to loop start if we hit the loop end
-					*/
-					if 
-					(
-						true == m_loop_range.m_enabled &&
-						m_transport_position.m_pattern == m_loop_range.m_end.m_pattern &&
-						m_transport_position.m_tick == m_loop_range.m_end.m_tick
-					)
-					{
-						//std::cout << "loop end" << std::endl;
-						m_transport_position.m_pattern = m_loop_range.m_start.m_pattern;
-						m_transport_position.m_tick = m_loop_range.m_start.m_tick;
-					}
-					
-					/**
-					* And stop the transport and do nothing if we ran out of the
-					* end of the song
-					*/
-					if (m_transport_position.m_pattern >= (int)patterns.size())
-					{
-						m_transport_state = transport_state::STOPPED;
-						// std::cout << "end" << std::endl;
-						return 0;
-					}
-					
-					process_tick(m_transport_position, frame_index, multi_out_buffer);
-				}
-				
+				process_tick(m_transport_position, frame_index, multi_out_buffer, patterns);
 			}
 			
 			write_cv_ports(frame_index);

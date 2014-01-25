@@ -235,11 +235,11 @@ namespace teq
 		
 		void write_cv_ports(int frame_index);
 		
-		void update_transport();
-		
 		void fetch_port_buffers(jack_nframes_t nframes);
 		
-		void process_tick(transport_position position, jack_nframes_t frame, void *multi_out_buffer);
+		void process_tick(transport_position position, jack_nframes_t frame, void *multi_out_buffer, const std::vector<pattern> &patterns);
+		
+		void advance_transport_by_one_tick(const std::vector<pattern> &patterns);
 		
 		int process(jack_nframes_t nframes);
 		
