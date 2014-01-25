@@ -36,10 +36,13 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(JACK REQUIRED jack)
 
 find_package(PythonLibs REQUIRED)
-find_package(Boost COMPONENTS python)
+
+unset(Boost_INCLUDE_DIR CACHE)
+unset(Boost_LIBRARY_DIRS CACHE)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost COMPONENTS python REQUIRED)
 
 #
 # BUILD TARGETS
@@ -54,15 +57,11 @@ add_library(teq SHARED teq/teq.cc)
 target_link_libraries(teq ${JACK_LIBRARIES})
 
 # Python bindings
-if (PYTHONLIBS_FOUND)
-	if (PYTHONLIBS_FOUND)
-		include_directories(${PYTHON_INCLUDE_DIRS})
-	endif()
-	
-	message(STATUS "Adding target for Python module...")
-	
-	add_library(pyteq SHARED teq/python.cc)
-	set_target_properties(pyteq PROPERTIES PREFIX "")
-	set_target_properties(pyteq PROPERTIES OUTPUT_NAME "teq")
-	target_link_libraries(pyteq ${JACK_LIBRARIES} teq ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
-endif()
+include_directories(${PYTHON_INCLUDE_DIRS})
+
+message(STATUS "Adding target for Python module...")
+
+add_library(pyteq SHARED teq/python.cc)
+set_target_properties(pyteq PROPERTIES PREFIX "")
+set_target_properties(pyteq PROPERTIES OUTPUT_NAME "teq")
+target_link_libraries(pyteq ${JACK_LIBRARIES}  ${PYTHON_LIBRARIES} ${Boost_LIBRARIES} teq)
