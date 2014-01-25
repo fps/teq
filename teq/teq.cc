@@ -843,6 +843,8 @@ namespace teq
 			 */
 			if (m_transport_source == transport_source::INTERNAL && m_transport_state == transport_state::PLAYING && m_time_until_next_tick <= 0)
 			{
+				process_tick(m_transport_position, frame_index, multi_out_buffer, patterns);
+
 				m_time_until_next_tick += tick_duration;
 				
 				advance_transport_by_one_tick(patterns);
@@ -861,7 +863,6 @@ namespace teq
 					m_state_info_buffer.write(info);
 				}
 
-				process_tick(m_transport_position, frame_index, multi_out_buffer, patterns);
 			}
 			
 			write_cv_ports(frame_index);
