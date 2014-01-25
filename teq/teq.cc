@@ -832,7 +832,15 @@ namespace teq
 				
 				double time_in_song = (double)frame_in_song / jack_get_sample_rate(m_jack_client);
 				
-				double ticks_per_second = ((double)m_ticks_per_beat * (jack_position.beats_per_minute / 60.0));
+				double ticks_per_second = 0;
+				if (jack_position.valid & JackPositionBBT)
+				{
+					ticks_per_second = ((double)m_ticks_per_beat * (jack_position.beats_per_minute / 60.0));
+				}
+				else
+				{
+					ticks_per_second = 8;
+				}
 				
 				double tick_time_in_song = time_in_song  / ticks_per_second;
 				
