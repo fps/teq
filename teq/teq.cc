@@ -848,8 +848,6 @@ namespace teq
 				
 				double tick_duration = 1.0 / ticks_per_second;
 				
-				m_time_until_next_tick = fmod(tick_time_in_song, tick_duration);
-
 				//! Find the pattern - O(number_of_patterns) :(
 
 				if (patterns.size() > 0)
@@ -871,7 +869,9 @@ namespace teq
 					
 					//! Find the tick 
 					
-					m_transport_position.m_tick = (tick)floor((tick_time_in_song + (double)patterns[m_transport_position.m_pattern].length()) / tick_duration);
+					m_transport_position.m_tick = (tick)floor((tick_time_in_song + (double)patterns[m_transport_position.m_pattern].length()));
+					
+					m_time_until_next_tick = fmod(time_in_song, tick_duration);
 				}
 				else
 				{
