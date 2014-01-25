@@ -634,6 +634,118 @@ namespace teq
 		}
 	}
 	
+	void teq::process_tick(transport_position position, jack_nframes_t frame, void *multi_out_buffer)
+	{
+		const std::vector<pattern> &patterns = *m_song->m_patterns;
+
+		const pattern &the_pattern = patterns[m_transport_position.m_pattern];
+		const tick current_tick = m_transport_position.m_tick;
+		
+		int midi_track_index = 0;
+		
+		for (size_t track_index = 0; track_index < m_song->m_tracks->size() && m_transport_position.m_pattern < (int)m_song->m_patterns->size(); ++track_index)
+		{
+			auto &track_properties = *(*m_song->m_tracks)[track_index].first;
+			
+			switch(track_properties.m_type)
+			{
+				case track::type::MIDI:
+				{
+					const auto &the_sequence = *std::static_pointer_cast<sequence_of<midi_event>>(the_pattern.m_sequences[track_index]);
+					auto &properties = *((midi_track*)&track_properties);
+
+					const auto &the_event = the_sequence.m_events[current_tick];
+
+					midi_event last_note_on_event = properties.m_last_note_on_event;
+						
+					switch(the_event.m_type)
+					{
+						case midi_event::NONE:
+							break;
+							
+						case midi_event::ON:
+							if (properties.m_note_off_on_new_note_on &&last_note_on_event.m_type == midi_event::ON)
+							{
+								
+								render_event(midi::midi_note_off_event(properties.m_channel, (unsigned char)last_note_on_event.m_value1, 127), properties.m_port_buffer, frame);
+							}
+							
+							render_event(midi::midi_note_on_event(properties.m_channel, (unsigned char)the_event.m_value1, (unsigned char)the_event.m_value2), properties.m_port_buffer, frame);
+
+							render_event(midi::midi_note_on_event((unsigned char)(midi_track_index % 16), (unsigned char)the_event.m_value1, (unsigned char)the_event.m_value2), multi_out_buffer, frame);
+							
+							properties.m_last_note_on_event = midi_event(midi_event::ON, the_event.m_value1, the_event.m_value2);
+							break;
+							
+						case midi_event::OFF:
+							if (properties.m_last_note_on_event.m_type == midi_event::ON)
+							{
+								render_event(midi::midi_note_off_event(properties.m_channel, (unsigned char)properties.m_last_note_on_event.m_value1, 127), properties.m_port_buffer, frame);
+								
+								render_event(midi::midi_note_off_event((unsigned char)(midi_track_index % 16), (unsigned char)properties.m_last_note_on_event.m_value1, 127), multi_out_buffer, frame);
+							}
+							break;
+							
+						case midi_event::CC:
+							render_event(midi::midi_cc_event(properties.m_channel, (unsigned char)the_event.m_value1, (unsigned char)the_event.m_value2), properties.m_port_buffer, frame);
+
+							render_event(midi::midi_cc_event((unsigned char)(midi_track_index % 16), (unsigned char)the_event.m_value1, (unsigned char)the_event.m_value2), multi_out_buffer, frame);
+							break;
+							
+						case midi_event::PITCHBEND:
+							break;
+					}
+					
+					++midi_track_index;
+				}
+				break;
+					
+				case track::type::CV:
+				{
+					const auto &the_sequence = *std::static_pointer_cast<sequence_of<cv_event>>(the_pattern.m_sequences[track_index]);
+					auto &cv_properties = *((cv_track*)&track_properties);
+					const auto &the_previous_event = cv_properties.m_current_event;
+					
+					if (cv_event::type::INTERVAL == the_previous_event.m_type)
+					{
+						cv_properties.m_current_value = the_previous_event.m_value2;
+					}
+					
+					const auto &the_event = the_sequence.m_events[current_tick];
+					cv_properties.m_current_event = the_event;
+				}
+				break;
+
+				case track::type::CONTROL:
+				{
+					const auto &the_sequence = *std::static_pointer_cast<sequence_of<control_event>>(the_pattern.m_sequences[track_index]);
+					const auto &the_event = the_sequence.m_events[current_tick];
+					
+					switch (the_event.m_type)
+					{
+						case control_event::type::GLOBAL_TEMPO:
+							m_global_tempo = the_event.m_value;
+							break;
+							
+						case control_event::type::RELATIVE_TEMPO:
+							m_relative_tempo = the_event.m_value;
+							break;
+							
+						default: 
+							break;
+					}
+				}
+				break;
+
+				default:
+					break;
+			}
+			
+			
+		}
+		
+	}
+	
 	int teq::process(jack_nframes_t nframes)
 	{
 		//std::cout << ".";
@@ -659,6 +771,11 @@ namespace teq
 		jack_midi_clear_buffer(multi_out_buffer);
 		
 		fetch_port_buffers(nframes);		
+		
+		if (m_transport_source == transport_source::JACK_TRANSPORT)
+		{
+			
+		}
 		
 		// std::cout << (long long)multi_out_buffer << std::endl;
 		
@@ -734,113 +851,10 @@ namespace teq
 						// std::cout << "end" << std::endl;
 						return 0;
 					}
+					
+					process_tick(m_transport_position, frame_index, multi_out_buffer);
 				}
 				
-				const pattern &the_pattern = patterns[m_transport_position.m_pattern];
-				const tick current_tick = m_transport_position.m_tick;
-				
-				int midi_track_index = 0;
-				
-				for (size_t track_index = 0; track_index < m_song->m_tracks->size() && m_transport_position.m_pattern < (int)m_song->m_patterns->size(); ++track_index)
-				{
-					auto &track_properties = *(*m_song->m_tracks)[track_index].first;
-					
-					switch(track_properties.m_type)
-					{
-						case track::type::MIDI:
-						{
-							const auto &the_sequence = *std::static_pointer_cast<sequence_of<midi_event>>(the_pattern.m_sequences[track_index]);
-							auto &properties = *((midi_track*)&track_properties);
-
-							const auto &the_event = the_sequence.m_events[current_tick];
-
-							midi_event last_note_on_event = properties.m_last_note_on_event;
-								
-							switch(the_event.m_type)
-							{
-								case midi_event::NONE:
-									break;
-									
-								case midi_event::ON:
-									if (properties.m_note_off_on_new_note_on &&last_note_on_event.m_type == midi_event::ON)
-									{
-										
-										render_event(midi::midi_note_off_event(properties.m_channel, (unsigned char)last_note_on_event.m_value1, 127), properties.m_port_buffer, frame_index);
-									}
-									
-									render_event(midi::midi_note_on_event(properties.m_channel, (unsigned char)the_event.m_value1, (unsigned char)the_event.m_value2), properties.m_port_buffer, frame_index);
-
-									render_event(midi::midi_note_on_event((unsigned char)(midi_track_index % 16), (unsigned char)the_event.m_value1, (unsigned char)the_event.m_value2), multi_out_buffer, frame_index);
-									
-									properties.m_last_note_on_event = midi_event(midi_event::ON, the_event.m_value1, the_event.m_value2);
-									break;
-									
-								case midi_event::OFF:
-									if (properties.m_last_note_on_event.m_type == midi_event::ON)
-									{
-										render_event(midi::midi_note_off_event(properties.m_channel, (unsigned char)properties.m_last_note_on_event.m_value1, 127), properties.m_port_buffer, frame_index);
-										
-										render_event(midi::midi_note_off_event((unsigned char)(midi_track_index % 16), (unsigned char)properties.m_last_note_on_event.m_value1, 127), multi_out_buffer, frame_index);
-									}
-									break;
-									
-								case midi_event::CC:
-									render_event(midi::midi_cc_event(properties.m_channel, (unsigned char)the_event.m_value1, (unsigned char)the_event.m_value2), properties.m_port_buffer, frame_index);
-
-									render_event(midi::midi_cc_event((unsigned char)(midi_track_index % 16), (unsigned char)the_event.m_value1, (unsigned char)the_event.m_value2), multi_out_buffer, frame_index);
-									break;
-									
-								case midi_event::PITCHBEND:
-									break;
-							}
-							
-							++midi_track_index;
-						}
-						break;
-							
-						case track::type::CV:
-						{
-							const auto &the_sequence = *std::static_pointer_cast<sequence_of<cv_event>>(the_pattern.m_sequences[track_index]);
-							auto &cv_properties = *((cv_track*)&track_properties);
-							const auto &the_previous_event = cv_properties.m_current_event;
-							
-							if (cv_event::type::INTERVAL == the_previous_event.m_type)
-							{
-								cv_properties.m_current_value = the_previous_event.m_value2;
-							}
-							
-							const auto &the_event = the_sequence.m_events[current_tick];
-							cv_properties.m_current_event = the_event;
-						}
-						break;
-
-						case track::type::CONTROL:
-						{
-							const auto &the_sequence = *std::static_pointer_cast<sequence_of<control_event>>(the_pattern.m_sequences[track_index]);
-							const auto &the_event = the_sequence.m_events[current_tick];
-							
-							switch (the_event.m_type)
-							{
-								case control_event::type::GLOBAL_TEMPO:
-									m_global_tempo = the_event.m_value;
-									break;
-									
-								case control_event::type::RELATIVE_TEMPO:
-									m_relative_tempo = the_event.m_value;
-									break;
-									
-								default: 
-									break;
-							}
-						}
-						break;
-
-						default:
-							break;
-					}
-					
-					
-				}
 			}
 			
 			write_cv_ports(frame_index);

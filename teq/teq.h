@@ -239,6 +239,8 @@ namespace teq
 		
 		void fetch_port_buffers(jack_nframes_t nframes);
 		
+		void process_tick(transport_position position, jack_nframes_t frame, void *multi_out_buffer);
+		
 		int process(jack_nframes_t nframes);
 		
 		friend int jack_process(jack_nframes_t, void*);
