@@ -822,6 +822,8 @@ namespace teq
 		
 		if (m_transport_source == transport_source::JACK_TRANSPORT)
 		{
+			m_loop_range.m_enabled = false;
+			
 			jack_transport_state = jack_transport_query(m_jack_client, &jack_position);
 			
 			if (jack_transport_state == JackTransportRolling)
