@@ -826,6 +826,8 @@ namespace teq
 			
 			if (jack_transport_state == JackTransportRolling)
 			{
+				m_transport_state = transport_state::PLAYING;
+				
 				frame_in_song = jack_position.frame;
 				
 				double time_in_song = (double)frame_in_song / jack_get_sample_rate(m_jack_client);
