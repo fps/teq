@@ -34,6 +34,9 @@ namespace teq
 		
 		m_transport_state = the_transport_state;
 		
+		m_last_jack_transport_state = JackTransportStopped;
+		m_last_jack_position.frame = 0;
+		
 		m_global_tempo = 8.0;
 		
 		m_relative_tempo = 1.0;
@@ -822,7 +825,7 @@ namespace teq
 		
 		if (m_transport_source == transport_source::JACK_TRANSPORT)
 		{
-			m_loop_range.m_enabled = false;
+			// m_loop_range.m_enabled = false;
 			
 			jack_transport_state = jack_transport_query(m_jack_client, &jack_position);
 			
@@ -830,7 +833,8 @@ namespace teq
 			{
 				m_transport_state = transport_state::STOPPED;
 			}
-			else 
+			
+			if ((m_last_jack_transport_state != JackTransportRolling || m_last_jack_position.frame + nframes != jack_position.frame)&& jack_transport_state == JackTransportRolling)
 			{
 				m_transport_state = transport_state::PLAYING;
 				
@@ -845,10 +849,9 @@ namespace teq
 				}
 				else
 				{
-					ticks_per_second = 8;
+					ticks_per_second = m_global_tempo;
 				}
 				
-				ticks_per_second = 8;
 				
 				m_global_tempo = (float)ticks_per_second;
 				
@@ -889,6 +892,9 @@ namespace teq
 					m_transport_position.m_tick = 0;
 				}
 			}
+			
+			m_last_jack_transport_state = jack_transport_state;
+			m_last_jack_position = jack_position;
 		}
 		
 		// std::cout << (long long)multi_out_buffer << std::endl;
@@ -896,12 +902,7 @@ namespace teq
 		for (jack_nframes_t frame_index = 0; frame_index < nframes; ++frame_index)
 		{
 			const float tick_duration = 1.0f / (m_relative_tempo * m_global_tempo);
-			
-			if (m_transport_source == transport_source::JACK_TRANSPORT && jack_transport_state == JackTransportRolling)
-			{
-				++frame_in_song;
-			}
-			
+
 			/**
 			 * Here come all the state transitions that depend on the ticks
 			 * and not individual frames.

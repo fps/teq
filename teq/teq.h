@@ -73,6 +73,8 @@ namespace teq
 		
 		transport_state m_last_transport_state;
 		
+		jack_position_t m_last_jack_position;
+		jack_transport_state_t m_last_jack_transport_state;
 		
 		song_ptr m_song;
 		
