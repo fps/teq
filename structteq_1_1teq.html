@@ -88,6 +88,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
@@ -99,17 +100,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structteq_1_1teq_1_1state__info.html">state_info</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ade64d92fe2d135841fe891399406743c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ade64d92fe2d135841fe891399406743c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>teq</b> (const std::string &amp;client_name=&quot;teq&quot;, unsigned command_buffer_size=1024)</td></tr>
-<tr class="separator:ade64d92fe2d135841fe891399406743c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d795d1f95ec4d56c1aff5fedf4698f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5d795d1f95ec4d56c1aff5fedf4698f2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>teq</b> (const std::string client_name=&quot;teq&quot;, int command_buffer_size=1024, int state_info_buffer_size=1024)</td></tr>
+<tr class="separator:a5d795d1f95ec4d56c1aff5fedf4698f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac104e8ab1c5f2b6d436e60d384cbabb9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac104e8ab1c5f2b6d436e60d384cbabb9"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>teq</b> (const <a class="el" href="structteq_1_1teq.html">teq</a> &amp;other)</td></tr>
 <tr class="separator:ac104e8ab1c5f2b6d436e60d384cbabb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a31093451d997654d3f0ab920ccdfc8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2a31093451d997654d3f0ab920ccdfc8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (const std::string &amp;client_name, transport_state the_transport_state, bool send_all_notes_off_on_loop, bool send_all_notes_off_on_stop)</td></tr>
-<tr class="separator:a2a31093451d997654d3f0ab920ccdfc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49e661c946ea25bfcc5eb8dc08cbda77"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a49e661c946ea25bfcc5eb8dc08cbda77"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (const std::string client_name, transport_state the_transport_state, <a class="el" href="structteq_1_1transport__position.html">transport_position</a> the_transport_position, bool send_all_notes_off_on_loop, bool send_all_notes_off_on_stop)</td></tr>
+<tr class="separator:a49e661c946ea25bfcc5eb8dc08cbda77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adeabfec8145e4b2a43b8301bb3772242"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adeabfec8145e4b2a43b8301bb3772242"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>deactivate</b> ()</td></tr>
+<tr class="separator:adeabfec8145e4b2a43b8301bb3772242"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61ab3be9058d77bb9507f6d58091ecfc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a61ab3be9058d77bb9507f6d58091ecfc"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>set_send_all_notes_off_on_loop</b> (bool on)</td></tr>
 <tr class="separator:a61ab3be9058d77bb9507f6d58091ecfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,59 +131,62 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>track_name_exists</b>
 <tr class="memitem:a38102007185393ac06fa6234d153429f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38102007185393ac06fa6234d153429f"></a>
 song_ptr&#160;</td><td class="memItemRight" valign="bottom"><b>copy_and_prepare_song</b> ()</td></tr>
 <tr class="separator:a38102007185393ac06fa6234d153429f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a218b0dc6603650f706f411c801d519ff"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a218b0dc6603650f706f411c801d519ff"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>check_track_name_and_index_for_insert</b> (const std::string &amp;track_name, unsigned index)</td></tr>
-<tr class="separator:a218b0dc6603650f706f411c801d519ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab8a2581eea6ce87e31046a04c52faf93"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab8a2581eea6ce87e31046a04c52faf93"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>number_of_tracks</b> ()</td></tr>
-<tr class="separator:ab8a2581eea6ce87e31046a04c52faf93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeefde8fb844f78788370a627bf88ee1a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeefde8fb844f78788370a627bf88ee1a"></a>
-track::type&#160;</td><td class="memItemRight" valign="bottom"><b>track_type</b> (unsigned index)</td></tr>
-<tr class="separator:aeefde8fb844f78788370a627bf88ee1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79f3178e37530b09f253856dd11b46bf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a79f3178e37530b09f253856dd11b46bf"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>track_name</b> (unsigned index)</td></tr>
-<tr class="separator:a79f3178e37530b09f253856dd11b46bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a107827897aaf1d8a5249da780dae38cd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a107827897aaf1d8a5249da780dae38cd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>insert_midi_track</b> (const std::string &amp;track_name, unsigned index)</td></tr>
-<tr class="separator:a107827897aaf1d8a5249da780dae38cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1cdcf9e8263c4f1fea8229f5d436172"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad1cdcf9e8263c4f1fea8229f5d436172"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>insert_cv_track</b> (const std::string &amp;track_name, unsigned index)</td></tr>
-<tr class="separator:ad1cdcf9e8263c4f1fea8229f5d436172"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83228a5eaed4ba25b3dacdf6d0e0174d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a83228a5eaed4ba25b3dacdf6d0e0174d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>insert_control_track</b> (const std::string &amp;track_name, unsigned index)</td></tr>
-<tr class="separator:a83228a5eaed4ba25b3dacdf6d0e0174d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9728c27cc09b3e4e227ce05790441427"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9728c27cc09b3e4e227ce05790441427"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>remove_track</b> (unsigned index)</td></tr>
-<tr class="separator:a9728c27cc09b3e4e227ce05790441427"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77b2ad5bf1e9ea9a68e14038283bbf5e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a77b2ad5bf1e9ea9a68e14038283bbf5e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>move_track</b> (unsigned from, unsigned to)</td></tr>
-<tr class="separator:a77b2ad5bf1e9ea9a68e14038283bbf5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2444440dd9d29f36e5bffcc7692921f8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2444440dd9d29f36e5bffcc7692921f8"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>number_of_patterns</b> ()</td></tr>
-<tr class="separator:a2444440dd9d29f36e5bffcc7692921f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a834e6f661870b212265a2a6e09249012"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a834e6f661870b212265a2a6e09249012"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>number_of_ticks</b> (unsigned pattern_index)</td></tr>
-<tr class="separator:a834e6f661870b212265a2a6e09249012"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a2705165ba1b212caf51ed0694cac2b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9a2705165ba1b212caf51ed0694cac2b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>insert_pattern</b> (unsigned index, const <a class="el" href="structteq_1_1pattern.html">pattern</a> &amp;the_pattern)</td></tr>
-<tr class="separator:a9a2705165ba1b212caf51ed0694cac2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a833e6e8737ba8c3aba738daa901f7732"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a833e6e8737ba8c3aba738daa901f7732"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>remove_pattern</b> (unsigned index)</td></tr>
-<tr class="separator:a833e6e8737ba8c3aba738daa901f7732"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af446ff1e9aa42a31e11aee48ff73b3a4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af446ff1e9aa42a31e11aee48ff73b3a4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>move_pattern</b> (unsigned from, unsigned to)</td></tr>
-<tr class="separator:af446ff1e9aa42a31e11aee48ff73b3a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a354c0154d8f5b49087ead1fa4264339e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a354c0154d8f5b49087ead1fa4264339e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_pattern</b> (const <a class="el" href="structteq_1_1pattern.html">pattern</a> &amp;the_pattern)</td></tr>
-<tr class="separator:a354c0154d8f5b49087ead1fa4264339e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a982cd9a8da61a039c7aeb16ae0bf1eef"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a982cd9a8da61a039c7aeb16ae0bf1eef"></a>
-<a class="el" href="structteq_1_1pattern.html">pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_pattern</b> (unsigned pattern_index)</td></tr>
-<tr class="separator:a982cd9a8da61a039c7aeb16ae0bf1eef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f6381213d5c4aefc3a4fd536389c0fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structteq_1_1pattern.html">pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structteq_1_1teq.html#a7f6381213d5c4aefc3a4fd536389c0fd">create_pattern</a> (unsigned length)</td></tr>
-<tr class="separator:a7f6381213d5c4aefc3a4fd536389c0fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42134b1fb62791fbbc985dd69ee3b2ee"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a42134b1fb62791fbbc985dd69ee3b2ee"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_loop_range</b> (const <a class="el" href="structteq_1_1loop__range.html">loop_range</a> &amp;<a class="el" href="structteq_1_1range.html">range</a>)</td></tr>
-<tr class="separator:a42134b1fb62791fbbc985dd69ee3b2ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af48b9998922bc5ce771c7a0ea6298100"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af48b9998922bc5ce771c7a0ea6298100"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>check_track_name_and_index_for_insert</b> (const std::string track_name, int index)</td></tr>
+<tr class="separator:af48b9998922bc5ce771c7a0ea6298100"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a5c3763f47844b920d7873283560eeb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7a5c3763f47844b920d7873283560eeb"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>number_of_tracks</b> ()</td></tr>
+<tr class="separator:a7a5c3763f47844b920d7873283560eeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a172e68ed5cc130170b9a61faf37edb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7a172e68ed5cc130170b9a61faf37edb"></a>
+track::type&#160;</td><td class="memItemRight" valign="bottom"><b>track_type</b> (int index)</td></tr>
+<tr class="separator:a7a172e68ed5cc130170b9a61faf37edb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af372bdcfda5139cc3e22d641417a52d2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af372bdcfda5139cc3e22d641417a52d2"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>track_name</b> (int index)</td></tr>
+<tr class="separator:af372bdcfda5139cc3e22d641417a52d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ee8f1807f31c204aaec20613ac1a1d8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8ee8f1807f31c204aaec20613ac1a1d8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>insert_midi_track</b> (const std::string track_name, int index)</td></tr>
+<tr class="separator:a8ee8f1807f31c204aaec20613ac1a1d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c9478eee4c89861b8f78988f5405fcc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2c9478eee4c89861b8f78988f5405fcc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>insert_cv_track</b> (const std::string track_name, int index)</td></tr>
+<tr class="separator:a2c9478eee4c89861b8f78988f5405fcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af74090a6d5c6653f30eacdb647b8035c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af74090a6d5c6653f30eacdb647b8035c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>insert_control_track</b> (const std::string track_name, int index)</td></tr>
+<tr class="separator:af74090a6d5c6653f30eacdb647b8035c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba68365dcf67b85681aa15ff63de30cf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aba68365dcf67b85681aa15ff63de30cf"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>remove_track</b> (int index)</td></tr>
+<tr class="separator:aba68365dcf67b85681aa15ff63de30cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19f99130c2734963e34710253e092e89"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a19f99130c2734963e34710253e092e89"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>rename_track</b> (int index, const std::string name)</td></tr>
+<tr class="separator:a19f99130c2734963e34710253e092e89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa583c3d1f9cd1ce1dddee3f72ae3dbfa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa583c3d1f9cd1ce1dddee3f72ae3dbfa"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>move_track</b> (int from, int to)</td></tr>
+<tr class="separator:aa583c3d1f9cd1ce1dddee3f72ae3dbfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f93626b047370fce84ffc3a330c854a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0f93626b047370fce84ffc3a330c854a"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>number_of_patterns</b> ()</td></tr>
+<tr class="separator:a0f93626b047370fce84ffc3a330c854a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2bbc057a1f15e99a73d70f93c8b744c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac2bbc057a1f15e99a73d70f93c8b744c"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>number_of_ticks</b> (int pattern_index)</td></tr>
+<tr class="separator:ac2bbc057a1f15e99a73d70f93c8b744c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17cbf4a4f13cbf88d8065b2519625405"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a17cbf4a4f13cbf88d8065b2519625405"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>insert_pattern</b> (int index, const <a class="el" href="structteq_1_1pattern.html">pattern</a> the_pattern)</td></tr>
+<tr class="separator:a17cbf4a4f13cbf88d8065b2519625405"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad40067f65743d1d3bec8882db9fd3855"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad40067f65743d1d3bec8882db9fd3855"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>remove_pattern</b> (int index)</td></tr>
+<tr class="separator:ad40067f65743d1d3bec8882db9fd3855"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae67f5d1de3b207146fc59e22941753aa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae67f5d1de3b207146fc59e22941753aa"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>move_pattern</b> (int from, int to)</td></tr>
+<tr class="separator:ae67f5d1de3b207146fc59e22941753aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a792c05f9fdeb7b974d5b18c1ff9b857d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a792c05f9fdeb7b974d5b18c1ff9b857d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_pattern</b> (int index, const <a class="el" href="structteq_1_1pattern.html">pattern</a> the_pattern)</td></tr>
+<tr class="separator:a792c05f9fdeb7b974d5b18c1ff9b857d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ce38cafaa2ba1380faf20dbbc06308e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0ce38cafaa2ba1380faf20dbbc06308e"></a>
+<a class="el" href="structteq_1_1pattern.html">pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_pattern</b> (int pattern_index)</td></tr>
+<tr class="separator:a0ce38cafaa2ba1380faf20dbbc06308e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac151d992b26851d41e1f1095fbf413c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structteq_1_1pattern.html">pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structteq_1_1teq.html#ac151d992b26851d41e1f1095fbf413c2">create_pattern</a> (int length)</td></tr>
+<tr class="separator:ac151d992b26851d41e1f1095fbf413c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02dbecac67e84c2aef771a01656c4d00"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a02dbecac67e84c2aef771a01656c4d00"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_loop_range</b> (const <a class="el" href="structteq_1_1loop__range.html">loop_range</a> <a class="el" href="structteq_1_1range.html">range</a>)</td></tr>
+<tr class="separator:a02dbecac67e84c2aef771a01656c4d00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3e19768e2ac63a60bb26b356e953e4d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae3e19768e2ac63a60bb26b356e953e4d"></a>
 <a class="el" href="structteq_1_1loop__range.html">loop_range</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_loop_range</b> ()</td></tr>
 <tr class="separator:ae3e19768e2ac63a60bb26b356e953e4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,12 +196,30 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_global_tempo</b> 
 <tr class="memitem:a000b3d9ab6c3c31978c8859dee309890"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a000b3d9ab6c3c31978c8859dee309890"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>get_global_tempo</b> ()</td></tr>
 <tr class="separator:a000b3d9ab6c3c31978c8859dee309890"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20f603819e1df27731fdfcb88538aa6a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a20f603819e1df27731fdfcb88538aa6a"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>get_ticks_per_beat</b> ()</td></tr>
+<tr class="separator:a20f603819e1df27731fdfcb88538aa6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a255524f7c62e847db0fc4c5190c99784"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a255524f7c62e847db0fc4c5190c99784"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_ticks_per_beat</b> (int ticks)</td></tr>
+<tr class="separator:a255524f7c62e847db0fc4c5190c99784"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06a15bb1e0e975beb9c257196c59aa9e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a06a15bb1e0e975beb9c257196c59aa9e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>set_transport_state</b> (transport_state state)</td></tr>
 <tr class="separator:a06a15bb1e0e975beb9c257196c59aa9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a494dae10e501303c4e7c120eb3ebd5a6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a494dae10e501303c4e7c120eb3ebd5a6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_transport_source</b> (transport_source source)</td></tr>
+<tr class="separator:a494dae10e501303c4e7c120eb3ebd5a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a404266cd341cc1efb2f701860f40f740"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a404266cd341cc1efb2f701860f40f740"></a>
+transport_source&#160;</td><td class="memItemRight" valign="bottom"><b>get_transport_source</b> ()</td></tr>
+<tr class="separator:a404266cd341cc1efb2f701860f40f740"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93db3bbbfb42a1137708686162305567"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a93db3bbbfb42a1137708686162305567"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>set_transport_position</b> (<a class="el" href="structteq_1_1transport__position.html">transport_position</a> position)</td></tr>
 <tr class="separator:a93db3bbbfb42a1137708686162305567"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ce258812d5107cf8c871239e3d8650d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9ce258812d5107cf8c871239e3d8650d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_state_info</b> ()</td></tr>
+<tr class="separator:a9ce258812d5107cf8c871239e3d8650d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff57a9175552e70509a76a10188b9b83"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aff57a9175552e70509a76a10188b9b83"></a>
+<a class="el" href="structteq_1_1teq_1_1state__info.html">state_info</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_state_info</b> ()</td></tr>
+<tr class="separator:aff57a9175552e70509a76a10188b9b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7cf355eec8d56e62f855f8a0363732dc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7cf355eec8d56e62f855f8a0363732dc"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>gc</b> ()</td></tr>
 <tr class="separator:a7cf355eec8d56e62f855f8a0363732dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -220,34 +250,42 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>render_event</b> (con
 <tr class="memitem:ab98f5891c9b80d6de4fe00d80623bd2d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab98f5891c9b80d6de4fe00d80623bd2d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>process_commands</b> ()</td></tr>
 <tr class="separator:ab98f5891c9b80d6de4fe00d80623bd2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aded9e9279fb3faf581567617ef0795b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structteq_1_1teq.html#aded9e9279fb3faf581567617ef0795b2">write_cv_ports</a> (unsigned frame_index)</td></tr>
-<tr class="separator:aded9e9279fb3faf581567617ef0795b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a4ff8773e92291abe188e8ff644a455"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0a4ff8773e92291abe188e8ff644a455"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>update_transport</b> ()</td></tr>
-<tr class="separator:a0a4ff8773e92291abe188e8ff644a455"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb693418fc34f3ba603b162f27b59626"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structteq_1_1teq.html#adb693418fc34f3ba603b162f27b59626">write_cv_ports</a> (int frame_index)</td></tr>
+<tr class="separator:adb693418fc34f3ba603b162f27b59626"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6d052d793fe657450eeb0b839ab5b2c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa6d052d793fe657450eeb0b839ab5b2c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>fetch_port_buffers</b> (jack_nframes_t nframes)</td></tr>
 <tr class="separator:aa6d052d793fe657450eeb0b839ab5b2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a643d2829a3e705c521f7f0d4b65bf781"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a643d2829a3e705c521f7f0d4b65bf781"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>process_tick</b> (<a class="el" href="structteq_1_1transport__position.html">transport_position</a> position, jack_nframes_t frame, void *multi_out_buffer, const std::vector&lt; <a class="el" href="structteq_1_1pattern.html">pattern</a> &gt; &amp;patterns)</td></tr>
+<tr class="separator:a643d2829a3e705c521f7f0d4b65bf781"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98ae39cef6ceeff2c2df0f0060dee6c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structteq_1_1teq.html#a98ae39cef6ceeff2c2df0f0060dee6c6">advance_transport_by_one_tick</a> (const std::vector&lt; <a class="el" href="structteq_1_1pattern.html">pattern</a> &gt; &amp;patterns)</td></tr>
+<tr class="separator:a98ae39cef6ceeff2c2df0f0060dee6c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87a5804d5e630901718c069f0097ad7f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structteq_1_1teq.html#a87a5804d5e630901718c069f0097ad7f">process</a> (jack_nframes_t nframes)</td></tr>
 <tr class="separator:a87a5804d5e630901718c069f0097ad7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
+<tr class="memitem:a826ea94886103fdf8ac8f319a102cdaa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a826ea94886103fdf8ac8f319a102cdaa"></a>
+jack_port_t *&#160;</td><td class="memItemRight" valign="bottom"><b>m_multi_out_port</b></td></tr>
+<tr class="separator:a826ea94886103fdf8ac8f319a102cdaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a674d85d57d7ad58d5ef6c6575cf666d3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a674d85d57d7ad58d5ef6c6575cf666d3"></a>
+jack_port_t *&#160;</td><td class="memItemRight" valign="bottom"><b>m_midi_in_port</b></td></tr>
+<tr class="separator:a674d85d57d7ad58d5ef6c6575cf666d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5902870d6204fbe74b7b487e8ce32f9a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5902870d6204fbe74b7b487e8ce32f9a"></a>
 <a class="el" href="structteq_1_1heap.html">heap</a>&lt; <a class="el" href="structteq_1_1song.html">song</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_song_heap</b></td></tr>
 <tr class="separator:a5902870d6204fbe74b7b487e8ce32f9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb153d9a170446c884cd02ae7e8db37e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeb153d9a170446c884cd02ae7e8db37e"></a>
 <a class="el" href="structteq_1_1heap.html">heap</a>&lt; song::track_list &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_track_list_heap</b></td></tr>
 <tr class="separator:aeb153d9a170446c884cd02ae7e8db37e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51178c106ee33f0755e218e33dba4b09"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a51178c106ee33f0755e218e33dba4b09"></a>
-<a class="el" href="structteq_1_1heap.html">heap</a>&lt; <a class="el" href="structteq_1_1pattern.html">pattern</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_pattern_heap</b></td></tr>
-<tr class="separator:a51178c106ee33f0755e218e33dba4b09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f6cb5d9740c8127ea32a61f6a2056d4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3f6cb5d9740c8127ea32a61f6a2056d4"></a>
 <a class="el" href="structteq_1_1heap.html">heap</a>&lt; <a class="el" href="structteq_1_1song.html#a96f4eb361bc3d06f42c0c17186e4dc67">song::pattern_list</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_pattern_list_heap</b></td></tr>
 <tr class="separator:a3f6cb5d9740c8127ea32a61f6a2056d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f65596e23d2d651447d025e418a34e6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2f65596e23d2d651447d025e418a34e6"></a>
-<a class="el" href="structlart_1_1ringbuffer.html">lart::ringbuffer</a>&lt; command &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_commands</b></td></tr>
-<tr class="separator:a2f65596e23d2d651447d025e418a34e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a591e3afaaaa9a5625730cefc4c0d83b2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a591e3afaaaa9a5625730cefc4c0d83b2"></a>
+<a class="el" href="structlart_1_1ringbuffer.html">lart::ringbuffer</a>&lt; command &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_command_buffer</b></td></tr>
+<tr class="separator:a591e3afaaaa9a5625730cefc4c0d83b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf03b96ea19ebb5fdac567f37cd919d4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaf03b96ea19ebb5fdac567f37cd919d4"></a>
+<a class="el" href="structlart_1_1ringbuffer.html">lart::ringbuffer</a>&lt; <a class="el" href="structteq_1_1teq_1_1state__info.html">state_info</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_state_info_buffer</b></td></tr>
+<tr class="separator:aaf03b96ea19ebb5fdac567f37cd919d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34febb5560201355fda0c50b7e968106"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a34febb5560201355fda0c50b7e968106"></a>
 std::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>m_ack_mutex</b></td></tr>
 <tr class="separator:a34febb5560201355fda0c50b7e968106"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -266,6 +304,12 @@ jack_client_t *&#160;</td><td class="memItemRight" valign="bottom"><b>m_jack_cli
 <tr class="memitem:a305fd989357eef272b5ff56634146a80"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a305fd989357eef272b5ff56634146a80"></a>
 transport_state&#160;</td><td class="memItemRight" valign="bottom"><b>m_last_transport_state</b></td></tr>
 <tr class="separator:a305fd989357eef272b5ff56634146a80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84f6502532836783b46fa4ae1f8e28d6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a84f6502532836783b46fa4ae1f8e28d6"></a>
+jack_position_t&#160;</td><td class="memItemRight" valign="bottom"><b>m_last_jack_position</b></td></tr>
+<tr class="separator:a84f6502532836783b46fa4ae1f8e28d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae067e826816c75c638bfd80d766b04ab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae067e826816c75c638bfd80d766b04ab"></a>
+jack_transport_state_t&#160;</td><td class="memItemRight" valign="bottom"><b>m_last_jack_transport_state</b></td></tr>
+<tr class="separator:ae067e826816c75c638bfd80d766b04ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaec7c06556429d760cf695ad14d65a51"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaec7c06556429d760cf695ad14d65a51"></a>
 song_ptr&#160;</td><td class="memItemRight" valign="bottom"><b>m_song</b></td></tr>
 <tr class="separator:aaec7c06556429d760cf695ad14d65a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -278,15 +322,21 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>m_global_tempo</b></
 <tr class="memitem:a75b1f10239b6453450568778e21f2411"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a75b1f10239b6453450568778e21f2411"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>m_relative_tempo</b></td></tr>
 <tr class="separator:a75b1f10239b6453450568778e21f2411"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae849f16e2c01633fb2286acbdde4030f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae849f16e2c01633fb2286acbdde4030f"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>m_ticks_per_beat</b></td></tr>
+<tr class="separator:ae849f16e2c01633fb2286acbdde4030f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32613915921239acf4d526b33e47cb87"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a32613915921239acf4d526b33e47cb87"></a>
+transport_source&#160;</td><td class="memItemRight" valign="bottom"><b>m_transport_source</b></td></tr>
+<tr class="separator:a32613915921239acf4d526b33e47cb87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd895c02b5d8490b46be75a3b41e4cf4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abd895c02b5d8490b46be75a3b41e4cf4"></a>
 transport_state&#160;</td><td class="memItemRight" valign="bottom"><b>m_transport_state</b></td></tr>
 <tr class="separator:abd895c02b5d8490b46be75a3b41e4cf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace6d2219ce6fd42219e8b258826ff408"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ace6d2219ce6fd42219e8b258826ff408"></a>
 <a class="el" href="structteq_1_1transport__position.html">transport_position</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_transport_position</b></td></tr>
 <tr class="separator:ace6d2219ce6fd42219e8b258826ff408"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa80a483222d91eb873d8e6796d904f5b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa80a483222d91eb873d8e6796d904f5b"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>m_time_since_last_tick</b></td></tr>
-<tr class="separator:aa80a483222d91eb873d8e6796d904f5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27d946436bdcd367aa957810827f87a1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a27d946436bdcd367aa957810827f87a1"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>m_time_until_next_tick</b></td></tr>
+<tr class="separator:a27d946436bdcd367aa957810827f87a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a156de277fcc3fcea80178eb49f9b98af"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a156de277fcc3fcea80178eb49f9b98af"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_send_all_notes_off_on_loop</b></td></tr>
 <tr class="separator:a156de277fcc3fcea80178eb49f9b98af"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -301,14 +351,42 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>jack_process</b> (jack
 <tr class="separator:ac01fc4fdde7cf37ef9c8eb067551e7fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a7f6381213d5c4aefc3a4fd536389c0fd"></a>
+<a class="anchor" id="a98ae39cef6ceeff2c2df0f0060dee6c6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void teq::teq::advance_transport_by_one_tick </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structteq_1_1pattern.html">pattern</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>patterns</em>)</td><td></td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Safeguard around being off the song..</p>
+<p>Wrap tick around if we meet the pattern boundary</p>
+<p>Wrap aound to loop start if we hit the loop end</p>
+<p>And stop the transport and do nothing if we ran out of the end of the song</p>
+
+</div>
+</div>
+<a class="anchor" id="ac151d992b26851d41e1f1095fbf413c2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="structteq_1_1pattern.html">pattern</a> teq::teq::create_pattern </td>
           <td>(</td>
-          <td class="paramtype">unsigned&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>length</em>)</td><td></td>
           <td></td>
         </tr>
@@ -340,14 +418,13 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>jack_process</b> (jack
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Find the pattern - O(number_of_patterns) :(</p>
+<p>Find the tick</p>
 <p>Here come all the state transitions that depend on the ticks and not individual frames.</p>
-<p>Wrap tick around if we meet the pattern boundary</p>
-<p>Wrap aound to loop start if we hit the loop endl</p>
-<p>And stop the transport and do nothing if we ran out of the end of the song</p>
 
 </div>
 </div>
-<a class="anchor" id="aded9e9279fb3faf581567617ef0795b2"></a>
+<a class="anchor" id="adb693418fc34f3ba603b162f27b59626"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -357,7 +434,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>jack_process</b> (jack
         <tr>
           <td class="memname">void teq::teq::write_cv_ports </td>
           <td>(</td>
-          <td class="paramtype">unsigned&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>frame_index</em>)</td><td></td>
           <td></td>
         </tr>
@@ -379,7 +456,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>jack_process</b> (jack
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Dec 28 2013 11:01:11 for teq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 26 2014 18:11:58 for teq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.4
 </small></address>

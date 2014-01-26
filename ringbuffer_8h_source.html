@@ -80,7 +80,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_5c162b0e562f5585b4e6c6cb74088b78.html">teq</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_dc8b0d1bbbd0ff4febb4c4c5cac6a4fe.html">teq</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -93,81 +93,80 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;jack/ringbuffer.h&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>lart</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt; </div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="code" href="structlart_1_1ringbuffer.html">   25</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structlart_1_1ringbuffer.html">ringbuffer</a> {</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> size;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        jack_ringbuffer_t *jack_ringbuffer;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="structlart_1_1ringbuffer.html">ringbuffer</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> size) : size(size) {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            jack_ringbuffer = jack_ringbuffer_create(<span class="keyword">sizeof</span>(T) * size);</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>lart</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt; </div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="code" href="structlart_1_1ringbuffer.html">   26</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structlart_1_1ringbuffer.html">ringbuffer</a> {</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> size;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        jack_ringbuffer_t *jack_ringbuffer;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        std::vector&lt;T&gt; elements;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; size; ++i) {</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                <span class="keyword">new</span> (jack_ringbuffer-&gt;buf + <span class="keyword">sizeof</span>(T) * i) T();</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            }</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        }</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        ~<a class="code" href="structlart_1_1ringbuffer.html">ringbuffer</a>() {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; size; ++i) {</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                ((T*)(jack_ringbuffer-&gt;buf + <span class="keyword">sizeof</span>(T) * i))-&gt;~T();</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            }</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordtype">size_t</span> elements_write_pos;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <a class="code" href="structlart_1_1ringbuffer.html">ringbuffer</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> size) : </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            size(size),</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            elements(size), </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            elements_write_pos(0)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            jack_ringbuffer = jack_ringbuffer_create(<span class="keyword">sizeof</span>(<span class="keywordtype">size_t</span>) * size);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        }</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            jack_ringbuffer_free(jack_ringbuffer);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        }</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">bool</span> can_write() {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            <span class="keywordflow">if</span> (jack_ringbuffer_write_space(jack_ringbuffer) &gt;= <span class="keyword">sizeof</span>(T)) {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        }</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordtype">void</span> write(<span class="keyword">const</span> T &amp;t) {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            jack_ringbuffer_data_t rb_data[2];</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            jack_ringbuffer_get_write_vector(jack_ringbuffer, rb_data);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            *((T*)rb_data-&gt;buf) = t;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            jack_ringbuffer_write_advance(jack_ringbuffer, <span class="keyword">sizeof</span>(T));</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        }</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">bool</span> can_read() {</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <span class="keywordflow">if</span> (jack_ringbuffer_read_space(jack_ringbuffer) &gt;= <span class="keyword">sizeof</span>(T)) {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            }</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        }</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keywordtype">void</span> read_advance()</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        {</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            jack_ringbuffer_read_advance(jack_ringbuffer, <span class="keyword">sizeof</span>(T));</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        }</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        T read() {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            jack_ringbuffer_data_t rb_data[2];</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            jack_ringbuffer_get_read_vector(jack_ringbuffer, rb_data);</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            T t = *((T*)rb_data-&gt;buf);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            jack_ringbuffer_read_advance(jack_ringbuffer, <span class="keyword">sizeof</span>(T));</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keywordflow">return</span> t;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        T&amp; snoop() {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            jack_ringbuffer_data_t rb_data[2];</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            jack_ringbuffer_get_read_vector(jack_ringbuffer, rb_data);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="keywordflow">return</span> *((T*)rb_data-&gt;buf);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        }</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    };</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        ~<a class="code" href="structlart_1_1ringbuffer.html">ringbuffer</a>() {</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            jack_ringbuffer_free(jack_ringbuffer);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        }</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordtype">bool</span> can_write() {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            <span class="keywordflow">if</span> (jack_ringbuffer_write_space(jack_ringbuffer) &gt;= <span class="keyword">sizeof</span>(<span class="keywordtype">size_t</span>)) {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            }</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordtype">void</span> write(<span class="keyword">const</span> T &amp;t) {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            elements[elements_write_pos] = t;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            jack_ringbuffer_write(jack_ringbuffer, (<span class="keywordtype">char</span> *)&amp;elements_write_pos, <span class="keyword">sizeof</span>(<span class="keywordtype">size_t</span>));</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            ++elements_write_pos;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            elements_write_pos = elements_write_pos % size;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordtype">bool</span> can_read() {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="keywordflow">if</span> (jack_ringbuffer_read_space(jack_ringbuffer) &gt;= <span class="keyword">sizeof</span>(<span class="keywordtype">size_t</span>)) {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            }</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordtype">void</span> read_advance()</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            jack_ringbuffer_read_advance(jack_ringbuffer, <span class="keyword">sizeof</span>(<span class="keywordtype">size_t</span>));</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        }</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        T read() {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <span class="keywordtype">size_t</span> n;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            jack_ringbuffer_read(jack_ringbuffer, (<span class="keywordtype">char</span>*)&amp;n, <span class="keyword">sizeof</span>(<span class="keywordtype">size_t</span>));</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="keywordflow">return</span> elements[n];</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno"><a class="code" href="structlart_1_1ringbuffer.html#a04ada105b9cbea005378eef47f25c0cb">   85</a></span>&#160;        T&amp; <a class="code" href="structlart_1_1ringbuffer.html#a04ada105b9cbea005378eef47f25c0cb">snoop</a>() {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="keywordtype">size_t</span> n;   </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            jack_ringbuffer_peek(jack_ringbuffer, (<span class="keywordtype">char</span>*)&amp;n, <span class="keyword">sizeof</span>(<span class="keywordtype">size_t</span>));</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            <span class="keywordflow">return</span> elements[n];</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    };</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Dec 28 2013 11:01:10 for teq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 26 2014 18:11:57 for teq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.4
 </small></address>

@@ -80,7 +80,26 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>A library implementing a jack midi client for sequencing purposes. The organization of the musical data is tracker-like, i.e. patterns with columns.</p>
-<h1>API Docs </h1>
+<h1>Requirements </h1>
+<ul>
+<li>A C++11 compatible compiler</li>
+<li>libboost-python for the python module</li>
+<li>python2 C library for the python module</li>
+</ul>
+<h1>Building</h1>
+<pre>
+mkdir build
+cd build
+cmake ..
+make
+cd ..
+</pre><p>If you have python3 installed in parallel to python2, you can try altering some cmake variables: Substitute this command for <code>cmake ..</code> above:</p>
+<pre>
+cmake -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so -DPYTHON_INCLUDE_DIR=/usr/include/python2.7
+</pre><p>Change the exact names and locations to your python2 install. This is nessecary if you get e.g. linker errors when running</p>
+<pre>
+PYTHONPATH=./build:./src LD_LIBARY_PATH=./build/ python2 example.py
+</pre><h1>API Docs </h1>
 <p>The C++ API should be documented here:</p>
 <p><a href="http://fps.github.com/teq">http://fps.github.com/teq</a></p>
 <p>If you find these to be out of date, use</p>
@@ -90,7 +109,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Dec 28 2013 11:01:10 for teq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 26 2014 18:11:57 for teq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.4
 </small></address>

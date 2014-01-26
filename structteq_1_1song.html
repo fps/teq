@@ -116,21 +116,21 @@ typedef std::vector<br class="typebreak"/>
 typedef std::shared_ptr<br class="typebreak"/>
 &lt; track_list &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>track_list_ptr</b></td></tr>
 <tr class="separator:a4e961afcad7ac838e4f570067d1dcdc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2efcd1b89e468ee397fa023a4268e103"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr<br class="typebreak"/>
-&lt; std::vector&lt; unsigned &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structteq_1_1song.html#a2efcd1b89e468ee397fa023a4268e103">arrangement_ptr</a></td></tr>
-<tr class="separator:a2efcd1b89e468ee397fa023a4268e103"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aad00c0a6ca2532d190f40622e0671ae8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aad00c0a6ca2532d190f40622e0671ae8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>check_track_index</b> (unsigned index)</td></tr>
-<tr class="separator:aad00c0a6ca2532d190f40622e0671ae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68dd41e6c8b7e4f3f4a4b89bed9547b4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a68dd41e6c8b7e4f3f4a4b89bed9547b4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>check_pattern_index</b> (unsigned index)</td></tr>
-<tr class="separator:a68dd41e6c8b7e4f3f4a4b89bed9547b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d8936763f3eb850a7a52851bd828aba"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3d8936763f3eb850a7a52851bd828aba"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>check_tick_index</b> (unsigned pattern_index, unsigned tick_index)</td></tr>
-<tr class="separator:a3d8936763f3eb850a7a52851bd828aba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a532f50771218649d565a0d7f9bbf85b5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a532f50771218649d565a0d7f9bbf85b5"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>song</b> (pattern_list_ptr the_pattern_list, track_list_ptr the_track_list)</td></tr>
+<tr class="separator:a532f50771218649d565a0d7f9bbf85b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29cec7efb041a3299b662dd5f0d55e99"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a29cec7efb041a3299b662dd5f0d55e99"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>check_track_index</b> (int index)</td></tr>
+<tr class="separator:a29cec7efb041a3299b662dd5f0d55e99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c0ef017643c2668c50c956b9aca5209"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1c0ef017643c2668c50c956b9aca5209"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>check_pattern_index</b> (int index)</td></tr>
+<tr class="separator:a1c0ef017643c2668c50c956b9aca5209"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a2d147de75cb98ea085224fbb0da572"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4a2d147de75cb98ea085224fbb0da572"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>check_tick_index</b> (int pattern_index, int tick_index)</td></tr>
+<tr class="separator:a4a2d147de75cb98ea085224fbb0da572"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -143,27 +143,11 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_description<
 <tr class="memitem:a1cb644f8a0a0449eee26f54124a70882"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1cb644f8a0a0449eee26f54124a70882"></a>
 pattern_list_ptr&#160;</td><td class="memItemRight" valign="bottom"><b>m_patterns</b></td></tr>
 <tr class="separator:a1cb644f8a0a0449eee26f54124a70882"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa90456d21aaba6fddd5633bb68cc3c5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaa90456d21aaba6fddd5633bb68cc3c5"></a>
-<a class="el" href="structteq_1_1song.html#a2efcd1b89e468ee397fa023a4268e103">arrangement_ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_arrangement</b></td></tr>
-<tr class="separator:aaa90456d21aaba6fddd5633bb68cc3c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abefc4fd62ee74c587b8f7a703c7ed2cc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abefc4fd62ee74c587b8f7a703c7ed2cc"></a>
 track_list_ptr&#160;</td><td class="memItemRight" valign="bottom"><b>m_tracks</b></td></tr>
 <tr class="separator:abefc4fd62ee74c587b8f7a703c7ed2cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
-<a class="anchor" id="a2efcd1b89e468ee397fa023a4268e103"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef std::shared_ptr&lt;std::vector&lt;unsigned&gt; &gt; <a class="el" href="structteq_1_1song.html#a2efcd1b89e468ee397fa023a4268e103">teq::song::arrangement_ptr</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The arrangement consists of indices into the pattern list </p>
-
-</div>
-</div>
 <a class="anchor" id="a96f4eb361bc3d06f42c0c17186e4dc67"></a>
 <div class="memitem">
 <div class="memproto">
@@ -197,7 +181,7 @@ track_list_ptr&#160;</td><td class="memItemRight" valign="bottom"><b>m_tracks</b
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Dec 28 2013 11:01:11 for teq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 26 2014 18:11:58 for teq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.4
 </small></address>

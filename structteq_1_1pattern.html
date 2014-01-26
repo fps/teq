@@ -105,37 +105,49 @@ typedef std::vector&lt; sequence_ptr &gt;&#160;</td><td class="memItemRight" val
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a47fd52338209d436a8b085222741e8b3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structteq_1_1pattern.html#a47fd52338209d436a8b085222741e8b3">pattern</a> (unsigned length=128)</td></tr>
-<tr class="separator:a47fd52338209d436a8b085222741e8b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2f6c57ce9182e3332f8a4de6cbb07f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad2f6c57ce9182e3332f8a4de6cbb07f2"></a>
-unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>length</b> ()</td></tr>
-<tr class="separator:ad2f6c57ce9182e3332f8a4de6cbb07f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb694364b01df809d99a27b91cf46f82"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abb694364b01df809d99a27b91cf46f82"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>check_tick_index</b> (unsigned the_tick)</td></tr>
-<tr class="separator:abb694364b01df809d99a27b91cf46f82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41c5853af27bfcc6fcf8e6968b106afc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a41c5853af27bfcc6fcf8e6968b106afc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>check_track_index</b> (unsigned the_track)</td></tr>
-<tr class="separator:a41c5853af27bfcc6fcf8e6968b106afc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe319e6605e5ee1804b62b13b5bae6e9"><td class="memTemplParams" colspan="2"><a class="anchor" id="afe319e6605e5ee1804b62b13b5bae6e9"></a>
+<tr class="memitem:a85e5fcc5be2dfb1143218f407a9b65fe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structteq_1_1pattern.html#a85e5fcc5be2dfb1143218f407a9b65fe">pattern</a> (int length=128)</td></tr>
+<tr class="separator:a85e5fcc5be2dfb1143218f407a9b65fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ce806f2d013c911ff9e397d9227d803"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9ce806f2d013c911ff9e397d9227d803"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>pattern</b> (const <a class="el" href="structteq_1_1pattern.html">pattern</a> &amp;other)</td></tr>
+<tr class="separator:a9ce806f2d013c911ff9e397d9227d803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a929e4dc58ead926fb06ac4fc55955428"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a929e4dc58ead926fb06ac4fc55955428"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>mute_sequence</b> (int index, bool muted)</td></tr>
+<tr class="separator:a929e4dc58ead926fb06ac4fc55955428"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a434aecdd4f25433b9a9472ede590f24d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a434aecdd4f25433b9a9472ede590f24d"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>length</b> () const </td></tr>
+<tr class="separator:a434aecdd4f25433b9a9472ede590f24d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a111223e8267e7fd9915b9e7b9dc873"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1a111223e8267e7fd9915b9e7b9dc873"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>check_tick_index</b> (int the_tick)</td></tr>
+<tr class="separator:a1a111223e8267e7fd9915b9e7b9dc873"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a048a46ddc1375794c08afe6ed313cf6c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a048a46ddc1375794c08afe6ed313cf6c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>check_track_index</b> (int the_track)</td></tr>
+<tr class="separator:a048a46ddc1375794c08afe6ed313cf6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a041c2c55df9826d00ab8f1932e21a0fe"><td class="memTemplParams" colspan="2"><a class="anchor" id="a041c2c55df9826d00ab8f1932e21a0fe"></a>
 template&lt;class EventType &gt; </td></tr>
-<tr class="memitem:afe319e6605e5ee1804b62b13b5bae6e9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_event</b> (unsigned track_index, unsigned tick_index, const EventType &amp;event)</td></tr>
-<tr class="separator:afe319e6605e5ee1804b62b13b5bae6e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab70b769f96edd6aca8b3e46ff5aae7f4"><td class="memTemplParams" colspan="2"><a class="anchor" id="ab70b769f96edd6aca8b3e46ff5aae7f4"></a>
+<tr class="memitem:a041c2c55df9826d00ab8f1932e21a0fe"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_event</b> (int track_index, int tick_index, const EventType &amp;event)</td></tr>
+<tr class="separator:a041c2c55df9826d00ab8f1932e21a0fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a655da01590539387d04f7dadb6577d4e"><td class="memTemplParams" colspan="2"><a class="anchor" id="a655da01590539387d04f7dadb6577d4e"></a>
 template&lt;class EventType &gt; </td></tr>
-<tr class="memitem:ab70b769f96edd6aca8b3e46ff5aae7f4"><td class="memTemplItemLeft" align="right" valign="top">EventType&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_event</b> (unsigned track_index, unsigned tick_index)</td></tr>
-<tr class="separator:ab70b769f96edd6aca8b3e46ff5aae7f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a655da01590539387d04f7dadb6577d4e"><td class="memTemplItemLeft" align="right" valign="top">EventType&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_event</b> (int track_index, int tick_index)</td></tr>
+<tr class="separator:a655da01590539387d04f7dadb6577d4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a1eacd281a8aaa0ea71e2e153da4db6ea"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1eacd281a8aaa0ea71e2e153da4db6ea"></a>
 sequence_list&#160;</td><td class="memItemRight" valign="bottom"><b>m_sequences</b></td></tr>
 <tr class="separator:a1eacd281a8aaa0ea71e2e153da4db6ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0dde6b257b0c14903deb32f2837ba6f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0dde6b257b0c14903deb32f2837ba6f2"></a>
-unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>m_length</b></td></tr>
-<tr class="separator:a0dde6b257b0c14903deb32f2837ba6f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2fd894b487e632b9d2996ddf8961802"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af2fd894b487e632b9d2996ddf8961802"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>m_length</b></td></tr>
+<tr class="separator:af2fd894b487e632b9d2996ddf8961802"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac21a1106715c0470ae658009281d0a4d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac21a1106715c0470ae658009281d0a4d"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_name</b></td></tr>
+<tr class="separator:ac21a1106715c0470ae658009281d0a4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afff5ea7ff51c06bfb9a68a47e0b511ba"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afff5ea7ff51c06bfb9a68a47e0b511ba"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_muted</b></td></tr>
+<tr class="separator:afff5ea7ff51c06bfb9a68a47e0b511ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a47fd52338209d436a8b085222741e8b3"></a>
+<a class="anchor" id="a85e5fcc5be2dfb1143218f407a9b65fe"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -145,7 +157,7 @@ unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>m_length</b></td>
         <tr>
           <td class="memname">teq::pattern::pattern </td>
           <td>(</td>
-          <td class="paramtype">unsigned&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>length</em> = <code>128</code>)</td><td></td>
           <td></td>
         </tr>
@@ -156,7 +168,7 @@ unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>m_length</b></td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Patterns should only ever be created by the <a class="el" href="structteq_1_1teq.html#a7f6381213d5c4aefc3a4fd536389c0fd">teq::create_pattern</a> method. See that method for more information on how to safely create and edit patterns </p>
+<p>Patterns should only ever be created by the <a class="el" href="structteq_1_1teq.html#ac151d992b26851d41e1f1095fbf413c2">teq::create_pattern</a> method. See that method for more information on how to safely create and edit patterns </p>
 
 </div>
 </div>
@@ -166,7 +178,7 @@ unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>m_length</b></td>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Dec 28 2013 11:01:10 for teq by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 26 2014 18:11:57 for teq by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.4
 </small></address>
