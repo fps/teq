@@ -875,17 +875,17 @@ namespace teq
 					
 					//! Find the tick 
 					
-					double remainder = tick_time_in_song + (double)patterns[m_transport_position.m_pattern].length();
+					double tick_time_in_pattern = tick_time_in_song + (double)patterns[m_transport_position.m_pattern].length();
 					
-					m_transport_position.m_tick = (tick)floor(remainder);
+					m_transport_position.m_tick = (tick)floor(tick_time_in_song);
 					
 					if (m_time_until_next_tick < 0)
 					{
-						m_time_until_next_tick = tick_duration * (1.0 - (remainder - (double)m_transport_position.m_tick));
+						m_time_until_next_tick = tick_duration * (1.0 - (tick_time_in_pattern - (double)m_transport_position.m_tick));
 					}
 					else
 					{
-						m_time_until_next_tick = tick_duration * (remainder - (double)m_transport_position.m_tick);
+						m_time_until_next_tick = tick_duration * (tick_time_in_pattern - (double)m_transport_position.m_tick);
 					}
 				}
 				else
@@ -911,7 +911,7 @@ namespace teq
 			 * Here come all the state transitions that depend on the ticks
 			 * and not individual frames.
 			 */
-			if (m_transport_state == transport_state::PLAYING && m_time_until_next_tick <= 0.0001)
+			if (m_transport_state == transport_state::PLAYING && m_time_until_next_tick <= 0.0)
 			{
 				process_tick(m_transport_position, frame_index, multi_out_buffer, patterns);
 
