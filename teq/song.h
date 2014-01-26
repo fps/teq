@@ -36,20 +36,12 @@ namespace teq
 		typedef std::shared_ptr<track_list> track_list_ptr;
 		
 
-		/**
-		 * The arrangement consists of indices into the pattern list
-		 */
-		typedef std::shared_ptr<std::vector<unsigned>> arrangement_ptr;
-		
-		
 		std::string m_name;
 	
 		std::string m_description;
 		
 		pattern_list_ptr m_patterns;
 
-		arrangement_ptr m_arrangement;
-		
 		track_list_ptr m_tracks;
 		
 		song() :
