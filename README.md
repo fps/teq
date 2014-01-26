@@ -11,6 +11,22 @@ Requirements
 * python2 C library for the python module
 
 
+# Building
+
+<pre>
+mkdir build
+cd build
+cmake ..
+make
+cd ..
+</pre>
+
+If you have python3 installed in parallel to python2, you can try altering some cmake variables: Substitute this command for <code>cmake ..</code> above:
+
+<pre>
+cmake -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so -DPYTHON_INCLUDE_DIR=/usr/include/python2.7
+<pre>
+
 API Docs
 ========
 
