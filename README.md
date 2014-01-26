@@ -27,7 +27,11 @@ If you have python3 installed in parallel to python2, you can try altering some 
 cmake -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so -DPYTHON_INCLUDE_DIR=/usr/include/python2.7
 </pre>
 
-Change the exact names and locations to your python2 install.
+Change the exact names and locations to your python2 install. This is nessecary if you get e.g. linker errors when running
+
+<pre>
+python2 example.py
+</pre>
 
 API Docs
 ========
