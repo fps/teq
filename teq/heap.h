@@ -21,20 +21,12 @@ namespace teq
 		
 		T_ptr add_new(T &&t)
 		{
-			T_ptr ptr = std::make_shared<T>(t);
-			return add(ptr);
+			return add(std::make_shared<T>(t));
 		}
 		
 		void gc()
 		{
-			for (auto it = m_heap.begin(); it != m_heap.end();) {
-				if (it->unique()) {
-					// std::cout << "Erasing..." << std::endl;
-					it = m_heap.erase(it);
-				} else {
-					++it;
-				}
-			}	
+			m_heap.remove_if(std::mem_fun_ref(&T_ptr::unique));
 		}
 	};
 } // namespace
