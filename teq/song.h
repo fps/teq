@@ -53,8 +53,8 @@ namespace teq
 		track_list_ptr m_tracks;
 		
 		song() :
-			m_patterns(new std::vector<pattern>),
-			m_tracks(new std::vector<track_properties_and_payload>)
+			m_patterns(std::make_shared<pattern_list>()),
+			m_tracks(std::make_shared<track_list>())
 		{
 			
 		}

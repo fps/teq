@@ -122,20 +122,15 @@ namespace teq
 			}
 		);
 	}
-	
+
 	bool teq::track_name_exists(const std::string track_name)
 	{
-		for (auto it : *(m_song->m_tracks))
-		{
-			if (track_name == it.first->m_name)
-			{
-				return true;
-			}
-		}
-		
-		return false;
+		return std::any_of(m_song->m_tracks->begin(), m_song->m_tracks->end(),
+				   [&track_name]
+				   (song::track_properties_and_payload const &pair) {
+					return track_name == pair.first->m_name; });
 	}
-	
+
 	song_ptr teq::copy_and_prepare_song()
 	{
 		song_ptr new_song = m_song_heap.add_new(song(*m_song));
