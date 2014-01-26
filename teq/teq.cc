@@ -875,9 +875,11 @@ namespace teq
 					
 					//! Find the tick 
 					
-					m_transport_position.m_tick = (tick)floor((tick_time_in_song + (double)patterns[m_transport_position.m_pattern].length()));
+					double remainder = tick_time_in_song + (double)patterns[m_transport_position.m_pattern].length();
 					
-					m_time_until_next_tick = fmod(time_in_song, tick_duration);
+					m_transport_position.m_tick = (tick)floor(remainder);
+					
+					m_time_until_next_tick = tick_duration * (remainder - (double)m_transport_position.m_tick);
 				}
 				else
 				{
