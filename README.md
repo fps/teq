@@ -30,7 +30,7 @@ cmake -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so -DPYTHON_INCLUDE_DIR=/usr/includ
 Change the exact names and locations to your python2 install. This is nessecary if you get e.g. linker errors when running
 
 <pre>
-python2 example.py
+PYTHONPATH=./build:./src LD_LIBARY_PATH=./build/ python2 example.py
 </pre>
 
 API Docs
