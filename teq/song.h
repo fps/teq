@@ -44,7 +44,7 @@ namespace teq
 
 		track_list_ptr m_tracks;
 		
-		song() :
+		song(pattern_list_ptr the_pattern_list, track_list_ptr the_track_list) :
 			m_patterns(std::make_shared<pattern_list>()),
 			m_tracks(std::make_shared<track_list>())
 		{

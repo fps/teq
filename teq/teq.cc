@@ -45,7 +45,7 @@ namespace teq
 		
 		m_send_all_notes_off_on_stop = send_all_notes_off_on_stop;
 		
-		m_song = m_song_heap.add_new(song());
+		m_song = m_song_heap.add_new(song(m_pattern_list_heap.add_new(song::pattern_list()), m_track_list_heap.add_new(song::track_list())));
 		
 		jack_status_t status;
 		m_jack_client = jack_client_open(m_client_name.c_str(), JackNullOption, &status);
