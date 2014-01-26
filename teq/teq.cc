@@ -848,7 +848,7 @@ namespace teq
 					ticks_per_second = 8;
 				}
 				
-				m_global_tempo = ticks_per_second;
+				m_global_tempo = (float)ticks_per_second;
 				
 				double tick_time_in_song = time_in_song  * ticks_per_second;
 				
