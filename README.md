@@ -25,7 +25,9 @@ If you have python3 installed in parallel to python2, you can try altering some 
 
 <pre>
 cmake -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so -DPYTHON_INCLUDE_DIR=/usr/include/python2.7
-<pre>
+</pre>
+
+Change the exact names and locations to your python2 install.
 
 API Docs
 ========
