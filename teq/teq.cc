@@ -911,7 +911,7 @@ namespace teq
 			 * Here come all the state transitions that depend on the ticks
 			 * and not individual frames.
 			 */
-			if (m_transport_state == transport_state::PLAYING && m_time_until_next_tick <= 0.0)
+			if (m_transport_state == transport_state::PLAYING && m_time_until_next_tick <= 0.001)
 			{
 				process_tick(m_transport_position, frame_index, multi_out_buffer, patterns);
 
