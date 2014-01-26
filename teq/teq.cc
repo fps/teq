@@ -879,7 +879,14 @@ namespace teq
 					
 					m_transport_position.m_tick = (tick)floor(remainder);
 					
-					m_time_until_next_tick = tick_duration * (remainder - (double)m_transport_position.m_tick);
+					if (m_time_until_next_tick < 0)
+					{
+						m_time_until_next_tick = tick_duration * (1.0 - (remainder - (double)m_transport_position.m_tick));
+					}
+					else
+					{
+						m_time_until_next_tick = tick_duration * (remainder - (double)m_transport_position.m_tick);
+					}
 				}
 				else
 				{
