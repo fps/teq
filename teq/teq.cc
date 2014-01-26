@@ -449,6 +449,11 @@ namespace teq
 		);
 	}
 
+	transport_source teq::get_transport_source()
+	{
+		return m_transport_source;
+	}
+
 	void teq::set_transport_state(transport_state state)
 	{
 		write_command_and_wait

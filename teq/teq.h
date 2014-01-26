@@ -214,6 +214,8 @@ namespace teq
 
 		void set_transport_source(transport_source source);
 		
+		transport_source get_transport_source();
+
 		void set_transport_position(transport_position position);
 		
 		bool has_state_info();
