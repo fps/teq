@@ -640,7 +640,7 @@ namespace teq
 	
 	void teq::process_tick(transport_position position, jack_nframes_t frame, void *multi_out_buffer, const std::vector<pattern> &patterns)
 	{
-		const pattern &the_pattern = patterns[m_transport_position.m_pattern];
+		const pattern &the_pattern = patterns[(size_t)m_transport_position.m_pattern];
 		const tick current_tick = m_transport_position.m_tick;
 		
 		int midi_track_index = 0;
@@ -656,7 +656,7 @@ namespace teq
 					const auto &the_sequence = *std::static_pointer_cast<sequence_of<midi_event>>(the_pattern.m_sequences[track_index]);
 					auto &properties = *((midi_track*)&track_properties);
 
-					const auto &the_event = the_sequence.m_events[current_tick];
+					const auto &the_event = the_sequence.m_events[(size_t)current_tick];
 
 					midi_event last_note_on_event = properties.m_last_note_on_event;
 						
@@ -713,7 +713,7 @@ namespace teq
 						cv_properties.m_current_value = the_previous_event.m_value2;
 					}
 					
-					const auto &the_event = the_sequence.m_events[current_tick];
+					const auto &the_event = the_sequence.m_events[(size_t)current_tick];
 					cv_properties.m_current_event = the_event;
 				}
 				break;
@@ -721,7 +721,7 @@ namespace teq
 				case track::type::CONTROL:
 				{
 					const auto &the_sequence = *std::static_pointer_cast<sequence_of<control_event>>(the_pattern.m_sequences[track_index]);
-					const auto &the_event = the_sequence.m_events[current_tick];
+					const auto &the_event = the_sequence.m_events[(size_t)current_tick];
 					
 					switch (the_event.m_type)
 					{
@@ -753,14 +753,14 @@ namespace teq
 		/** 
 			Safeguard around being off the song..
 		*/
-		if (m_transport_position.m_pattern < (int)patterns.size() && m_transport_position.m_tick < patterns[m_transport_position.m_pattern].m_length)
+		if (m_transport_position.m_pattern < (int)patterns.size() && m_transport_position.m_tick < patterns[(size_t)m_transport_position.m_pattern].m_length)
 		{
 			++m_transport_position.m_tick;
 		
 			/**
 			* Wrap tick around if we meet the pattern boundary
 			*/
-			if (m_transport_position.m_tick >= patterns[m_transport_position.m_pattern].m_length)
+			if (m_transport_position.m_tick >= patterns[(size_t)m_transport_position.m_pattern].m_length)
 			{
 				//std::cout << "pattern end" << std::endl;
 				m_transport_position.m_tick = 0;
@@ -873,7 +873,7 @@ namespace teq
 					bool in_range = false;
 					while(tick_time_in_song >= 0 && m_transport_position.m_pattern < (tick)patterns.size())
 					{
-						tick_time_in_song -= (double)patterns[m_transport_position.m_pattern].length();
+						tick_time_in_song -= (double)patterns[(size_t)m_transport_position.m_pattern].length();
 						in_range = true;
 						++m_transport_position.m_pattern;
 					}
@@ -885,7 +885,7 @@ namespace teq
 					
 					//! Find the tick 
 					
-					double tick_time_in_pattern = tick_time_in_song + (double)patterns[m_transport_position.m_pattern].length();
+					double tick_time_in_pattern = tick_time_in_song + (double)patterns[(size_t)m_transport_position.m_pattern].length();
 					
 					m_transport_position.m_tick = (tick)floor(tick_time_in_pattern);
 					
