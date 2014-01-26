@@ -881,7 +881,7 @@ namespace teq
 					
 					if (m_time_until_next_tick < 0)
 					{
-						m_time_until_next_tick = tick_duration * (1.0 - (tick_time_in_pattern - (double)m_transport_position.m_tick));
+						m_time_until_next_tick = -tick_duration * (1.0 - (tick_time_in_pattern - (double)m_transport_position.m_tick));
 					}
 					else
 					{
