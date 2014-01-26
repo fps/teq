@@ -826,7 +826,11 @@ namespace teq
 			
 			jack_transport_state = jack_transport_query(m_jack_client, &jack_position);
 			
-			if (jack_transport_state == JackTransportRolling)
+			if (jack_transport_state != JackTransportRolling)
+			{
+				m_transport_state = transport_state::STOPPED;
+			}
+			else 
 			{
 				m_transport_state = transport_state::PLAYING;
 				
