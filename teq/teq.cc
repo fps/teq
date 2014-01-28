@@ -229,6 +229,10 @@ namespace teq
 				LIBTEQ_THROW_RUNTIME_ERROR("Failed to set track name")
 			}
 		}
+
+		song_ptr new_song = copy_and_prepare_song();
+		
+		(*new_song->m_tracks)[index].first->m_name = name;
 #if 0
 		write_command_and_wait([this, name, index](){
 			(*(m_song->m_tracks))[index].first.m_name = name;
