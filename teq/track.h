@@ -59,7 +59,7 @@ namespace teq
 		
 		type m_type;
 
-		const std::string m_name;
+		std::string m_name;
 		
 		bool m_muted;
 		
