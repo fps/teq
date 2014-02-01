@@ -7,6 +7,7 @@
 
 #include <teq/pattern.h>
 #include <teq/track.h>
+#include <teq/transport.h>
 
 #include <teq/exception.h>
 
@@ -14,6 +15,8 @@ namespace teq
 {
 	struct song
 	{
+		typedef std::shared_ptr<std::vector<transport_position>> transport_lookup_list_ptr;
+		
 		/**
 		 * The patterns are the material used for arrangement
 		 */
@@ -76,6 +79,8 @@ namespace teq
 				LIBTEQ_THROW_RUNTIME_ERROR("Tick index out of bounds: " << tick_index << ". Pattern length: " << (*m_patterns)[pattern_index].m_length)
 			}
 		}
+		
+		
 	};
 	
 	typedef std::shared_ptr<song> song_ptr;
