@@ -29,7 +29,9 @@ BOOST_PYTHON_MODULE(teq)
 		.def_readwrite("is_tick", &teq::teq::state_info::m_is_tick)
 	;
 
-	class_<teq::loop_range>("loop_range")
+	class_<teq::loop_range>("loop_range", init<>())
+		.def(init<teq::tick, teq::tick, teq::tick, teq::tick, bool>())
+		.def(init<teq::transport_position, teq::transport_position, bool>())
 		.def_readwrite("enabled", &teq::loop_range::m_enabled)
 		.def_readwrite("start", &teq::loop_range::m_start)
 		.def_readwrite("end", &teq::loop_range::m_end)

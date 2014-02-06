@@ -2,14 +2,9 @@ import teq
 
 # Some utility functions to make life easier in the long run
 def set_loop_range(t, start_pattern, start_tick, end_pattern, end_tick, onoff):
-	r = teq.loop_range()
-	r.enabled = onoff
-	r.start.pattern = start_pattern
-	r.start.tick = start_tick
-	r.end.pattern = end_pattern
-	r.end.tick = end_tick
+	r = teq.loop_range(start_pattern, start_tick, end_pattern, end_tick, onoff)
 	t.set_loop_range(r)
-	
+
 def set_loop_enabled(t, onoff):
 	r = t.get_loop_range()
 	r.enabled = onoff
