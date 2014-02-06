@@ -38,6 +38,21 @@ namespace teq
 		{
 			
 		}
+
+		loop_range
+		(
+			tick start_pattern,
+			tick start_tick,
+			tick end_pattern,
+			tick end_tick,
+			bool enabled
+		) :
+			range(transport_position(start_pattern, start_tick),
+			      transport_position(end_pattern, end_tick)),
+			m_enabled(enabled)
+		{
+		}
+
 	};
 } // namespace		
 #endif
