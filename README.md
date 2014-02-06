@@ -6,7 +6,7 @@ A library implementing a jack midi client for sequencing purposes. The organizat
 Known Limitations
 =================
 
-* Jack transport support is severely limited and will always remain so, since the jack_transport API is broken. This means: BBT information is ignored except for the beats_per_minute field and for the mapping of frametime to ticks it is furhtermore assumed that the BBM is constant.
+* Jack transport support is severely limited and will always remain so, since the jack_transport API is broken. This means: BBT information is ignored except for the beats_per_minute field and for the mapping of frametime to ticks it is furthermore assumed that the BPM is constant.
 
 Requirements
 ============
