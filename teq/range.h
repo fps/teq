@@ -10,6 +10,17 @@ namespace teq
 		transport_position m_start;
 		
 		transport_position m_end;
+		
+		range
+		(
+			const transport_position &start = transport_position(), 
+			const transport_position &end = transport_position()
+		) :
+			m_start(start),
+			m_end(end)
+		{
+			
+		}
 	};
 	
 	struct loop_range : range
@@ -18,8 +29,11 @@ namespace teq
 		
 		loop_range
 		(
+			const transport_position &start = transport_position(),
+			const transport_position &end = transport_position(),
 			bool enabled = false
 		) :
+			range(start, end),
 			m_enabled(enabled)
 		{
 			
