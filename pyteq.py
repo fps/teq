@@ -16,10 +16,7 @@ def set_loop_enabled(t, onoff):
 	t.set_loop_range(r)
 	
 def set_transport_position(t, pattern, tick):
-	p = teq.transport_position()
-	p.pattern = pattern
-	p.tick = tick
-	t.set_transport_position(p)
+	t.set_transport_position(teq.transport_position(pattern, tick))
 
 def play(t):
 	t.set_transport_state(teq.transport_state.PLAYING)

@@ -6,7 +6,8 @@ BOOST_PYTHON_MODULE(teq)
 {
 	using namespace boost::python;
 	
-	class_<teq::transport_position>("transport_position")
+	class_<teq::transport_position>("transport_position", init<>())
+		.def(init<teq::tick, teq::tick>())
 		.def_readwrite("pattern", &teq::transport_position::m_pattern)
 		.def_readwrite("tick", &teq::transport_position::m_tick)
 	;
