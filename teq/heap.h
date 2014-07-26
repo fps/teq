@@ -29,7 +29,7 @@ namespace teq
 			return add(std::make_shared<T>(t));
 		}
 		
-		void gc()
+		virtual void gc() override
 		{
 			m_heap.remove_if(std::mem_fun_ref(&T_ptr::unique));
 		}
