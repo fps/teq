@@ -6,8 +6,13 @@
 
 namespace teq
 {
+	struct heap_base
+	{
+		virtual void gc() = 0;
+	};
+
 	template <class T>
-	struct heap
+	struct heap : public heap_base
 	{
 		typedef std::shared_ptr<T> T_ptr;
 		
