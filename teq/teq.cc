@@ -134,6 +134,8 @@ namespace teq
 	song_ptr teq::copy_song_shallow()
 	{
 		song_ptr new_song = m_song_heap.add_new(song(*m_song));
+
+		assert(new_song != m_song);
 				
 		return new_song;
 	}
@@ -141,7 +143,7 @@ namespace teq
 
 	song_ptr teq::copy_song_top_level_deep()
 	{
-		song_ptr new_song(new song(*m_song));
+		song_ptr new_song = copy_song_shallow();
 
 		new_song->m_transport_lookup_list = song::transport_lookup_list_ptr
 			(new song::transport_lookup_list(*(m_song->m_transport_lookup_list)));
@@ -151,6 +153,19 @@ namespace teq
 
 		new_song->m_track_list = song::track_list_ptr
 			(new song::track_list(*(m_song->m_track_list)));
+
+		assert(new_song->m_transport_lookup_list != new_song->m_transport_lookup_list);
+
+		assert(new_song->m_track_list != new_song->m_track_list);
+
+		assert(new_song->m_transport_lookup_list != new_song->m_transport_lookup_list);
+
+		return new_song;
+	}
+
+	song_ptr teq::copy_cong_deep()
+	{
+		song_ptr new_song = copy_song_top_level_deep();
 
 		return new_song;
 	}
