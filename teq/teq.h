@@ -247,7 +247,7 @@ namespace teq
 		/**
 		 * Convenience function to copy a song and have the top
 		 * level smart pointers deeply copied (i.e. the list
-		 * of patterns and tracks.) 
+		 * of patterns and tracks and the tick lookup list.) 
 		 *
 		 * NOTE: The tracks and sequences themself are NOT deeply
 		 * copied.

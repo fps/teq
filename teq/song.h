@@ -47,17 +47,17 @@ namespace teq
 		 * (*m_Transport_lookup_list)[position].
 		 */
 		typedef std::vector<transport_position> transport_lookup_list;
+		typedef std::shared_ptr<transport_lookup_list> transport_lookup_list_ptr;
 
-		transport_lookup_list m_transport_lookup_list;
+		transport_lookup_list_ptr m_transport_lookup_list;
 		
 		/**
 		 * The patterns are the material used for arrangement
 		 */
 		typedef std::vector<pattern_ptr> pattern_list;
-
 		typedef std::shared_ptr<pattern_list> pattern_list_ptr;
 
-		pattern_list_ptr m_patterns;
+		pattern_list_ptr m_pattern_list;
 
 
 		/**
@@ -70,7 +70,6 @@ namespace teq
 		typedef std::pair<track_ptr, jack_port_t *> track_properties_and_payload;
 		
 		typedef std::vector<track_properties_and_payload> track_list;
-		
 		typedef std::shared_ptr<track_list> track_list_ptr;
 		
 		track_list_ptr m_tracks;
@@ -81,7 +80,7 @@ namespace teq
 		std::string m_description;
 		
 		song(pattern_list_ptr the_pattern_list, track_list_ptr the_track_list) :
-			m_patterns(the_pattern_list),
+			m_pattern_list(the_pattern_list),
 			m_tracks(the_track_list)
 		{
 			
@@ -97,9 +96,9 @@ namespace teq
 		
 		void check_pattern_index(int index)
 		{
-			if (index < 0 || index >= (int)m_patterns->size())
+			if (index < 0 || index >= (int)m_pattern_list->size())
 			{
-				LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << m_patterns->size())
+				LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << m_pattern_list->size())
 			}
 		}
 		
@@ -107,9 +106,9 @@ namespace teq
 		{
 			check_pattern_index(pattern_index);
 			
-			if (tick_index < 0 || tick_index >=  (*m_patterns)[pattern_index]->m_length)
+			if (tick_index < 0 || tick_index >=  (*m_pattern_list)[pattern_index]->m_length)
 			{
-				LIBTEQ_THROW_RUNTIME_ERROR("Tick index out of bounds: " << tick_index << ". Pattern length: " << (*m_patterns)[pattern_index]->m_length)
+				LIBTEQ_THROW_RUNTIME_ERROR("Tick index out of bounds: " << tick_index << ". Pattern length: " << (*m_pattern_list)[pattern_index]->m_length)
 			}
 		}
 		

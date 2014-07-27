@@ -137,6 +137,20 @@ namespace teq
 				
 		return new_song;
 	}
+
+
+	song_ptr teq::copy_song_top_level_deep()
+	{
+		song_ptr new_song(new song(*m_song));
+
+		new_song->m_transport_lookup_list = song::transport_lookup_list_ptr
+			(new song::transport_lookup_list(*(m_song->m_transport_lookup_list)));
+
+		new_song->m_pattern_list = song::pattern_list_ptr
+			(new song::pattern_list(*(m_song->m_pattern_list)));
+
+		return new_song;
+	}
 	
 	void teq::check_track_name_and_index_for_insert(const std::string track_name, int index)
 	{
@@ -168,7 +182,7 @@ namespace teq
 			std::make_pair(track_ptr(new TrackType(name)), port)
 		);
 		
-		for (auto &it : *new_song->m_patterns)
+		for (auto &it : *new_song->m_pattern_list)
 		{
 			it->m_sequences.insert
 			(
@@ -280,14 +294,14 @@ namespace teq
 	
 	int teq::number_of_patterns()
 	{
-		return (int)m_song->m_patterns->size();
+		return (int)m_song->m_pattern_list->size();
 	}
 	
 	int teq::number_of_ticks(int pattern_index)
 	{
 		m_song->check_pattern_index(pattern_index);
 		
-		return (*m_song->m_patterns)[pattern_index]->m_length;
+		return (*m_song->m_pattern_list)[pattern_index]->m_length;
 	}
 	
 	void teq::remove_track(int index)
@@ -326,12 +340,12 @@ namespace teq
 	{	
 		song_ptr new_song = copy_song_top_level_deep();
 		
-		if (index > (int)m_song->m_patterns->size())
+		if (index > (int)m_song->m_pattern_list->size())
 		{
 			LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << number_of_patterns())
 		}
 
-		song::pattern_list_ptr new_pattern_list(new song::pattern_list(*m_song->m_patterns));
+		song::pattern_list_ptr new_pattern_list(new song::pattern_list(*m_song->m_pattern_list));
 		
 		new_pattern_list->insert(new_pattern_list->begin() + index, the_pattern);
 
@@ -340,7 +354,7 @@ namespace teq
 		(
 			[this, new_pattern_list] () mutable
 			{
-				m_song->m_patterns = new_pattern_list;
+				m_song->m_pattern_list = new_pattern_list;
 				new_pattern_list.reset();
 			}
 		);
@@ -350,11 +364,11 @@ namespace teq
 	{	
 		song_ptr new_song = copy_song_top_level_deep();
 
-		if (index >= (int)m_song->m_patterns->size())
+		if (index >= (int)m_song->m_pattern_list->size())
 		{
 			LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << number_of_patterns())
 		}
-		song::pattern_list_ptr new_pattern_list(new song::pattern_list(*m_song->m_patterns));
+		song::pattern_list_ptr new_pattern_list(new song::pattern_list(*m_song->m_pattern_list));
 		
 		(*new_pattern_list)[index] = the_pattern;
 
@@ -363,7 +377,7 @@ namespace teq
 		(
 			[this, new_pattern_list] () mutable
 			{
-				m_song->m_patterns = new_pattern_list;
+				m_song->m_pattern_list = new_pattern_list;
 				new_pattern_list.reset();
 			}
 		);
@@ -372,7 +386,7 @@ namespace teq
 	pattern_ptr teq::get_pattern(int index)
 	{
 		m_song->check_pattern_index(index);
-		return (*m_song->m_patterns)[index];
+		return (*m_song->m_pattern_list)[index];
 	}
 	
 	void teq::remove_pattern(int index)
@@ -646,7 +660,7 @@ namespace teq
 		
 		int midi_track_index = 0;
 		
-		for (size_t track_index = 0; track_index < m_song->m_tracks->size() && m_transport_position.m_pattern < (int)m_song->m_patterns->size(); ++track_index)
+		for (size_t track_index = 0; track_index < m_song->m_tracks->size() && m_transport_position.m_pattern < (int)m_song->m_pattern_list->size(); ++track_index)
 		{
 			auto &track_properties = *(*m_song->m_tracks)[track_index].first;
 			
@@ -827,7 +841,7 @@ namespace teq
 		jack_position_t jack_position;
 		tick frame_in_song = 0;
 		
-		const std::vector<pattern_ptr> &patterns = *m_song->m_patterns;
+		const std::vector<pattern_ptr> &patterns = *m_song->m_pattern_list;
 		
 		if (m_transport_source == transport_source::JACK_TRANSPORT)
 		{
