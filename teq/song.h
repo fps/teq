@@ -72,7 +72,7 @@ namespace teq
 		typedef std::vector<track_properties_and_payload> track_list;
 		typedef std::shared_ptr<track_list> track_list_ptr;
 		
-		track_list_ptr m_tracks;
+		track_list_ptr m_track_list;
 		
 
 		std::string m_name;
@@ -81,16 +81,16 @@ namespace teq
 		
 		song(pattern_list_ptr the_pattern_list, track_list_ptr the_track_list) :
 			m_pattern_list(the_pattern_list),
-			m_tracks(the_track_list)
+			m_track_list(the_track_list)
 		{
 			
 		}
 
 		void check_track_index(int index)
 		{
-			if (index < 0 || index >= (int)m_tracks->size())
+			if (index < 0 || index >= (int)m_track_list->size())
 			{
-				LIBTEQ_THROW_RUNTIME_ERROR("Track index out of bounds: " << index << ". Number of tracks: " << m_tracks->size())
+				LIBTEQ_THROW_RUNTIME_ERROR("Track index out of bounds: " << index << ". Number of tracks: " << m_track_list->size())
 			}
 		}
 		

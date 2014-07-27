@@ -125,7 +125,7 @@ namespace teq
 
 	bool teq::track_name_exists(const std::string track_name)
 	{
-		return std::any_of(m_song->m_tracks->begin(), m_song->m_tracks->end(),
+		return std::any_of(m_song->m_track_list->begin(), m_song->m_track_list->end(),
 				   [&track_name]
 				   (song::track_properties_and_payload const &pair) {
 					return track_name == pair.first->m_name; });
@@ -149,6 +149,9 @@ namespace teq
 		new_song->m_pattern_list = song::pattern_list_ptr
 			(new song::pattern_list(*(m_song->m_pattern_list)));
 
+		new_song->m_track_list = song::track_list_ptr
+			(new song::track_list(*(m_song->m_track_list)));
+
 		return new_song;
 	}
 	
@@ -169,16 +172,16 @@ namespace teq
 	{
 		m_song->check_track_index(index);
 		
-		return (*m_song->m_tracks)[index].first->m_type;
+		return (*m_song->m_track_list)[index].first->m_type;
 	}
 	
 	//! For internal use only!
 	template <class SequenceType, class TrackType>
 	void insert_track(const std::string &name, song_ptr new_song, int index, jack_port_t *port)
 	{
-		new_song->m_tracks->insert
+		new_song->m_track_list->insert
 		(
-			new_song->m_tracks->begin() + index, 
+			new_song->m_track_list->begin() + index, 
 			std::make_pair(track_ptr(new TrackType(name)), port)
 		);
 		
@@ -230,7 +233,7 @@ namespace teq
 		
 		if (track_type(index) == track::MIDI || track_type(index) == track::CV)
 		{
-			if (0 != jack_port_set_name((*(m_song->m_tracks))[index].second, name.c_str()))
+			if (0 != jack_port_set_name((*(m_song->m_track_list))[index].second, name.c_str()))
 			{
 				LIBTEQ_THROW_RUNTIME_ERROR("Failed to set track name")
 			}
@@ -238,10 +241,10 @@ namespace teq
 
 		song_ptr new_song = copy_song_deep();
 		
-		(*new_song->m_tracks)[index].first->m_name = name;
+		(*new_song->m_track_list)[index].first->m_name = name;
 #if 0
 		write_command_and_wait([this, name, index](){
-			(*(m_song->m_tracks))[index].first.m_name = name;
+			(*(m_song->m_track_list))[index].first.m_name = name;
 		});
 #endif
 	}
@@ -284,12 +287,12 @@ namespace teq
 	
 	int teq::number_of_tracks()
 	{
-		return (int)m_song->m_tracks->size();
+		return (int)m_song->m_track_list->size();
 	}
 	
 	std::string teq::track_name(int index)
 	{
-		return (*m_song->m_tracks)[index].first->m_name;
+		return (*m_song->m_track_list)[index].first->m_name;
 	}
 	
 	int teq::number_of_patterns()
@@ -323,7 +326,7 @@ namespace teq
 		
 		new_pattern.m_length = pattern_length;
 		
-		for (auto &it : *m_song->m_tracks)
+		for (auto &it : *m_song->m_track_list)
 		{
 			// std::cout << "Creating track" << std::endl;
 			sequence_ptr new_sequence = it.first->create_sequence();
@@ -595,10 +598,10 @@ namespace teq
 		
 	void teq::fetch_port_buffers(jack_nframes_t nframes)
 	{
-		for (size_t track_index = 0; track_index < m_song->m_tracks->size(); ++track_index)
+		for (size_t track_index = 0; track_index < m_song->m_track_list->size(); ++track_index)
 		{
-			auto &track_properties = *(*m_song->m_tracks)[track_index].first;
-			jack_port_t *port = (*m_song->m_tracks)[track_index].second;
+			auto &track_properties = *(*m_song->m_track_list)[track_index].first;
+			jack_port_t *port = (*m_song->m_track_list)[track_index].second;
 			
 			switch(track_properties.m_type)
 			{
@@ -633,9 +636,9 @@ namespace teq
 			* since it's a continous signal as opposed to the event based 
 			* midi and control signals
 			*/
-		for (size_t track_index = 0; track_index < m_song->m_tracks->size(); ++track_index)
+		for (size_t track_index = 0; track_index < m_song->m_track_list->size(); ++track_index)
 		{
-			auto &track_properties = *(*m_song->m_tracks)[track_index].first;
+			auto &track_properties = *(*m_song->m_track_list)[track_index].first;
 			
 			switch(track_properties.m_type)
 			{
@@ -660,9 +663,9 @@ namespace teq
 		
 		int midi_track_index = 0;
 		
-		for (size_t track_index = 0; track_index < m_song->m_tracks->size() && m_transport_position.m_pattern < (int)m_song->m_pattern_list->size(); ++track_index)
+		for (size_t track_index = 0; track_index < m_song->m_track_list->size() && m_transport_position.m_pattern < (int)m_song->m_pattern_list->size(); ++track_index)
 		{
-			auto &track_properties = *(*m_song->m_tracks)[track_index].first;
+			auto &track_properties = *(*m_song->m_track_list)[track_index].first;
 			
 			switch(track_properties.m_type)
 			{
