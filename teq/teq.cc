@@ -163,7 +163,7 @@ namespace teq
 		return new_song;
 	}
 
-	song_ptr teq::copy_cong_deep()
+	song_ptr teq::copy_song_deep()
 	{
 		song_ptr new_song = copy_song_top_level_deep();
 
