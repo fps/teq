@@ -49,6 +49,8 @@ namespace teq
 		}
 
 	};
+
+	typedef std::shared_ptr<cv_event> cv_event_ptr;
 	
 	struct midi_event
 	{

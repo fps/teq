@@ -97,7 +97,7 @@ namespace teq
 			
 		}
 		
-		virtual sequence_ptr create_sequence()
+		virtual sequence_ptr create_sequence() override
 		{
 			return sequence_ptr(new sequence_of<midi_event>);
 		}
@@ -112,7 +112,7 @@ namespace teq
 		
 		void *m_port_buffer;
 		
-		virtual sequence_ptr create_sequence()
+		virtual sequence_ptr create_sequence() override
 		{
 			return sequence_ptr(new sequence_of<cv_event>);
 		}
@@ -127,7 +127,7 @@ namespace teq
 	
 	struct control_track : track
 	{
-		virtual sequence_ptr create_sequence()
+		virtual sequence_ptr create_sequence() override
 		{
 			return sequence_ptr(new sequence_of<control_event>);
 		}

@@ -45,7 +45,7 @@ namespace teq
 		
 		m_send_all_notes_off_on_stop = send_all_notes_off_on_stop;
 		
-		m_song = m_song_heap.add_new(song(m_pattern_list_heap.add_new(song::pattern_list()), m_track_list_heap.add_new(song::track_list())));
+		m_song = m_song_heap.add_new(song(song::pattern_list_ptr(new song::pattern_list()), song::track_list_ptr(new song::track_list())));
 		
 		jack_status_t status;
 		m_jack_client = jack_client_open(m_client_name.c_str(), JackNullOption, &status);
@@ -131,17 +131,9 @@ namespace teq
 					return track_name == pair.first->m_name; });
 	}
 
-	song_ptr teq::copy_and_prepare_song()
+	song_ptr teq::copy_song_shallow()
 	{
 		song_ptr new_song = m_song_heap.add_new(song(*m_song));
-		
-		new_song->m_tracks =
-			m_track_list_heap
-				.add_new(song::track_list(*m_song->m_tracks));
-		
-		new_song->m_patterns = 
-			m_pattern_list_heap
-				.add_new(song::pattern_list(*m_song->m_patterns));
 				
 		return new_song;
 	}
@@ -178,13 +170,13 @@ namespace teq
 		
 		for (auto &it : *new_song->m_patterns)
 		{
-			it.m_sequences.insert
+			it->m_sequences.insert
 			(
-				it.m_sequences.begin() + index,
+				it->m_sequences.begin() + index,
 				sequence_ptr(new SequenceType)
 			);
 			
-			(*(it.m_sequences.begin() + index))->set_length(it.m_length);
+			(*(it->m_sequences.begin() + index))->set_length(it->m_length);
 		}
 	}
 	
@@ -192,7 +184,7 @@ namespace teq
 	{
 		check_track_name_and_index_for_insert(track_name, index);
 		
-		song_ptr new_song = copy_and_prepare_song();
+		song_ptr new_song = copy_song_top_level_deep();
 		
 		jack_port_t *port = jack_port_register
 		(
@@ -230,7 +222,7 @@ namespace teq
 			}
 		}
 
-		song_ptr new_song = copy_and_prepare_song();
+		song_ptr new_song = copy_song_deep();
 		
 		(*new_song->m_tracks)[index].first->m_name = name;
 #if 0
@@ -244,7 +236,7 @@ namespace teq
 	{
 		check_track_name_and_index_for_insert(track_name, index);
 		
-		song_ptr new_song = copy_and_prepare_song();
+		song_ptr new_song = copy_song_deep();
 		
 		jack_port_t *port = jack_port_register
 		(
@@ -269,7 +261,7 @@ namespace teq
 	{
 		check_track_name_and_index_for_insert(track_name, index);
 		
-		song_ptr new_song = copy_and_prepare_song();
+		song_ptr new_song = copy_song_deep();
 
 		insert_track<sequence_of<control_event>, control_track>(track_name, new_song, index, nullptr);
 
@@ -295,7 +287,7 @@ namespace teq
 	{
 		m_song->check_pattern_index(pattern_index);
 		
-		return (*m_song->m_patterns)[pattern_index].m_length;
+		return (*m_song->m_patterns)[pattern_index]->m_length;
 	}
 	
 	void teq::remove_track(int index)
@@ -330,13 +322,16 @@ namespace teq
 		return new_pattern;
 	}
 	
-	void teq::insert_pattern(int index, const pattern the_pattern)
+	void teq::insert_pattern(int index, const pattern_ptr the_pattern)
 	{	
+		song_ptr new_song = copy_song_top_level_deep();
+		
 		if (index > (int)m_song->m_patterns->size())
 		{
 			LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << number_of_patterns())
 		}
-		song::pattern_list_ptr new_pattern_list = m_pattern_list_heap.add_new(song::pattern_list(*m_song->m_patterns));
+
+		song::pattern_list_ptr new_pattern_list(new song::pattern_list(*m_song->m_patterns));
 		
 		new_pattern_list->insert(new_pattern_list->begin() + index, the_pattern);
 
@@ -351,13 +346,15 @@ namespace teq
 		);
 	}
 
-	void teq::set_pattern(int index, const pattern the_pattern)
+	void teq::set_pattern(int index, const pattern_ptr the_pattern)
 	{	
+		song_ptr new_song = copy_song_top_level_deep();
+
 		if (index >= (int)m_song->m_patterns->size())
 		{
 			LIBTEQ_THROW_RUNTIME_ERROR("Pattern index out of bounds: " << index << ". Number of patterns: " << number_of_patterns())
 		}
-		song::pattern_list_ptr new_pattern_list = m_pattern_list_heap.add_new(song::pattern_list(*m_song->m_patterns));
+		song::pattern_list_ptr new_pattern_list(new song::pattern_list(*m_song->m_patterns));
 		
 		(*new_pattern_list)[index] = the_pattern;
 
@@ -372,7 +369,7 @@ namespace teq
 		);
 	}
 
-	pattern teq::get_pattern(int index)
+	pattern_ptr teq::get_pattern(int index)
 	{
 		m_song->check_pattern_index(index);
 		return (*m_song->m_patterns)[index];
@@ -496,8 +493,6 @@ namespace teq
 	void teq::gc()
 	{
 		m_song_heap.gc();
-		m_track_list_heap.gc();
-		m_pattern_list_heap.gc();
 	}
 	
 	void teq::write_command(command f)
@@ -535,6 +530,8 @@ namespace teq
 	
 	void teq::update_song(song_ptr new_song)
 	{
+		update_transport_lookup_list(new_song);
+
 		write_command_and_wait
 		(
 			[this, new_song] () mutable
@@ -543,6 +540,11 @@ namespace teq
 				new_song.reset();
 			}
 		);
+	}
+
+	void teq::update_transport_lookup_list(song_ptr new_song)
+	{
+		
 	}
 
 	void teq::render_event(const midi::midi_event &e, void *port_buffer, jack_nframes_t time)
@@ -637,9 +639,9 @@ namespace teq
 		}
 	}
 	
-	void teq::process_tick(transport_position position, jack_nframes_t frame, void *multi_out_buffer, const std::vector<pattern> &patterns)
+	void teq::process_tick(transport_position position, jack_nframes_t frame, void *multi_out_buffer, const std::vector<pattern_ptr> &patterns)
 	{
-		const pattern &the_pattern = patterns[(size_t)m_transport_position.m_pattern];
+		const pattern &the_pattern = *patterns[(size_t)m_transport_position.m_pattern];
 		const tick current_tick = m_transport_position.m_tick;
 		
 		int midi_track_index = 0;
@@ -747,19 +749,19 @@ namespace teq
 		
 	}
 	
-	void teq::advance_transport_by_one_tick(const std::vector<pattern> &patterns)
+	void teq::advance_transport_by_one_tick(const song::pattern_list &patterns)
 	{
 		/** 
 			Safeguard around being off the song..
 		*/
-		if (m_transport_position.m_pattern < (int)patterns.size() && m_transport_position.m_tick < patterns[(size_t)m_transport_position.m_pattern].m_length)
+		if (m_transport_position.m_pattern < (int)patterns.size() && m_transport_position.m_tick < patterns[(size_t)m_transport_position.m_pattern]->m_length)
 		{
 			++m_transport_position.m_tick;
 		
 			/**
 			* Wrap tick around if we meet the pattern boundary
 			*/
-			if (m_transport_position.m_tick >= patterns[(size_t)m_transport_position.m_pattern].m_length)
+			if (m_transport_position.m_tick >= patterns[(size_t)m_transport_position.m_pattern]->m_length)
 			{
 				//std::cout << "pattern end" << std::endl;
 				m_transport_position.m_tick = 0;
@@ -825,7 +827,7 @@ namespace teq
 		jack_position_t jack_position;
 		tick frame_in_song = 0;
 		
-		const std::vector<pattern> &patterns = *m_song->m_patterns;
+		const std::vector<pattern_ptr> &patterns = *m_song->m_patterns;
 		
 		if (m_transport_source == transport_source::JACK_TRANSPORT)
 		{
@@ -872,7 +874,7 @@ namespace teq
 					bool in_range = false;
 					while(tick_time_in_song >= 0 && m_transport_position.m_pattern < (tick)patterns.size())
 					{
-						tick_time_in_song -= (double)patterns[(size_t)m_transport_position.m_pattern].length();
+						tick_time_in_song -= (double)patterns[(size_t)m_transport_position.m_pattern]->length();
 						in_range = true;
 						++m_transport_position.m_pattern;
 					}
@@ -884,7 +886,7 @@ namespace teq
 					
 					//! Find the tick 
 					
-					double tick_time_in_pattern = tick_time_in_song + (double)patterns[(size_t)m_transport_position.m_pattern].length();
+					double tick_time_in_pattern = tick_time_in_song + (double)patterns[(size_t)m_transport_position.m_pattern]->length();
 					
 					m_transport_position.m_tick = (tick)floor(tick_time_in_pattern);
 					

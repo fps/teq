@@ -48,13 +48,12 @@ namespace teq
 		
 		typedef std::function<void()> command;
 		
+		/**
+		 * A global heap for the one single data structure
+		 * that needs to be garbage collected..
+		 */
 		heap<song> m_song_heap;
-		
-		heap<song::track_list> m_track_list_heap;
-		
-		heap<song::pattern_list> m_pattern_list_heap;
-		
-		
+	
 		
 		lart::ringbuffer<command> m_command_buffer;
 		
@@ -150,10 +149,7 @@ namespace teq
 		
 		bool track_name_exists(const std::string track_name);
 		
-		song_ptr copy_and_prepare_song();
-		
-		void check_track_name_and_index_for_insert(const std::string track_name, int index);
-		
+	
 		
 		int number_of_tracks();
 		
@@ -178,15 +174,30 @@ namespace teq
 		
 		int number_of_ticks(int pattern_index);
 		
-		void insert_pattern(int index, const pattern the_pattern);
+		void insert_pattern(int index, const pattern_ptr the_pattern);
 	
 		void remove_pattern(int index);
 		
 		void move_pattern(int from, int to);
 		
-		void set_pattern(int index, const pattern the_pattern);
-		
-		pattern get_pattern(int pattern_index);
+		void set_pattern(int index, const pattern_ptr the_pattern);
+	
+		/**
+		 * Get a reference to a pattern in the song. Make sure
+		 * to make a copy before modifying it because
+		 * the RT thread also uses this data structure.
+		 * Also make sure you create a DEEP copy of the 
+		 * pattern. Not just the pattern_ptr returned
+		 * from this method. See the method:
+		 * get_pattern_deep_copy()
+		 */	
+		pattern_ptr get_pattern(int pattern_index);
+
+		/**
+		 * Get a deep copy of a pattern, ready to be modified,
+		 * etc.
+		 */
+		pattern_ptr get_pattern_deep_copy(int pattern_index);
 
 		/**
 		 * Use this function to create new patterns. 
@@ -219,6 +230,7 @@ namespace teq
 		void set_transport_position(transport_position position);
 		
 		bool has_state_info();
+
 		state_info get_state_info();
 		
 		void gc();
@@ -226,13 +238,57 @@ namespace teq
 		void wait();
 		
 	protected:
-		
-		void write_command(command f);
-		
-		void write_command_and_wait(command f);
-		
+		/**
+		 * Convencience method to make a SHALLOW copy of the song.
+		 * This just copies the smart pointers.
+		 */
+		song_ptr copy_song_shallow();
+
+		/**
+		 * Convenience function to copy a song and have the top
+		 * level smart pointers deeply copied (i.e. the list
+		 * of patterns and tracks.) 
+		 *
+		 * NOTE: The tracks and sequences themself are NOT deeply
+		 * copied.
+		*/
+		song_ptr copy_song_top_level_deep();
+
+		/**
+		 * A deep copy of the song. This copy holds no more
+		 * references to data structures used in the RT thread.
+		 * with one notable exception: The jack ports are
+		 * not copied to avoid compromising connections
+		 * made to these ports.
+		*/
+		song_ptr copy_song_deep();
+
+		/**
+		 * RT-safe method to update the song data structure.
+		 */
 		void update_song(song_ptr new_song);
 
+		/**
+		 * Used by update_song()
+		 */
+		void update_transport_lookup_list(song_ptr new_song);
+
+
+		void check_track_name_and_index_for_insert(const std::string track_name, int index);
+			
+
+		/**
+		 * Convenience function to store a command in the 
+		 * command ringbuffer.
+		 */
+		void write_command(command f);
+		
+		/**
+		 * Function to pass a command in the command ringbuffer 
+		 * and wait until it has completed
+		 */
+		void write_command_and_wait(command f);
+		
 		void render_event(const midi::midi_event &e, void *port_buffer, jack_nframes_t time);
 		
 		void process_commands();
@@ -241,9 +297,9 @@ namespace teq
 		
 		void fetch_port_buffers(jack_nframes_t nframes);
 		
-		void process_tick(transport_position position, jack_nframes_t frame, void *multi_out_buffer, const std::vector<pattern> &patterns);
+		void process_tick(transport_position position, jack_nframes_t frame, void *multi_out_buffer, const song::pattern_list &patterns);
 		
-		void advance_transport_by_one_tick(const std::vector<pattern> &patterns);
+		void advance_transport_by_one_tick(const song::pattern_list &patterns);
 		
 		int process(jack_nframes_t nframes);
 		

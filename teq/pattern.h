@@ -11,7 +11,7 @@ namespace teq
 	struct pattern
 	{
 		/**
-		 * Patterns should only ever be created by the teq::create_pattern method. See that
+		 * Patterns should only ever be created by the teq::create_pattern() method. See that
 		 * method for more information on how to safely create and edit patterns
 		 */
 		pattern(int length = 128) :
@@ -54,7 +54,7 @@ namespace teq
 			return m_length;
 		}
 		
-		void check_tick_index(int the_tick)
+		void check_tick_index(int the_tick) const
 		{
 			if (the_tick < 0 || the_tick >= length()) 
 			{
@@ -62,7 +62,7 @@ namespace teq
 			}
 		}
 		
-		void check_track_index(int the_track)
+		void check_track_index(int the_track) const
 		{
 			if (the_track < 0 || the_track >= (int)m_sequences.size())
 			{
@@ -98,7 +98,7 @@ namespace teq
 		(
 			int track_index,
 			int tick_index
-		)
+		) const
 		{
 			check_track_index(track_index);
 			
