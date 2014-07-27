@@ -80,6 +80,7 @@ namespace teq
 		std::string m_description;
 		
 		song(pattern_list_ptr the_pattern_list, track_list_ptr the_track_list) :
+			m_transport_lookup_list(new transport_lookup_list),
 			m_pattern_list(the_pattern_list),
 			m_track_list(the_track_list)
 		{

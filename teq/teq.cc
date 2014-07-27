@@ -154,11 +154,11 @@ namespace teq
 		new_song->m_track_list = song::track_list_ptr
 			(new song::track_list(*(m_song->m_track_list)));
 
-		assert(new_song->m_transport_lookup_list != new_song->m_transport_lookup_list);
+		assert(new_song->m_transport_lookup_list != m_song->m_transport_lookup_list);
 
-		assert(new_song->m_track_list != new_song->m_track_list);
+		assert(new_song->m_track_list != m_song->m_track_list);
 
-		assert(new_song->m_transport_lookup_list != new_song->m_transport_lookup_list);
+		assert(new_song->m_transport_lookup_list != m_song->m_transport_lookup_list);
 
 		return new_song;
 	}
