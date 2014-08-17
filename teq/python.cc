@@ -84,7 +84,7 @@ BOOST_PYTHON_MODULE(teq)
 		.value("RELATIVE_TEMPO", teq::control_event::type::RELATIVE_TEMPO)
 	;
 
-	class_<teq::pattern, pattern_ptr>("pattern")
+	class_<teq::pattern, teq::pattern_ptr>("pattern")
 		.def("set_midi_event", &teq::pattern::set_event<teq::midi_event>)
 		.def("get_midi_event", &teq::pattern::get_event<teq::midi_event>)
 		.def("set_control_event", &teq::pattern::set_event<teq::control_event>)
