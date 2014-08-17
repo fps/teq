@@ -335,11 +335,11 @@ namespace teq
 		throw std::logic_error("Not implemented yet");
 	}
 	
-	pattern teq::create_pattern(int pattern_length)
+	pattern_ptr teq::create_pattern(int pattern_length)
 	{
-		pattern new_pattern;
+		pattern_ptr new_pattern(new pattern);
 		
-		new_pattern.m_length = pattern_length;
+		new_pattern->m_length = pattern_length;
 		
 		for (auto &it : *m_song->m_track_list)
 		{
@@ -348,7 +348,7 @@ namespace teq
 			
 			new_sequence->set_length(pattern_length);
 			
-			new_pattern.m_sequences.push_back(new_sequence);
+			new_pattern->m_sequences.push_back(new_sequence);
 		}
 		
 		return new_pattern;

@@ -39,12 +39,12 @@ namespace teq
 	{
 		std::vector<EventType> m_events;
 		
-		virtual void set_length(unsigned length)
+		virtual void set_length(unsigned length) override
 		{
 			m_events.resize(length);
 		}
 		
-		virtual sequence_ptr clone()
+		virtual sequence_ptr clone() override
 		{
 			std::shared_ptr<sequence_of<EventType>> s(new sequence_of<EventType>());
 			s->m_events = m_events;
