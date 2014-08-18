@@ -1,5 +1,6 @@
 # Let's import the teq module. Make sure the dynamic linker is setup to find libteq.so. Also
 # make sure that python finds teq.so (the python module).
+#
 import teq
 
 # Let's import the little python library that makes some things a little easier
