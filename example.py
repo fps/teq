@@ -48,7 +48,7 @@ for n in range(0, 16):
 
 t.insert_pattern(0, p)
 
-t.wait()
+# t.wait()
 
 # Client processes MUST call gc() sometimes after altering state to clear up unused objects.
 print ("Cleaning up some memory...")
