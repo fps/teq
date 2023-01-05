@@ -2,6 +2,7 @@
 #include <cassert>
 
 #include <chrono>
+#include <math.h>
 
 namespace teq
 {
@@ -248,7 +249,7 @@ namespace teq
 		
 		if (track_type(index) == track::MIDI || track_type(index) == track::CV)
 		{
-			if (0 != jack_port_set_name((*(m_song->m_track_list))[index].second, name.c_str()))
+			if (0 != jack_port_rename(m_jack_client, (*(m_song->m_track_list))[index].second, name.c_str()))
 			{
 				LIBTEQ_THROW_RUNTIME_ERROR("Failed to set track name")
 			}
